@@ -6,8 +6,8 @@
 all: chess
 
 chess: src/main.o
-	g++ -o chess src/main.o -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2
+	g++ -o chess src/main.o -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2 -lmingw32 -lSDL2main -lSDL2 -Lsrc/SDL2/lib
 	
 src/main.o: src/main.cpp
-	g++ -c src/main.cpp -o src/main.o -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2
+	g++ -c src/main.cpp -o src/main.o -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2 -lmingw32 -lSDL2main -lSDL2 -Lsrc/SDL2/lib
 

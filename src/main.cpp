@@ -1,20 +1,35 @@
+#pragma once
 #include <iostream>
 // #define SDL_MAIN_HANDLED
 #include <SDL.h>
-
+#include "./test.cpp"
+#include "./../include/board.h"
+#include "./../include/color.h"
+#include "./../include/colorScheme.h"
+// #include "./color.cpp"
 using std::cerr, std::cout;
 SDL_Surface *winSurface;
 SDL_Window *window;
 // void initSDL()
 int main(int argc, char *args[])
 {
+    debug();
+    // return 0;
+
     winSurface = NULL;
     window = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
-    window = SDL_CreateWindow("Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN);
+ 
+    window = SDL_CreateWindow("VLXD", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_SHOWN);
+ 
+    // Board chessboard(window);
     winSurface = SDL_GetWindowSurface(window);
-    SDL_FillRect(winSurface, NULL, SDL_MapRGB(winSurface->format, 0, 255, 255));
 
+    Background background(winSurface);
+ 
+    // SDL_FillRect(winSurface, NULL, SDL_MapRGB(winSurface->format, 0, 255, 255));
+
+    // background.render(bgColor);
     // Update the window display
     SDL_UpdateWindowSurface(window);
 
@@ -27,13 +42,4 @@ int main(int argc, char *args[])
     // Quit SDL
     SDL_Quit();
     return 0;
-    // if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
-    // {
-    //     cerr << "Initialization failed\n";
-    // }
 }
-// {
-//     initSDL();
-//     std::cout << "succ\n";
-//     return 0;
-// }

@@ -4,9 +4,9 @@
 class Background
 {
 private:
-    SDL_Surface *surface;
+    SDL_Renderer *renderer;
 
 public:
-    void render(colorRGB color);
-    Background(SDL_Surface *surface);
+    void render(colorRGBA color);
+    Background(SDL_Renderer *renderer);
 };

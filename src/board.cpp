@@ -1,14 +1,18 @@
 #pragma once
+#include <iostream>
 #include <SDL.h>
 #include "./../include/board.h"
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
 
-Background::Background(SDL_Surface *surface)
+Background::Background(SDL_Renderer *renderer)
 {
-    this -> surface = surface;
+    this->renderer = renderer;
 }
-void Background::render(colorRGB color)
+void Background::render(colorRGBA color)
 {
-    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, color.getR(), color.getG(), color.getB()));
+    SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
+    SDL_RenderClear(renderer);
+    std::cout << "\n" << SDL_RenderFillRect(renderer, NULL);
+    SDL_RenderPresent(renderer);
 }

@@ -6,7 +6,7 @@
 COMPILER_FLAG= -std=c++20 -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2 -lmingw32 -lSDL2main -lSDL2 -Lsrc/SDL2/lib
 all: chess
 	rm -f $(wildcard src/*.o)
-
+	./chess
 clean:
 	rm -f $(wildcard src/*.o)
 	rm -f chess.exe

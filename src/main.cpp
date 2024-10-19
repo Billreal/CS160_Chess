@@ -6,40 +6,28 @@
 #include "./../include/board.h"
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
-// #include "./color.cpp"
 using std::cerr, std::cout;
-SDL_Surface *winSurface;
+SDL_Renderer *renderer;
 SDL_Window *window;
-// void initSDL()
+SDL_Surface *winSurface;
 int main(int argc, char *args[])
 {
     debug();
-    // return 0;
 
-    winSurface = NULL;
+    renderer = NULL;
     window = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
- 
-    window = SDL_CreateWindow("VLXD", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_SHOWN);
- 
-    // Board chessboard(window);
-    winSurface = SDL_GetWindowSurface(window);
 
-    Background background(winSurface);
- 
-    // SDL_FillRect(winSurface, NULL, SDL_MapRGB(winSurface->format, 0, 255, 255));
+    window = SDL_CreateWindow("VLXD", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 600, SDL_WINDOW_SHOWN);
 
-    // background.render(bgColor);
-    // Update the window display
-    SDL_UpdateWindowSurface(window);
+    renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // Wait
+    Background background(renderer);
+    background.render(board1Primary);
+
     system("pause");
-
-    // Destroy the window. This will also destroy the surface
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-
-    // Quit SDL
     SDL_Quit();
     return 0;
 }

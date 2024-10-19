@@ -2,6 +2,6 @@
 #include "./../include/colorScheme.h"
 #include "./../include/color.h"
 
-colorRGB board1Primary = colorRGB(118, 150, 85);
-colorRGB board2Primary = colorRGB(238, 238, 210);
-colorRGB bgColor = colorRGB(0, 0, 0);
+colorRGBA board1Primary = colorRGBA(118, 150, 85, 255);
+colorRGBA board2Primary = colorRGBA(238, 238, 210, 255);
+colorRGBA bgColor = colorRGBA(0, 0, 0, 0);

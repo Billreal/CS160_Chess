@@ -1,23 +1,29 @@
 #pragma once
 #include "./../include/color.h"
-colorRGB :: colorRGB(int r, int g, int b)
+colorRGBA ::colorRGBA(int r, int g, int b, int a)
 {
     this->r = r;
     this->g = g;
     this->b = b;
+    this->a = a;
 }
 
-int colorRGB::getR()
+int colorRGBA::getR()
 {
     return r;
 }
 
-int colorRGB::getG()
+int colorRGBA::getG()
 {
     return g;
 }
 
-int colorRGB::getB()
+int colorRGBA::getB()
 {
     return b;
+}
+
+int colorRGBA::getA()
+{
+    return a;
 }

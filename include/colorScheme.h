@@ -1,5 +1,5 @@
 #pragma once
 #include "./color.h"
-extern colorRGB board1Primary;
-extern colorRGB board2Primary;
-extern colorRGB bgColor;
+extern colorRGBA board1Primary;
+extern colorRGBA board2Primary;
+extern colorRGBA bgColor;

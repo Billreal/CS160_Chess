@@ -20,10 +20,5 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
             else SDL_SetRenderDrawColor(renderer, secondary.getR(), secondary.getG(), secondary.getB(), secondary.getA());
             SDL_RenderFillRect(renderer, &currentCell);
         }
-    // SDL_Rect underlay{60, 60, 480, 480};
-    // SDL_RenderDrawRect(renderer, &underlay);
-    // SDL_RenderFillRect(renderer, &underlay);
     SDL_RenderPresent(renderer);
-    
-
 }

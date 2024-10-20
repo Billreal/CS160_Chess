@@ -4,14 +4,14 @@
 # src/main.o: src/main.cpp
 # 	g++ src/main.cpp -o src/main.o -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2
 COMPILER_FLAG= -std=c++20 -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2 -lmingw32 -lSDL2main -lSDL2 -Lsrc/SDL2/lib
-all: chess
+all: clean chess
 	rm -f $(wildcard src/*.o)
 	./chess
 clean:
 	rm -f $(wildcard src/*.o)
 	rm -f chess.exe
 
-chess: src/main.o src/board.o src/color.o src/colorScheme.o
+chess: src/main.o src/color.o src/board.o src/colorScheme.o src/background.o
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG)
 
 src/main.o: src/main.cpp
@@ -26,3 +26,5 @@ src/color.o: src/color.cpp
 src/colorScheme.o: src/colorScheme.cpp
 	g++ -c src/colorScheme.cpp -o src/colorScheme.o $(COMPILER_FLAG)
 
+src/background.o: src/background.cpp
+	g++ -c src/background.cpp -o src/background.o $(COMPILER_FLAG)

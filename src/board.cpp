@@ -1,18 +1,29 @@
 #pragma once
-#include <iostream>
-#include <SDL.h>
 #include "./../include/board.h"
-#include "./../include/color.h"
-#include "./../include/colorScheme.h"
 
-Background::Background(SDL_Renderer *renderer)
+Board::Board(SDL_Renderer *renderer)
 {
-    this->renderer = renderer;
+    this -> renderer = renderer;
 }
-void Background::render(colorRGBA color)
+
+void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
 {
-    SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
-    SDL_RenderClear(renderer);
-    std::cout << "\n" << SDL_RenderFillRect(renderer, NULL);
+    SDL_SetRenderDrawColor(renderer, primary.getR(), primary.getG(), primary.getB(), primary.getA());
+    for (int i = 1; i <= 8; i++)
+        for (int j = 1; j <= 8; j++)
+        {
+            bool cellType = (i + j) % 2;
+            int currentX = 60 * i;
+            int currentY = 60 * j;
+            SDL_Rect currentCell{currentX, currentY, 60, 60};
+            if (cellType) SDL_SetRenderDrawColor(renderer, primary.getR(), primary.getG(), primary.getB(), primary.getA());
+            else SDL_SetRenderDrawColor(renderer, secondary.getR(), secondary.getG(), secondary.getB(), secondary.getA());
+            SDL_RenderFillRect(renderer, &currentCell);
+        }
+    // SDL_Rect underlay{60, 60, 480, 480};
+    // SDL_RenderDrawRect(renderer, &underlay);
+    // SDL_RenderFillRect(renderer, &underlay);
     SDL_RenderPresent(renderer);
+    
+
 }

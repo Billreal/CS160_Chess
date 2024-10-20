@@ -3,9 +3,10 @@
 // #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include "./test.cpp"
-#include "./../include/board.h"
+#include "./../include/background.h"
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
+#include "./../include/board.h"
 using std::cerr, std::cout;
 SDL_Renderer *renderer;
 SDL_Window *window;
@@ -23,8 +24,10 @@ int main(int argc, char *args[])
     renderer = SDL_CreateRenderer(window, -1, 0);
 
     Background background(renderer);
-    background.render(board1Primary);
+    background.render(bgColor);
 
+    Board board(renderer);
+    board.renderChessboard(board1Primary, board2Primary);
     system("pause");
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

@@ -13,6 +13,11 @@ SDL_Window *window;
 SDL_Surface *winSurface;
 int main(int argc, char *args[])
 {
+    // ! Temporary variable, will change in later version
+    bool isPlayer1White = false;
+    bool isAgainstBot   = true;
+    bool isToRotate     = (isPlayer1White == false) && isAgainstBot;
+    // ! End of temporary variable
     debug();
 
     renderer = NULL;
@@ -32,5 +37,7 @@ int main(int argc, char *args[])
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    // TODO: Render column and row indexing correctly
     return 0;
 }

@@ -19,7 +19,7 @@ int main(int argc, char *args[])
     window = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    window = SDL_CreateWindow("VLXD", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 600, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("VLXD", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 700, 700, SDL_WINDOW_SHOWN);
 
     renderer = SDL_CreateRenderer(window, -1, 0);
 

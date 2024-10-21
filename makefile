@@ -11,20 +11,20 @@ clean:
 	rm -f $(wildcard src/*.o)
 	rm -f chess.exe
 
-chess: src/main.o src/color.o src/board.o src/colorScheme.o src/background.o
+chess: main color board colorScheme background
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG)
 
-src/main.o: src/main.cpp
+main:
 	g++ -c src/main.cpp -o src/main.o $(COMPILER_FLAG)
 
-src/board.o: src/board.cpp
+board:
 	g++ -c src/board.cpp -o src/board.o $(COMPILER_FLAG)
 
-src/color.o: src/color.cpp
+color: 
 	g++ -c src/color.cpp -o src/color.o $(COMPILER_FLAG)
 
-src/colorScheme.o: src/colorScheme.cpp
+colorScheme:
 	g++ -c src/colorScheme.cpp -o src/colorScheme.o $(COMPILER_FLAG)
 
-src/background.o: src/background.cpp
+background:
 	g++ -c src/background.cpp -o src/background.o $(COMPILER_FLAG)

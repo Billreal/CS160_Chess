@@ -13,9 +13,10 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
         for (int j = 1; j <= 8; j++)
         {
             bool cellType = (i + j) % 2;
-            int currentX = 60 * i;
-            int currentY = 60 * j;
-            SDL_Rect currentCell{currentX, currentY, 60, 60};
+            int currentX = margin + sideLength * (i - 1);
+            int currentY = margin + sideLength * (j - 1);
+            SDL_Rect currentCell{currentX, currentY, sideLength, sideLength};
+
             if (cellType) SDL_SetRenderDrawColor(renderer, primary.getR(), primary.getG(), primary.getB(), primary.getA());
             else SDL_SetRenderDrawColor(renderer, secondary.getR(), secondary.getG(), secondary.getB(), secondary.getA());
             SDL_RenderFillRect(renderer, &currentCell);

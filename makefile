@@ -3,14 +3,22 @@
 # 	g++ src/main.o -o chess -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2
 # src/main.o: src/main.cpp
 # 	g++ src/main.cpp -o src/main.o -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2
+
 LINKER = -lSDL2main -lSDL2 -lSDL2_image -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include/SDL2       
 COMPILER_FLAG= -std=c++20 -lmingw32 
+
+# Target to clean up object files and initialize Chess.exe
 all: clean chess
 	rm -f $(wildcard src/*.o)
 	./chess
+# Target to clean up object files
 clean:
-	rm -f $(wildcard src/*.o)
-	rm -f chess.exe
+	@powershell -Command "Get-ChildItem -Path src -Filter *.o | Remove-Item -Force"
+	@powershell -Command "Remove-Item -Force chess.exe"
+
+# clean:
+# 	rm -f $(wildcard src/*.o)
+# 	rm -f chess.exe
 
 chess: main color board colorScheme background
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER)

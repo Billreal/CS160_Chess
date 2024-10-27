@@ -1,5 +1,5 @@
 #pragma once
-
+#include <SDL_image.h>
 #include <SDL.h>
 #include "colorScheme.h"
 #include <string>
@@ -27,8 +27,7 @@ public:
 
     SDL_Texture *loadTexture(const std::string &path)
     {
-        SDL_Surface *surface = SDL_LoadBMP(path.c_str());
-
+        SDL_Surface *surface = IMG_Load(path.c_str());
         // Check if surface is loaded
         if (!surface)
         {
@@ -55,4 +54,5 @@ public:
     // Infos
     int getMargin();
     int getSideLength();
+    void setRendererColor(SDL_Renderer *renderer, colorRGBA color);
 };

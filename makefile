@@ -9,7 +9,6 @@ COMPILER_FLAG= -std=c++20 -lmingw32
 
 # Target to clean up object files and initialize Chess.exe
 all: clean chess
-	rm -f $(wildcard src/*.o)
 	./chess
 # Target to clean up object files
 clean:

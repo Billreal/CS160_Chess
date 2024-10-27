@@ -76,6 +76,7 @@ int main(int argc, char *args[])
 
         //Chessboard rendering
         board.renderChessboard(board1Primary, board2Primary);
+        board.render();
     }
 
     // system("pause");

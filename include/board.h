@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include "colorScheme.h"
 #include <string>
-
+#include <vector>
 class Board
 {
 private:
@@ -12,6 +12,7 @@ private:
     const int SIDE_LENGTH = 70;
     const int BOARD_SIZE = 8;
 
+    std::vector<SDL_Texture*> TextureList;
     SDL_Texture *boardTexture;
     SDL_Texture *pieces[2][6];
     void loadTextures();
@@ -34,8 +35,8 @@ public:
             SDL_Log("Failed to load texture %s: %s", path.c_str(), SDL_GetError());
             return nullptr;
         }
-
-        SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+        TextureList.push_back(SDL_CreateTextureFromSurface(renderer, surface));
+        SDL_Texture *texture = TextureList.back();
         SDL_FreeSurface(surface);
         return texture;
     }
@@ -55,4 +56,6 @@ public:
     int getMargin();
     int getSideLength();
     void setRendererColor(SDL_Renderer *renderer, colorRGBA color);
+
+    void flush();
 };

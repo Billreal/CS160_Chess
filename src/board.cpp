@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "./../include/board.h"
 
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
@@ -14,8 +15,12 @@ void Board::loadTextures()
 
 void Board::render()
 {
-    drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    drawTexture(pieces[0][0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    drawTexture(pieces[1][0], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
+    std::cerr << "Rendering Done\n";
+    flush();
 }
 
 void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
@@ -41,7 +46,7 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
             SDL_RenderFillRect(renderer, &currentCell);
         }
     // Update the screen with any rendering performed since the previous call.
-    SDL_RenderPresent(renderer);
+    flush();
 }
 
 void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag)
@@ -76,4 +81,9 @@ int Board::getSideLength()
 void Board::setRendererColor(SDL_Renderer *renderer, colorRGBA color)
 {
     SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
+}
+
+void Board::flush()
+{
+    SDL_RenderPresent(renderer);
 }

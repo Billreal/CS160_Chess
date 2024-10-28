@@ -71,8 +71,6 @@ int main(int argc, char *args[])
     SDL_Event event;
 
     // Chessboard rendering
-    board.renderChessboard(board1Primary, board2Primary);
-    board.render();
 
     while (running)
     {
@@ -82,6 +80,9 @@ int main(int argc, char *args[])
             if (event.type == SDL_QUIT)
                 running = false;
         }
+        board.renderChessboard(board1Primary, board2Primary);
+        board.renderPieces();
+        board.flush();
     }
 
     // system("pause");

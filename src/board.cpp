@@ -26,8 +26,8 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
 
     // Rasterize SVG
     struct NSVGrasterizer *rast = nsvgCreateRasterizer();
-    unsigned char *imageData = (unsigned char *)malloc(width * height * 4); // RGBA buffer
-    nsvgRasterize(rast, image, 0, 0, 1, imageData, width, height, width * 4);
+    unsigned char *imageData = (unsigned char *)malloc(width * height * 10); // RGBA buffer
+    nsvgRasterize(rast, image, 0, 0, IMG_SCALE, imageData, width, height, width * 4);
 
     // Create SDL surface and texture
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(

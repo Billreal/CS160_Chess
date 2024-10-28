@@ -69,14 +69,20 @@ int main(int argc, char *args[])
 
 
     while (running) {
+        unsigned int frameStart = SDL_GetTicks();
+        board.clear();
         //Check if the window is running or not
         while (SDL_PollEvent(&event) != 0) {
             if (event.type == SDL_QUIT) running = false;
         }
 
+
         //Chessboard rendering
         board.renderChessboard(board1Primary, board2Primary);
-        board.render();
+        board.renderPieces();
+        board.flush();
+        unsigned int frameTime = SDL_GetTicks() - frameStart;
+        printf("Debug %u\n", frameTime);
     }
 
     // system("pause");

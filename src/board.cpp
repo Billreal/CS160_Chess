@@ -10,7 +10,17 @@ Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 void Board::loadTextures()
 {
     pieces[0][0] = loadTexture("./assets/white_pawn.png");
+    pieces[0][1] = loadTexture("./assets/white_rook.png");
+    pieces[0][2] = loadTexture("./assets/white_knight.png");
+    pieces[0][3] = loadTexture("./assets/white_bishop.png");
+    pieces[0][4] = loadTexture("./assets/white_queen.png");
+    pieces[0][5] = loadTexture("./assets/white_king.png");
     pieces[1][0] = loadTexture("./assets/black_pawn.png");
+    pieces[1][1] = loadTexture("./assets/black_rook.png");
+    pieces[1][2] = loadTexture("./assets/black_knight.png");
+    pieces[1][3] = loadTexture("./assets/black_bishop.png");
+    pieces[1][4] = loadTexture("./assets/black_queen.png");
+    pieces[1][5] = loadTexture("./assets/black_king.png");
 }
 
 void Board::render()

@@ -14,7 +14,7 @@ private:
     const int MARGIN = 80;
     const int SIDE_LENGTH = 70;
     const int BOARD_SIZE = 8;
-    const int IMG_SCALE = 1.5;
+    const float IMG_SCALE = 1.5;
     std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;
     SDL_Texture *pieces[2][6];

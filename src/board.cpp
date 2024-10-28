@@ -1,26 +1,71 @@
 #pragma once
 #include <iostream>
 #include "./../include/board.h"
+#include <math.h>
+#include <string.h>
+#include <stdio.h>
+
+#define NANOSVG_IMPLEMENTATION
+#define NANOSVGRAST_IMPLEMENTATION
+#include "./../include/nanosvg.h"
+#include "./../include/nanosvgrast.h"
 
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
     loadTextures();
 }
 
+SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
+{
+    struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
+    if (!image)
+    {
+        printf("Failed to load SVG file.\n");
+        return nullptr;
+    }
+
+    // Rasterize SVG
+    struct NSVGrasterizer *rast = nsvgCreateRasterizer();
+    unsigned char *imageData = (unsigned char *)malloc(width * height * 4); // RGBA buffer
+    nsvgRasterize(rast, image, 0, 0, 1, imageData, width, height, width * 4);
+
+    // Create SDL surface and texture
+    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(
+        imageData, width, height, 32, width * 4,
+        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    // Cleanup
+    SDL_FreeSurface(surface);
+    free(imageData);
+    nsvgDeleteRasterizer(rast);
+    nsvgDelete(image);
+
+    return texture;
+}
+
+// SDL_Texture *Board::loadTexture(const std::string &path)
+// {
+//     SDL_Surface *surface = IMG_Load(path.c_str());
+//     // Check if surface is loaded
+//     if (!surface)
+//     {
+//         SDL_Log("Failed to load texture %s: %s", path.c_str(), SDL_GetError());
+//         return nullptr;
+//     }
+//     TextureList.push_back(SDL_CreateTextureFromSurface(renderer, surface));
+//     SDL_Texture *texture = TextureList.back();
+//     SDL_FreeSurface(surface);
+//     return texture;
+// }
+
 void Board::loadTextures()
 {
-    pieces[0][0] = loadTexture("./assets/white_pawn.png");
-    pieces[0][1] = loadTexture("./assets/white_rook.png");
-    pieces[0][2] = loadTexture("./assets/white_knight.png");
-    pieces[0][3] = loadTexture("./assets/white_bishop.png");
-    pieces[0][4] = loadTexture("./assets/white_queen.png");
-    pieces[0][5] = loadTexture("./assets/white_king.png");
-    pieces[1][0] = loadTexture("./assets/black_pawn.png");
-    pieces[1][1] = loadTexture("./assets/black_rook.png");
-    pieces[1][2] = loadTexture("./assets/black_knight.png");
-    pieces[1][3] = loadTexture("./assets/black_bishop.png");
-    pieces[1][4] = loadTexture("./assets/black_queen.png");
-    pieces[1][5] = loadTexture("./assets/black_king.png");
+
+    pieces[0][0] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[1][0] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
+    // pieces[0][0] = loadTexture("./assets/white_pawn.png");
+    // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
 void Board::renderPieces()

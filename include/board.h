@@ -1,9 +1,12 @@
 #pragma once
+
 #include <SDL_image.h>
 #include <SDL.h>
-#include "colorScheme.h"
-#include <string>
+#include <math.h>
+#include <string.h>
 #include <vector>
+#include "colorScheme.h"
+
 class Board
 {
 private:
@@ -12,7 +15,7 @@ private:
     const int SIDE_LENGTH = 70;
     const int BOARD_SIZE = 8;
 
-    std::vector<SDL_Texture*> TextureList;
+    std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;
     SDL_Texture *pieces[2][6];
     void loadTextures();
@@ -26,27 +29,16 @@ public:
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }
 
-    SDL_Texture *loadTexture(const std::string &path)
-    {
-        SDL_Surface *surface = IMG_Load(path.c_str());
-        // Check if surface is loaded
-        if (!surface)
-        {
-            SDL_Log("Failed to load texture %s: %s", path.c_str(), SDL_GetError());
-            return nullptr;
-        }
-        TextureList.push_back(SDL_CreateTextureFromSurface(renderer, surface));
-        SDL_Texture *texture = TextureList.back();
-        SDL_FreeSurface(surface);
-        return texture;
-    }
+    SDL_Texture *loadTexture(const char *filePath, int width, int height);
 
+    // SDL_Texture *loadTexture(const std::string &path);
+    
     void drawTexture(SDL_Texture *texture, int x, int y, int w, int h) const
     {
         SDL_Rect infos = {x, y, w, h};
         SDL_RenderCopy(renderer, texture, nullptr, &infos);
     }
-    
+
     // Main functions
     void renderChessboard(colorRGBA primary, colorRGBA secondary);
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);

@@ -42,7 +42,7 @@ public:
     // Main functions
     void renderChessboard(colorRGBA primary, colorRGBA secondary);
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
-    void render();
+    void renderPieces();
 
     // Infos
     int getMargin();

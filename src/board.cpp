@@ -61,20 +61,21 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
 
 void Board::loadTextures()
 {
+
     pieces[0][0] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
     pieces[1][0] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
     // pieces[0][0] = loadTexture("./assets/white_pawn.png");
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
-void Board::render()
+void Board::renderPieces()
 {
-    std::cerr << "Begin rendering\n";
+    // std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     drawTexture(pieces[0][0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     drawTexture(pieces[1][0], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
-    std::cerr << "Rendering Done\n";
-    flush();
+    // std::cerr << "Rendering Done\n";
+    // flush();
 }
 
 void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
@@ -100,7 +101,7 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
             SDL_RenderFillRect(renderer, &currentCell);
         }
     // Update the screen with any rendering performed since the previous call.
-    flush();
+    // flush();
 }
 
 void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag)

@@ -26,8 +26,8 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
 
     // Rasterize SVG
     struct NSVGrasterizer *rast = nsvgCreateRasterizer();
-    unsigned char *imageData = (unsigned char *)malloc(width * height * 4); // RGBA buffer
-    nsvgRasterize(rast, image, 0, 0, 1, imageData, width, height, width * 4);
+    unsigned char *imageData = (unsigned char *)malloc(width * height * 10); // RGBA buffer
+    nsvgRasterize(rast, image, 0, 0, IMG_SCALE, imageData, width, height, width * 4);
 
     // Create SDL surface and texture
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(
@@ -63,7 +63,17 @@ void Board::loadTextures()
 {
 
     pieces[0][0] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[0][1] = loadTexture("./assets/white_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[0][2] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[0][3] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[0][4] = loadTexture("./assets/white_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[0][5] = loadTexture("./assets/white_king.svg", SIDE_LENGTH, SIDE_LENGTH);
     pieces[1][0] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[1][1] = loadTexture("./assets/black_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[1][2] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[1][3] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[1][4] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[1][5] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
     // pieces[0][0] = loadTexture("./assets/white_pawn.png");
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
@@ -72,8 +82,9 @@ void Board::renderPieces()
 {
     // std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    drawTexture(pieces[0][0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    drawTexture(pieces[1][0], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
+    for (int i = 0; i <= 1; i++)
+        for (int j = 0; j <= 5; j++)
+            drawTexture(pieces[i][j], MARGIN + i * SIDE_LENGTH, MARGIN + j * SIDE_LENGTH, SIDE_LENGTH, SIDE_LENGTH);
     // std::cerr << "Rendering Done\n";
     // flush();
 }

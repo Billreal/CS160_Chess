@@ -7,6 +7,7 @@
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
 #include "./../include/board.h"
+#include "./../include/pieces.h"
 using std::cerr, std::cout;
 
 SDL_Renderer *renderer;
@@ -71,18 +72,24 @@ int main(int argc, char *args[])
     SDL_Event event;
 
     // Chessboard rendering
-    board.renderChessboard(board1Primary, board2Primary);
-    board.render();
 
-    while (running)
-    {
-        // Check if the window is running or not
-        while (SDL_PollEvent(&event) != 0)
-        {
-            if (event.type == SDL_QUIT)
-                running = false;
-        }
-    }
+    chessPieces chess(QUEEN, WHITE, 4, 4);
+    auto dbg = chess.listAllMove();
+    for (auto x : dbg)
+        cerr << x.getX() << " " << x.getY() << "\n";
+
+    // while (running)
+    // {
+    //     // Check if the window is running or not
+    //     while (SDL_PollEvent(&event) != 0)
+    //     {
+    //         if (event.type == SDL_QUIT)
+    //             running = false;
+    //     }
+    //     board.renderChessboard(board1Primary, board2Primary);
+    //     board.renderPieces();
+    //     board.flush();
+    // }
 
     // system("pause");
     SDL_DestroyRenderer(renderer);

@@ -47,7 +47,7 @@ public:
     // Infos
     int getMargin();
     int getSideLength();
-    void setRendererColor(SDL_Renderer *renderer, colorRGBA color);
+    void setRendererColor(colorRGBA color);
 
     void flush();
 };

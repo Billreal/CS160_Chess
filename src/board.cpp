@@ -92,7 +92,7 @@ void Board::renderPieces()
 void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
 {
     // Initialize color for 1st cell as primary color
-    setRendererColor(renderer, primary);
+    setRendererColor(primary);
     for (int i = 1; i <= BOARD_SIZE; i++)
         for (int j = 1; j <= BOARD_SIZE; j++)
         {
@@ -105,9 +105,9 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
 
             // cellType = cellType ^ rotationFlag;
             if (cellType)
-                setRendererColor(renderer, primary);
+                setRendererColor(primary);
             else
-                setRendererColor(renderer, secondary);
+                setRendererColor(secondary);
             // Fill a rectangle on the current rendering target with the drawing color.
             SDL_RenderFillRect(renderer, &currentCell);
         }
@@ -144,7 +144,7 @@ int Board::getSideLength()
     return SIDE_LENGTH;
 }
 
-void Board::setRendererColor(SDL_Renderer *renderer, colorRGBA color)
+void Board::setRendererColor(colorRGBA color)
 {
     SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
 }

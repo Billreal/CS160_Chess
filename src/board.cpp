@@ -61,8 +61,22 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
 
 void Board::loadTextures()
 {
-    pieces[0][0] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[1][0] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
+    /*
+        0 -> 5: white
+        6 -> 11: black
+    */
+    pieces[0] = loadTexture("./assets/white_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[1] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[2] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[3] = loadTexture("./assets/white_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[4] = loadTexture("./assets/white_king.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[5] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[6] = loadTexture("./assets/black_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[7] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[8] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[9] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[10] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[11] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
     // pieces[0][0] = loadTexture("./assets/white_pawn.png");
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
@@ -71,8 +85,8 @@ void Board::render()
 {
     std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    drawTexture(pieces[0][0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    drawTexture(pieces[1][0], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
+    drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    drawTexture(pieces[6], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
     std::cerr << "Rendering Done\n";
     flush();
 }
@@ -122,6 +136,83 @@ void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFla
         }
 }
 
+void Board::renderStartingPosition()
+{
+    // Translate FEN notation's chess placements into an 8x8 array
+    // Direction: Left to Right, Top down
+    for (int i = 0, row = 0, column = 0; i <= boardSequence[0].length(); i++)
+    {
+        char currentChar = boardSequence[0][i];
+
+        // If there's a chess piece, place it on the board
+        int pieceIndicator;
+        if (isChessPiece(currentChar, pieceIndicator))
+        {
+            // board[row][column++] = currentChar;
+            if (0 <= pieceIndicator && pieceIndicator < 12)
+            {
+                // Draw chess piece
+                drawTexture(pieces[pieceIndicator], MARGIN + SIDE_LENGTH * row, MARGIN + SIDE_LENGTH * column, SIDE_LENGTH, SIDE_LENGTH);
+            }
+            continue;
+        }
+
+        // If there's no available piece, place a '*' onto the board instead
+        if (isNum(currentChar))
+        {
+            int blankLength = int(currentChar) - '0';
+            column = column + blankLength;
+            // while (length--)
+            // {
+            //     board[row][column++] = '*';
+            // }
+            continue;
+        }
+
+        // Moves to the next row
+        if (currentChar == '/')
+        {
+            row++;
+            // Reset column initial position on a new row
+            column = 0;
+            continue;
+        }
+    }
+}
+
+// Game update fuction
+void Board::updatePlayerStatus(std::string player)
+{
+    isPlayerTurn = player == "w" ? 1 : 0; // 1 stands for white turn, 0 for black turn
+    std::cerr << "Player " << isPlayerTurn << " is playing\n";
+}
+
+void Board::updateCastlingStatus(std::string seq)
+{
+    whiteKingSide = seq.find('K') != std::string::npos ? true : false;
+    whiteQueenSide = seq.find('Q') != std::string::npos ? true : false;
+    blackKingSide = seq.find('k') != std::string::npos ? true : false;
+    blackQueenSide = seq.find('q') != std::string::npos ? true : false;
+}
+
+// Check if en passant move is available
+void Board::updateEnPassantStatus(std::string seq)
+{
+    enPassant = seq == "-" ? false : true;
+}
+
+// Halfmoves, used to enforce the 50-move draw rule
+void Board::countHalfmove(std::string num)
+{
+    halfmoves = stringToNum(boardSequence[4]);
+}
+
+// Total moves
+void Board::countTotalMove(std::string num)
+{
+    totalmoves = stringToNum(boardSequence[5]);
+}
+
 int Board::getMargin()
 {
     return MARGIN;
@@ -135,6 +226,46 @@ int Board::getSideLength()
 void Board::setRendererColor(SDL_Renderer *renderer, colorRGBA color)
 {
     SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
+}
+
+// Utilities
+
+void Board::splitSequence(std::string str) // Input FEN Notation
+{
+    for (int i = 0, j = 0; i <= str.length(); i++)
+    {
+        if (str[i] == ' ' || str[i] == '\0')
+        {
+            j++;
+        }
+        else
+            boardSequence[j] += str[i];
+    }
+}
+
+bool Board::isChessPiece(char c, int &indicator)
+{
+    std::string ChessPiece = "RNBQKPrnbqkp";
+    bool isPiece = false;
+    for (int i = 0; i < ChessPiece.length(); i++)
+    {
+        if (c == ChessPiece[i])
+        {
+            indicator = i;
+            isPiece = true;
+        }
+    }
+    return isPiece;
+}
+
+int Board::stringToNum(std::string str)
+{
+    int num = 0;
+    for (int i = 0; i < str.length(); i++)
+    {
+        num = num * 10 + (str[i] - '0');
+    }
+    return num;
 }
 
 void Board::flush()

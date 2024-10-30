@@ -28,6 +28,7 @@ private:
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
     const float IMG_SCALE = 1.5;

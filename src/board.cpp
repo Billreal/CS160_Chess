@@ -302,3 +302,16 @@ void Board::flush()
 {
     SDL_RenderPresent(renderer);
 }
+
+bool Board::testInbound(SDL_MouseButtonEvent ev)
+{
+    // placeholder
+    return true;
+}
+
+void Board::log(SDL_MouseButtonEvent ev, std::string status)
+{
+    double mouseX = ev.x;
+    double mouseY = ev.y;
+    printf("The mouse is %s, its position is: %f %f\n", status.c_str(), mouseX, mouseY);
+}

@@ -98,4 +98,8 @@ public:
     int stringToNum(std::string str);
 
     void flush();
+
+    bool testInbound(SDL_MouseButtonEvent ev);
+
+    void log(SDL_MouseButtonEvent ev, std::string status);
 };

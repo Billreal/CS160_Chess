@@ -80,14 +80,40 @@ int main(int argc, char *args[])
 
     board.renderChessboard(board1Primary, board2Primary);
     board.renderPieces();
-
+    bool isLeftMouseHolding = false;
     while (running)
     {
         // Check if the window is running or not
         while (SDL_PollEvent(&event) != 0)
         {
-            if (event.type == SDL_QUIT)
+            switch (event.type)
+            {
+
+            case SDL_QUIT:
                 running = false;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button != SDL_BUTTON_LEFT)
+                    break;
+                isLeftMouseHolding = true;
+                board.log(event.button, "pressed");
+                break;
+            case SDL_MOUSEMOTION:
+                if (isLeftMouseHolding == false)
+                {
+                    board.log(event.button, "hovering");
+                    break;
+                }
+                board.log(event.button, "dragging");
+                break;
+
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button != SDL_BUTTON_LEFT)
+                    break;
+                isLeftMouseHolding = false;
+                board.log(event.button, "released");
+                break;
+            }
         }
         // board.flush();
     }

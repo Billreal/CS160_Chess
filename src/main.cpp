@@ -73,10 +73,13 @@ int main(int argc, char *args[])
 
     // Chessboard rendering
 
-    chessPieces chess(QUEEN, WHITE, 4, 4);
-    auto dbg = chess.listAllMove();
-    for (auto x : dbg)
-        cerr << x.getX() << " " << x.getY() << "\n";
+    // chessPieces chess(QUEEN, WHITE, 4, 4);
+    // auto dbg = chess.listAllMove();
+    // for (auto x : dbg)
+    //     cerr << x.getX() << " " << x.getY() << "\n";
+
+    board.renderChessboard(board1Primary, board2Primary);
+    board.renderPieces();
 
     while (running)
     {
@@ -86,9 +89,7 @@ int main(int argc, char *args[])
             if (event.type == SDL_QUIT)
                 running = false;
         }
-        board.renderChessboard(board1Primary, board2Primary);
-        board.renderPieces();
-        board.flush();
+        // board.flush();
     }
 
     // system("pause");

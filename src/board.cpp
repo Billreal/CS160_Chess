@@ -86,7 +86,7 @@ void Board::render()
     std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    // drawTexture(pieces[6], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
+    drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
 
     splitSequence(STARTING_FEN);
 
@@ -177,10 +177,12 @@ void Board::renderStartingPosition(std::string seq)
             {
                 // Draw chess piece
                 drawTexture(pieces[pieceIndicator],
-                            MARGIN + SIDE_LENGTH * row,
                             MARGIN + SIDE_LENGTH * column,
+                            MARGIN + SIDE_LENGTH * row,
                             SIDE_LENGTH,
                             SIDE_LENGTH);
+                column++;
+                std::cerr << row << " " << column << "\n";
             }
             continue;
         }

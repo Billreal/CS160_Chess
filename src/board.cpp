@@ -85,8 +85,21 @@ void Board::render()
 {
     std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    drawTexture(pieces[6], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
+    // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    // drawTexture(pieces[6], MARGIN + 70, MARGIN + 70, SIDE_LENGTH, SIDE_LENGTH);
+
+    splitSequence(STARTING_FEN);
+
+    if (checkBoardSeq())
+    {
+        renderStartingPosition(boardSequence[0]);
+        updatePlayerStatus(boardSequence[1]);
+        updateCastlingStatus(boardSequence[2]);
+        updateEnPassantStatus(boardSequence[3]);
+        countHalfmove(boardSequence[4]);
+        countTotalMove(boardSequence[5]);
+    }
+
     std::cerr << "Rendering Done\n";
     flush();
 }
@@ -136,13 +149,24 @@ void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFla
         }
 }
 
-void Board::renderStartingPosition()
+bool Board::checkBoardSeq()
+{
+    // Check if FEN Notation sequences are available. If not, end the function
+    for (int i = 0; i < 6; i++)
+    {
+        if (boardSequence[i].empty())
+            return false;
+    }
+    return true;
+}
+
+void Board::renderStartingPosition(std::string seq)
 {
     // Translate FEN notation's chess placements into an 8x8 array
     // Direction: Left to Right, Top down
-    for (int i = 0, row = 0, column = 0; i <= boardSequence[0].length(); i++)
+    for (int i = 0, row = 0, column = 0; i <= seq.length(); i++)
     {
-        char currentChar = boardSequence[0][i];
+        char currentChar = seq[i];
 
         // If there's a chess piece, place it on the board
         int pieceIndicator;
@@ -152,7 +176,11 @@ void Board::renderStartingPosition()
             if (0 <= pieceIndicator && pieceIndicator < 12)
             {
                 // Draw chess piece
-                drawTexture(pieces[pieceIndicator], MARGIN + SIDE_LENGTH * row, MARGIN + SIDE_LENGTH * column, SIDE_LENGTH, SIDE_LENGTH);
+                drawTexture(pieces[pieceIndicator],
+                            MARGIN + SIDE_LENGTH * row,
+                            MARGIN + SIDE_LENGTH * column,
+                            SIDE_LENGTH,
+                            SIDE_LENGTH);
             }
             continue;
         }

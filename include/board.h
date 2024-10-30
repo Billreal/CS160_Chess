@@ -63,11 +63,12 @@ public:
 
     // Main functions
     void renderChessboard(colorRGBA primary, colorRGBA secondary);
-    void renderStartingPosition();
+    void renderStartingPosition(std::string seq);
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
     void render();
 
     // Infos
+    bool checkBoardSeq();
     int getMargin();
     int getSideLength();
     void setRendererColor(SDL_Renderer *renderer, colorRGBA color);
@@ -92,15 +93,7 @@ public:
         return 0 <= (c - '0') && (c - '0') <= 9;
     }
 
-    int stringToNum(std::string str)
-    {
-        int num = 0;
-        for (int i = 0; i < str.length(); i++)
-        {
-            num = num * 10 + (str[i] - '0');
-        }
-        return num;
-    }
+    int stringToNum(std::string str);
 
     void flush();
 };

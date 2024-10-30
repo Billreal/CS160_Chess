@@ -6,7 +6,7 @@
 #include <string.h>
 #include <vector>
 #include "colorScheme.h"
-
+#include "coordinate.h"
 class Board
 {
 private:
@@ -102,4 +102,6 @@ public:
     bool testInbound(SDL_MouseButtonEvent ev);
 
     void log(SDL_MouseButtonEvent ev, std::string status);
+
+    Coordinate getPressedPieceCoord(SDL_MouseButtonEvent ev);
 };

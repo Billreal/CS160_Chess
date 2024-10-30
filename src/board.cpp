@@ -306,7 +306,9 @@ void Board::flush()
 bool Board::testInbound(SDL_MouseButtonEvent ev)
 {
     // placeholder
-    return true;
+    int maxX = MARGIN + 8 * SIDE_LENGTH;
+    int maxY = MARGIN + 8 * SIDE_LENGTH;
+    return MARGIN <= ev.x && ev.x <= maxX && MARGIN <= ev.y && ev.y <= maxY;
 }
 
 void Board::log(SDL_MouseButtonEvent ev, std::string status)
@@ -314,4 +316,18 @@ void Board::log(SDL_MouseButtonEvent ev, std::string status)
     double mouseX = ev.x;
     double mouseY = ev.y;
     printf("The mouse is %s, its position is: %f %f\n", status.c_str(), mouseX, mouseY);
+}
+
+Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
+{
+    int mouseX = ev.x;
+    int mouseY = ev.y;
+    int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH + 1;
+    int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH + 1;
+    // Fix out of bound cell
+    if (horizontalCell < 1) horizontalCell = 1;
+    if (horizontalCell > 8) horizontalCell = 8;
+    if (verticalCell < 1) verticalCell = 1;
+    if (verticalCell > 8) verticalCell = 8;
+    return Coordinate(horizontalCell, verticalCell); 
 }

@@ -8,6 +8,7 @@
 #include "./../include/colorScheme.h"
 #include "./../include/board.h"
 #include "./../include/pieces.h"
+#include "./../include/coordinate.h"
 using std::cerr, std::cout;
 
 SDL_Renderer *renderer;
@@ -90,29 +91,42 @@ int main(int argc, char *args[])
             {
 
             case SDL_QUIT:
+            {
                 running = false;
                 break;
+            }
             case SDL_MOUSEBUTTONDOWN:
+            {
                 if (event.button.button != SDL_BUTTON_LEFT)
                     break;
                 isLeftMouseHolding = true;
-                board.log(event.button, "pressed");
+                Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
+                std::cerr << "Picked up at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
+                // board.log(event.button, "pressed");
                 break;
+            }
             case SDL_MOUSEMOTION:
-                if (isLeftMouseHolding == false)
+            {
+                if (isLeftMouseHolding == false) // Mouse hover
                 {
-                    board.log(event.button, "hovering");
+                    // board.log(event.button, "hovering");
+
                     break;
                 }
-                board.log(event.button, "dragging");
-                break;
+                // board.log(event.button, "dragging"); // Mouse drag
 
+                break;
+            }
             case SDL_MOUSEBUTTONUP:
+            {
                 if (event.button.button != SDL_BUTTON_LEFT)
                     break;
                 isLeftMouseHolding = false;
-                board.log(event.button, "released");
+                Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
+                std::cerr << "Dropped at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
+                // board.log(event.button, "released");
                 break;
+            }
             }
         }
         // board.flush();

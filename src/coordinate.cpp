@@ -1,3 +1,4 @@
+#pragma once
 #include "./../include/coordinate.h"
 
 Coordinate::Coordinate()

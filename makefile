@@ -19,7 +19,8 @@ clean:
 # 	rm -f $(wildcard src/*.o)
 # 	rm -f chess.exe
 
-chess: main color board colorScheme background pieces coordinate
+# chess: main color board colorScheme background pieces coordinate
+chess: main color board colorScheme background
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER)
 
 main:

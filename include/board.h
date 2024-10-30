@@ -30,6 +30,7 @@ private:
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
+    const float IMG_SCALE = 1.5;
     std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;
     SDL_Texture *pieces[12];
@@ -65,7 +66,7 @@ public:
     void renderChessboard(colorRGBA primary, colorRGBA secondary);
     void renderStartingPosition(std::string seq);
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
-    void render();
+    void renderPieces();
 
     // Infos
     bool checkBoardSeq();

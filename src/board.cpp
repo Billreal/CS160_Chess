@@ -26,8 +26,8 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
 
     // Rasterize SVG
     struct NSVGrasterizer *rast = nsvgCreateRasterizer();
-    unsigned char *imageData = (unsigned char *)malloc(width * height * 4); // RGBA buffer
-    nsvgRasterize(rast, image, 0, 0, 1, imageData, width, height, width * 4);
+    unsigned char *imageData = (unsigned char *)malloc(width * height * 10); // RGBA buffer
+    nsvgRasterize(rast, image, 0, 0, IMG_SCALE, imageData, width, height, width * 4);
 
     // Create SDL surface and texture
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(
@@ -81,9 +81,9 @@ void Board::loadTextures()
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
-void Board::render()
+void Board::renderPieces()
 {
-    std::cerr << "Begin rendering\n";
+    // std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
@@ -127,7 +127,7 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
             SDL_RenderFillRect(renderer, &currentCell);
         }
     // Update the screen with any rendering performed since the previous call.
-    flush();
+    // flush();
 }
 
 void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag)

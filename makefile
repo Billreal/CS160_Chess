@@ -13,13 +13,13 @@ all: clean chess
 # Target to clean up object files
 clean:
 	@powershell -Command "Get-ChildItem -Path src -Filter *.o | Remove-Item -Force"
-	@powershell -Command "Remove-Item -Force chess.exe"
+	@powershell -Command "Get-ChildItem -Path src -Filter chess.exe | Remove-Item -Force"
 
 # clean:
 # 	rm -f $(wildcard src/*.o)
 # 	rm -f chess.exe
 
-chess: main color board colorScheme background
+chess: main color board colorScheme background pieces coordinate
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER)
 
 main:
@@ -36,3 +36,9 @@ colorScheme:
 
 background:
 	g++ -c src/background.cpp -o src/background.o $(COMPILER_FLAG) $(LINKER)
+
+pieces:
+	g++ -c src/pieces.cpp -o src/pieces.o $(COMPILER_FLAG) $(LINKER)
+
+coordinate:
+	g++ -c src/coordinate.cpp -o src/coordinate.o $(COMPILER_FLAG) $(LINKER)

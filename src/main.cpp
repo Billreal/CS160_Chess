@@ -109,11 +109,12 @@ int main(int argc, char *args[])
             {
                 if (isLeftMouseHolding == false) // Mouse hover
                 {
-                    // board.log(event.button, "hovering");
+                    board.log(event.button, "hovering");
 
                     break;
                 }
-                // board.log(event.button, "dragging"); // Mouse drag
+                // Mouse drags
+                board.log(event.button, "dragging"); // Mouse drag
 
                 break;
             }
@@ -129,7 +130,7 @@ int main(int argc, char *args[])
             }
             }
         }
-        // board.flush();
+        board.flush();
     }
 
     // system("pause");

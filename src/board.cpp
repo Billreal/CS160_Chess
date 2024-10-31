@@ -101,7 +101,7 @@ void Board::renderPieces()
     }
 
     std::cerr << "Rendering Done\n";
-    flush();
+    // flush();
 }
 
 void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
@@ -322,12 +322,12 @@ Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
 {
     int mouseX = ev.x;
     int mouseY = ev.y;
-    int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH + 1;
-    int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH + 1;
+    int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
+    int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
     // Fix out of bound cell
-    if (horizontalCell < 1) horizontalCell = 1;
-    if (horizontalCell > 8) horizontalCell = 8;
-    if (verticalCell < 1) verticalCell = 1;
-    if (verticalCell > 8) verticalCell = 8;
+    if (horizontalCell < 0) horizontalCell = 0;
+    if (horizontalCell > 7) horizontalCell = 7;
+    if (verticalCell < 0) verticalCell = 0;
+    if (verticalCell > 7) verticalCell = 7;
     return Coordinate(horizontalCell, verticalCell); 
 }

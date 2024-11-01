@@ -6,7 +6,7 @@
 #include <string.h>
 #include <vector>
 #include "colorScheme.h"
-
+#include "coordinate.h"
 class Board
 {
 private:
@@ -73,7 +73,7 @@ public:
     bool checkBoardSeq();
     int getMargin();
     int getSideLength();
-    void setRendererColor(SDL_Renderer *renderer, colorRGBA color);
+    void setRendererColor(colorRGBA color);
 
     // Utilities
 
@@ -98,4 +98,10 @@ public:
     int stringToNum(std::string str);
 
     void flush();
+
+    bool testInbound(SDL_MouseButtonEvent ev);
+
+    void log(SDL_MouseButtonEvent ev, std::string status);
+
+    Coordinate getPressedPieceCoord(SDL_MouseButtonEvent ev);
 };

@@ -99,6 +99,7 @@ int main(int argc, char *args[])
             {
                 if (event.button.button != SDL_BUTTON_LEFT)
                     break;
+                if (!board.testInbound(event.button)) break;
                 isLeftMouseHolding = true;
                 Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
                 std::cerr << "Picked up at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
@@ -122,6 +123,7 @@ int main(int argc, char *args[])
             {
                 if (event.button.button != SDL_BUTTON_LEFT)
                     break;
+                if (!isLeftMouseHolding) break;
                 isLeftMouseHolding = false;
                 Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
                 std::cerr << "Dropped at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";

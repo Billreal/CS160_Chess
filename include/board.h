@@ -7,6 +7,8 @@
 #include <vector>
 #include "colorScheme.h"
 #include "coordinate.h"
+#include "pieces.h"
+
 class Board
 {
 private:
@@ -56,7 +58,8 @@ public:
         SDL_RenderCopy(renderer, texture, nullptr, &infos);
     }
 
-    // Game Update, with data taken in as boardSequence[1 -> 5], which are strings
+    // Game Update, with data taken in as boardSequence[0 -> 5], which are strings
+    void convertStartingPosition(std::string seq);
     void updatePlayerStatus(std::string player);
     void updateCastlingStatus(std::string seq);
     void updateEnPassantStatus(std::string seq);
@@ -65,9 +68,8 @@ public:
 
     // Main functions
     void renderChessboard(colorRGBA primary, colorRGBA secondary);
-    void renderStartingPosition(std::string seq);
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
-    void renderPieces();
+    void ConvertFEN();
 
     // Infos
     bool checkBoardSeq();

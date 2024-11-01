@@ -81,7 +81,7 @@ void Board::loadTextures()
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
-void Board::renderPieces()
+void Board::ConvertFEN()
 {
     // std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
@@ -92,7 +92,7 @@ void Board::renderPieces()
 
     if (checkBoardSeq())
     {
-        renderStartingPosition(boardSequence[0]);
+        convertStartingPosition(boardSequence[0]);
         updatePlayerStatus(boardSequence[1]);
         updateCastlingStatus(boardSequence[2]);
         updateEnPassantStatus(boardSequence[3]);
@@ -100,7 +100,7 @@ void Board::renderPieces()
         countTotalMove(boardSequence[5]);
     }
 
-    std::cerr << "Rendering Done\n";
+    std::cerr << "Converting Done\n";
     // flush();
 }
 
@@ -160,7 +160,7 @@ bool Board::checkBoardSeq()
     return true;
 }
 
-void Board::renderStartingPosition(std::string seq)
+void Board::convertStartingPosition(std::string seq)
 {
     // Translate FEN notation's chess placements into an 8x8 array
     // Direction: Left to Right, Top down
@@ -176,13 +176,14 @@ void Board::renderStartingPosition(std::string seq)
             if (0 <= pieceIndicator && pieceIndicator < 12)
             {
                 // Draw chess piece
-                drawTexture(pieces[pieceIndicator],
-                            MARGIN + SIDE_LENGTH * column,
-                            MARGIN + SIDE_LENGTH * row,
-                            SIDE_LENGTH,
-                            SIDE_LENGTH);
+                // BOARD[row][column] = 
+                // drawTexture(pieces[pieceIndicator],
+                //             MARGIN + SIDE_LENGTH * column,
+                //             MARGIN + SIDE_LENGTH * row,
+                //             SIDE_LENGTH,
+                //             SIDE_LENGTH);
                 column++;
-                std::cerr << row << " " << column << "\n";
+                // std::cerr << row << " " << column << "\n";
             }
             continue;
         }

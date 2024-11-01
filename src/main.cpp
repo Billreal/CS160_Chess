@@ -80,7 +80,7 @@ int main(int argc, char *args[])
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
     board.renderChessboard(board1Primary, board2Primary);
-    board.renderPieces();
+    board.ConvertFEN();
     bool isLeftMouseHolding = false;
     while (running)
     {

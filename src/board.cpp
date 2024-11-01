@@ -101,13 +101,13 @@ void Board::renderPieces()
     }
 
     std::cerr << "Rendering Done\n";
-    flush();
+    // flush();
 }
 
 void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
 {
     // Initialize color for 1st cell as primary color
-    setRendererColor(renderer, primary);
+    setRendererColor(primary);
     for (int i = 1; i <= BOARD_SIZE; i++)
         for (int j = 1; j <= BOARD_SIZE; j++)
         {
@@ -120,9 +120,9 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
 
             // cellType = cellType ^ rotationFlag;
             if (cellType)
-                setRendererColor(renderer, primary);
+                setRendererColor(primary);
             else
-                setRendererColor(renderer, secondary);
+                setRendererColor(secondary);
             // Fill a rectangle on the current rendering target with the drawing color.
             SDL_RenderFillRect(renderer, &currentCell);
         }
@@ -253,7 +253,7 @@ int Board::getSideLength()
     return SIDE_LENGTH;
 }
 
-void Board::setRendererColor(SDL_Renderer *renderer, colorRGBA color)
+void Board::setRendererColor(colorRGBA color)
 {
     SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
 }
@@ -301,4 +301,33 @@ int Board::stringToNum(std::string str)
 void Board::flush()
 {
     SDL_RenderPresent(renderer);
+}
+
+bool Board::testInbound(SDL_MouseButtonEvent ev)
+{
+    // placeholder
+    int maxX = MARGIN + 8 * SIDE_LENGTH;
+    int maxY = MARGIN + 8 * SIDE_LENGTH;
+    return MARGIN <= ev.x && ev.x <= maxX && MARGIN <= ev.y && ev.y <= maxY;
+}
+
+void Board::log(SDL_MouseButtonEvent ev, std::string status)
+{
+    double mouseX = ev.x;
+    double mouseY = ev.y;
+    printf("The mouse is %s, its position is: %f %f\n", status.c_str(), mouseX, mouseY);
+}
+
+Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
+{
+    int mouseX = ev.x;
+    int mouseY = ev.y;
+    int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
+    int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
+    // Fix out of bound cell
+    if (horizontalCell < 0) horizontalCell = 0;
+    if (horizontalCell > 7) horizontalCell = 7;
+    if (verticalCell < 0) verticalCell = 0;
+    if (verticalCell > 7) verticalCell = 7;
+    return Coordinate(horizontalCell, verticalCell); 
 }

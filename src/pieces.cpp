@@ -100,3 +100,13 @@ vector<Coordinate> chessPieces::listAllMove()
     std::sort(res.begin(), res.end());
     return res;
 }
+
+
+vector<Coordinate> chessPieces::listAllMove(Coordinate current)
+{
+    Coordinate prevCoord = coordinate;
+    coordinate = current;
+    vector<Coordinate> result = listAllMove();
+    coordinate = prevCoord;
+    return result;
+}

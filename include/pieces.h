@@ -34,5 +34,6 @@ class chessPieces
     int getX();
     int getY();
     vector<Coordinate> listAllMove(); 
+    vector<Coordinate> listAllMove(Coordinate current);
 
 };

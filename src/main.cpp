@@ -87,7 +87,8 @@ int main(int argc, char *args[])
         {
             board.clear();
             board.renderChessboard(board1Primary, board2Primary);
-            // board.renderPieces();
+            board.renderPieces();
+    
             switch (event.type)
             {
 
@@ -103,7 +104,7 @@ int main(int argc, char *args[])
                 if (!board.testInbound(event.button)) break;
                 isLeftMouseHolding = true;
                 Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
-                std::cerr << "Picked up at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
+                // std::cerr << "Picked up at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
                 // board.log(event.button, "pressed");
                 break;
             }
@@ -111,12 +112,12 @@ int main(int argc, char *args[])
             {
                 if (isLeftMouseHolding == false) // Mouse hover
                 {
-                    board.log(event.button, "hovering");
+                    // board.log(event.button, "hovering");
 
                     break;
                 }
                 // Mouse drags
-                board.log(event.button, "dragging"); // Mouse drag
+                // board.log(event.button, "dragging"); // Mouse drag
                 board.renderPiece(ROOK, WHITE, event.button.x, event.button.y);
                 break;
             }
@@ -127,7 +128,7 @@ int main(int argc, char *args[])
                 if (!isLeftMouseHolding) break;
                 isLeftMouseHolding = false;
                 Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
-                std::cerr << "Dropped at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
+                // std::cerr << "Dropped at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
                 // board.log(event.button, "released");
                 break;
             }

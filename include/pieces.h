@@ -5,20 +5,20 @@ using std::string;
 using std::vector;
 enum chessName 
 {
-    CHESS_NONE,
-    PAWN,
+    CHESS_NONE = -1,
     ROOK,
     KNIGHT,
     BISHOP,
     QUEEN,
     KING,
+    PAWN,
 };
 
 enum chessColor
 {
-    COLOR_NONE,
-    BLACK,
+    COLOR_NONE = -1,
     WHITE,
+    BLACK,
 };
 class chessPieces
 {

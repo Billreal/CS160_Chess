@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL.h>
 class Coordinate
 {
     private:
@@ -8,6 +9,8 @@ class Coordinate
     public:
     Coordinate();
     Coordinate(int x, int y);
+    Coordinate(SDL_MouseButtonEvent ev);
+
     int getX();
     int getY();
     Coordinate operator+(Coordinate x);

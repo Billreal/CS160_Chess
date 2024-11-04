@@ -164,6 +164,7 @@ void Board::renderStartingPosition(std::string seq)
 {
     // Translate FEN notation's chess placements into an 8x8 array
     // Direction: Left to Right, Top down
+    std::cerr << seq << "\n";
     for (int i = 0, row = 0, column = 0; i <= seq.length(); i++)
     {
         char currentChar = seq[i];
@@ -256,12 +257,13 @@ int Board::getSideLength()
 void Board::setRendererColor(colorRGBA color)
 {
     SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
-}
+} 
 
 // Utilities
 
 void Board::splitSequence(std::string str) // Input FEN Notation
 {
+    for (int i = 0; i <= 5; i++) boardSequence[i] = "";
     for (int i = 0, j = 0; i <= str.length(); i++)
     {
         if (str[i] == ' ' || str[i] == '\0')
@@ -298,10 +300,6 @@ int Board::stringToNum(std::string str)
     return num;
 }
 
-void Board::flush()
-{
-    SDL_RenderPresent(renderer);
-}
 
 bool Board::testInbound(SDL_MouseButtonEvent ev)
 {
@@ -330,4 +328,12 @@ Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
     if (verticalCell < 0) verticalCell = 0;
     if (verticalCell > 7) verticalCell = 7;
     return Coordinate(horizontalCell, verticalCell); 
+}
+
+void Board::renderPiece(int pieceName, int color, int x, int y)
+{
+    if (color < 0 || pieceName < 0) return;
+    int pieceIndex = pieceName + color * 6;
+    drawTexture(pieces[pieceIndex], x - SIDE_LENGTH / 2, y - SIDE_LENGTH / 2, SIDE_LENGTH, SIDE_LENGTH);
+    // SDL_Log("Rendering chess pieces at %d %d", x, y);
 }

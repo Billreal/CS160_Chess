@@ -1,6 +1,6 @@
 #pragma once
 #include "./../include/coordinate.h"
-
+#include <SDL.h>
 Coordinate::Coordinate()
 {
     x = 0;
@@ -11,6 +11,11 @@ Coordinate::Coordinate(int x, int y)
 {
     this -> x = x;
     this -> y = y;
+}
+
+Coordinate::Coordinate(SDL_MouseButtonEvent ev)
+{
+    Coordinate(ev.x, ev.y);
 }
 
 int Coordinate::getX()

@@ -182,7 +182,7 @@ void Board::renderStartingPosition(std::string seq)
                             SIDE_LENGTH,
                             SIDE_LENGTH);
                 column++;
-                std::cerr << row << " " << column << "\n";
+                // std::cerr << row << " " << column << "\n";
             }
             continue;
         }
@@ -298,10 +298,6 @@ int Board::stringToNum(std::string str)
     return num;
 }
 
-void Board::flush()
-{
-    SDL_RenderPresent(renderer);
-}
 
 bool Board::testInbound(SDL_MouseButtonEvent ev)
 {
@@ -330,4 +326,12 @@ Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
     if (verticalCell < 0) verticalCell = 0;
     if (verticalCell > 7) verticalCell = 7;
     return Coordinate(horizontalCell, verticalCell); 
+}
+
+void Board::renderPiece(int pieceName, int color, int x, int y)
+{
+    if (color < 0 || pieceName < 0) return;
+    int pieceIndex = pieceName + color * 6;
+    drawTexture(pieces[pieceIndex], x - SIDE_LENGTH / 2, y - SIDE_LENGTH / 2, SIDE_LENGTH, SIDE_LENGTH);
+    SDL_Log("Rendering chess pieces at %d %d", x, y);
 }

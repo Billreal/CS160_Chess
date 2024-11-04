@@ -79,14 +79,15 @@ int main(int argc, char *args[])
     // for (auto x : dbg)
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
-    board.renderChessboard(board1Primary, board2Primary);
-    board.renderPieces();
     bool isLeftMouseHolding = false;
     while (running)
     {
         // Check if the window is running or not
         while (SDL_PollEvent(&event) != 0)
         {
+            board.clear();
+            board.renderChessboard(board1Primary, board2Primary);
+            // board.renderPieces();
             switch (event.type)
             {
 
@@ -116,7 +117,7 @@ int main(int argc, char *args[])
                 }
                 // Mouse drags
                 board.log(event.button, "dragging"); // Mouse drag
-
+                board.renderPiece(ROOK, WHITE, event.button.x, event.button.y);
                 break;
             }
             case SDL_MOUSEBUTTONUP:
@@ -131,8 +132,8 @@ int main(int argc, char *args[])
                 break;
             }
             }
+            board.present();
         }
-        board.flush();
     }
 
     // system("pause");

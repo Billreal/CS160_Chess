@@ -68,6 +68,7 @@ int main(int argc, char *args[])
     background.render(bgColor);
 
     Board board(renderer);
+    ChessPieces pieces(renderer);
 
     // Handling SDL_events
     SDL_Event event;

@@ -1,47 +1,10 @@
 #pragma once
 #include <iostream>
 #include "./../include/board.h"
-#include <math.h>
-#include <string.h>
-#include <stdio.h>
-
-#define NANOSVG_IMPLEMENTATION
-#define NANOSVGRAST_IMPLEMENTATION
-#include "./../include/nanosvg.h"
-#include "./../include/nanosvgrast.h"
 
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
-    loadTextures();
-}
-
-SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
-{
-    struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
-    if (!image)
-    {
-        printf("Failed to load SVG file.\n");
-        return nullptr;
-    }
-
-    // Rasterize SVG
-    struct NSVGrasterizer *rast = nsvgCreateRasterizer();
-    unsigned char *imageData = (unsigned char *)malloc(width * height * 10); // RGBA buffer
-    nsvgRasterize(rast, image, 0, 0, IMG_SCALE, imageData, width, height, width * 4);
-
-    // Create SDL surface and texture
-    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(
-        imageData, width, height, 32, width * 4,
-        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    // Cleanup
-    SDL_FreeSurface(surface);
-    free(imageData);
-    nsvgDeleteRasterizer(rast);
-    nsvgDelete(image);
-
-    return texture;
+    // loadTextures();
 }
 
 // SDL_Texture *Board::loadTexture(const std::string &path)
@@ -59,26 +22,24 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
 //     return texture;
 // }
 
-void Board::loadTextures()
+void Board::initPieces()
 {
     /*
         0 -> 5: white
         6 -> 11: black
     */
-    pieces[0] = loadTexture("./assets/white_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[1] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[2] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[3] = loadTexture("./assets/white_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[4] = loadTexture("./assets/white_king.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[5] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[6] = loadTexture("./assets/black_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[7] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[8] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[9] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[10] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[11] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
-    // pieces[0][0] = loadTexture("./assets/white_pawn.png");
-    // pieces[1][0] = loadTexture("./assets/black_pawn.png");
+    pieces[0].update(WHITE, ROOK);
+    pieces[1] = {chessColor::WHITE, chessName::KNIGHT};
+    pieces[2] = {chessColor::WHITE, chessName::BISHOP};
+    pieces[3] = {chessColor::WHITE, chessName::QUEEN};
+    pieces[4] = {chessColor::WHITE, chessName::KING};
+    pieces[5] = {chessColor::WHITE, chessName::PAWN};
+    pieces[6] = {chessColor::BLACK, chessName::ROOK};
+    pieces[7] = {chessColor::BLACK, chessName::KNIGHT};
+    pieces[8] = {chessColor::BLACK, chessName::BISHOP};
+    pieces[9] = {chessColor::BLACK, chessName::QUEEN};
+    pieces[10] = {chessColor::BLACK, chessName::KING};
+    pieces[11] = {chessColor::BLACK, chessName::PAWN};
 }
 
 void Board::ConvertFEN()
@@ -130,20 +91,19 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
     // flush();
 }
 
-void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag)
+void Board::renderPieces(colorRGBA primary, colorRGBA secondary, bool rotationFlag)
 {
-    // i is row index
-    // j is column index
     // * Bottom to up, left to right
-    for (int i = 1; i <= BOARD_SIZE; i++)
-        for (int j = 1; j <= BOARD_SIZE; j++)
+    for (int row = 1; row <= BOARD_SIZE; row++)
+        for (int column = 1; column <= BOARD_SIZE; column++)
         {
-            if (j != 1 || i != BOARD_SIZE)
-                continue;
-            bool cellType = (i + j) % 2 ^ 1; // As to contrast the cell's color
-            int currentX = MARGIN + SIDE_LENGTH * (i - 1);
-            int currentY = MARGIN + SIDE_LENGTH * (j - 1);
-            // if (i == BOARD_SIZE)
+            // Draw chess piece
+            drawTexture(BOARD[row][column].texture)
+                        MARGIN + SIDE_LENGTH * column,
+                        MARGIN + SIDE_LENGTH * row,
+                        SIDE_LENGTH,
+                        SIDE_LENGTH);
+            if (i == BOARD_SIZE)
 
             // if (j == 1)
         }
@@ -175,8 +135,7 @@ void Board::convertStartingPosition(std::string seq)
             // board[row][column++] = currentChar;
             if (0 <= pieceIndicator && pieceIndicator < 12)
             {
-                // Draw chess piece
-                // BOARD[row][column] = 
+                BOARD[row][column].update()
                 // drawTexture(pieces[pieceIndicator],
                 //             MARGIN + SIDE_LENGTH * column,
                 //             MARGIN + SIDE_LENGTH * row,

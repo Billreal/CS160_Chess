@@ -12,39 +12,42 @@
 
 ChessPieces::ChessPieces(SDL_Renderer *renderer) : renderer(renderer)
 {
-    loadTextures();
+    initMap();
 }
 
-// void ChessPieces::loadTextures()
-// {
-// textures[WHITE][PAWN] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[BLACK][PAWN] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[WHITE][ROOK] = loadTexture("./assets/white_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[BLACK][ROOK] = loadTexture("./assets/black_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[WHITE][KNIGHT] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[BLACK][KNIGHT] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[WHITE][BISHOP] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[BLACK][BISHOP] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[WHITE][QUEEN] = loadTexture("./assets/white_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[BLACK][QUEEN] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[WHITE][KING] = loadTexture("./assets/white_king.svg", SIDE_LENGTH, SIDE_LENGTH);
-// textures[BLACK][KING] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
-// }
+void ChessPieces::initMap(){
+    //init name map
+    nameMap[CHESS_NONE] = "NONE";
+    nameMap[PAWN] = "PAWN";
+    nameMap[ROOK] = "ROOK";
+    nameMap[KNIGHT] = "KNIGHT";
+    nameMap[BISHOP] = "BISHOP";
+    nameMap[QUEEN] = "QUEEN";
+    nameMap[KING] = "KING";
+    //init color map
+    colorMap[COLOR_NONE] = "NONE";
+    colorMap[BLACK] = "BLACK";
+    colorMap[WHITE] = "WHITE";
+}
 
-void ChessPieces::update(chessName name, chessColor color, int row, int column)
+
+// textures[BLACK][KING] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
+void ChessPieces::update(chessColor color, chessName name, int row, int column)
 {
     ChessPieces::name = name;
     ChessPieces::color = color;
-    const string PATH = "./assets/" + nameMap[name] + "_" + colorMap[color] + ".svg";
-    texture = loadTexture(PATH.c_str(), SIDE_LENGTH, SIDE_LENGTH);
     coordinate = Coordinate(row, column);
 }
 
-ChessPieces::ChessPieces(chessName name, chessColor color, int row, int column) : name(name), color(color)
+void ChessPieces::update(chessColor color, chessName name)
 {
-    // string path = "./assets/" + color + "_" + name + ".svg";
-    // texture = loadTexture(path.c_str(), SIDE_LENGTH, SIDE_LENGTH);
-    coordinate = Coordinate(row, column);
+    ChessPieces::name = name;
+    ChessPieces::color = color;
+}
+
+void ChessPieces::update(SDL_Renderer *renderer)
+{
+    ChessPieces::renderer = renderer;
 }
 
 SDL_Texture *ChessPieces::loadTexture(const char *filePath, int width, int height)
@@ -76,9 +79,17 @@ SDL_Texture *ChessPieces::loadTexture(const char *filePath, int width, int heigh
     return texture;
 }
 
-SDL_Texture ChessPieces::*getTexture(){
-    // SDL_Texture *texture = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
-    return ChessPieces::texture;
+SDL_Texture *ChessPieces::getTexture(){
+    const string PATH = "./assets/" + nameMap[name] + "_" + colorMap[color] + ".svg";
+    return loadTexture(PATH.c_str(), SIDE_LENGTH, SIDE_LENGTH);;
+}
+
+chessColor ChessPieces::getColor(){
+    return color;
+}
+
+chessName ChessPieces::getName(){
+    return name;
 }
 
 int ChessPieces::getX()

@@ -19,10 +19,10 @@ private:
     const int SIDE_LENGTH = 70;
     const int BOARD_SIZE = 8;
 
-    std::map<int, ChessPieces> BOARD[8][8];
+    std::map<int, ChessPieces> BOARD;
 
     // Pieces
-    ChessPieces piece;
+    std::map<int, ChessPieces> pieces;
 
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
     int isPlayerTurn; // contains either 0 or 1, whiÍÍÍch 1 stands for white turn, 0 for black turn
@@ -38,12 +38,12 @@ private:
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
-    std::map<int, ChessPieces> pieces;
     std::vector<std::string> MOVES;
 
     // std::vector<SDL_Texture *> TextureList;
     // SDL_Texture *boardTexture;
     void initPieces();
+    void initPiecesRenderer();
 
 public:
 

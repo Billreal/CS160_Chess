@@ -9,20 +9,20 @@ using std::string;
 using std::vector;
 enum chessName
 {
-    CHESS_NONE,
-    PAWN,
+    CHESS_NONE = -1,
     ROOK,
     KNIGHT,
     BISHOP,
     QUEEN,
     KING,
+    PAWN,
 };
 
 enum chessColor
 {
-    COLOR_NONE,
-    BLACK,
+    COLOR_NONE = -1,
     WHITE,
+    BLACK,
 };
 
 class ChessPieces
@@ -30,23 +30,12 @@ class ChessPieces
 private:
     
     std::map<int, std::string> nameMap;
-    // nameMap[0] = "NONE";
-    nameMap[PAWN] = "PAWN";
-    nameMap[ROOK] = "ROOK";
-    nameMap[KNIGHT] = "KNIGHT";
-    nameMap[BISHOP] = "BISHOP";
-    nameMap[QUEEN] = "QUEEN";
-    nameMap[KING] = "KING";
     std::map<int, string> colorMap;
-    // colorMap[COLOR_NONE] = "NONE";
-    // colorMap[BLACK] = "BLACK";
-    // colorMap[WHITE] = "WHITE";
 
     SDL_Renderer *renderer = NULL;
     Coordinate coordinate;
     chessName name;
     chessColor color;
-    SDL_Texture *texture;
     const int MARGIN = 80;
     const int SIDE_LENGTH = 70;
     const int BOARD_SIZE = 8;
@@ -58,15 +47,19 @@ private:
 
 public:
     ChessPieces(SDL_Renderer *renderer);
-    ChessPieces(chessName name, chessColor color, int row, int column);
+
 
     SDL_Texture *loadTexture(const char *filePath, int width, int height);
 
-    void update(chessName name, chessColor color, int row, int column);
-    void loadTextures();
+    void update(chessColor color, chessName name, int row, int column);
+    void update(chessColor color, chessName name);
+    void update(SDL_Renderer *renderer);
+    void initMap();
     
     // Get Infos
     SDL_Texture *getTexture();
+    chessColor getColor();
+    chessName getName();
     int getX();
     int getY();
     vector<Coordinate> listAllMove();

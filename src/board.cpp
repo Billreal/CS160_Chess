@@ -4,7 +4,7 @@
 
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
-    // loadTextures();
+    initPieces();
 }
 
 // SDL_Texture *Board::loadTexture(const std::string &path)
@@ -22,24 +22,33 @@ Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 //     return texture;
 // }
 
+void Board::initPiecesRenderer(){
+}
+
 void Board::initPieces()
 {
     /*
         0 -> 5: white
         6 -> 11: black
     */
+    for (int i = 0; i <= 11; i++) pieces[i].update(renderer);
+    // for (int color = WHITE; color <= BLACK; color++){
+    //     for(int name = ROOK; name <= PAWN; name++){
+    //         pieces[color * 6 + name].update(color, name);
+    //     }
+    // }
     pieces[0].update(WHITE, ROOK);
-    pieces[1] = {chessColor::WHITE, chessName::KNIGHT};
-    pieces[2] = {chessColor::WHITE, chessName::BISHOP};
-    pieces[3] = {chessColor::WHITE, chessName::QUEEN};
-    pieces[4] = {chessColor::WHITE, chessName::KING};
-    pieces[5] = {chessColor::WHITE, chessName::PAWN};
-    pieces[6] = {chessColor::BLACK, chessName::ROOK};
-    pieces[7] = {chessColor::BLACK, chessName::KNIGHT};
-    pieces[8] = {chessColor::BLACK, chessName::BISHOP};
-    pieces[9] = {chessColor::BLACK, chessName::QUEEN};
-    pieces[10] = {chessColor::BLACK, chessName::KING};
-    pieces[11] = {chessColor::BLACK, chessName::PAWN};
+    pieces[1].update(WHITE, KNIGHT);
+    pieces[2].update(WHITE, BISHOP);
+    pieces[3].update(WHITE, QUEEN);
+    pieces[4].update(WHITE, KING);
+    pieces[5].update(WHITE, PAWN);
+    pieces[6].update(BLACK, ROOK);
+    pieces[7].update(BLACK, KNIGHT);
+    pieces[8].update(BLACK, BISHOP);
+    pieces[9].update(BLACK, QUEEN);
+    pieces[10].update(BLACK, KING);
+    pieces[11].update(BLACK, PAWN);
 }
 
 void Board::ConvertFEN()
@@ -98,12 +107,12 @@ void Board::renderPieces(colorRGBA primary, colorRGBA secondary, bool rotationFl
         for (int column = 1; column <= BOARD_SIZE; column++)
         {
             // Draw chess piece
-            drawTexture(BOARD[row][column].texture)
+            drawTexture(BOARD[row * 8 + column].getTexture(),
                         MARGIN + SIDE_LENGTH * column,
                         MARGIN + SIDE_LENGTH * row,
                         SIDE_LENGTH,
                         SIDE_LENGTH);
-            if (i == BOARD_SIZE)
+            // if (row == BOARD_SIZE)
 
             // if (j == 1)
         }
@@ -135,7 +144,10 @@ void Board::convertStartingPosition(std::string seq)
             // board[row][column++] = currentChar;
             if (0 <= pieceIndicator && pieceIndicator < 12)
             {
-                BOARD[row][column].update()
+                BOARD[row * 8 + column].update(pieces[pieceIndicator].getColor(), 
+                                        pieces[pieceIndicator].getName(), 
+                                        row, 
+                                        column);
                 // drawTexture(pieces[pieceIndicator],
                 //             MARGIN + SIDE_LENGTH * column,
                 //             MARGIN + SIDE_LENGTH * row,

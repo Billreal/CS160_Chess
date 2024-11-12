@@ -286,7 +286,7 @@ bool Board::isChessPiece(char c, int &indicator)
             indicator = i;
             isPiece = true;
         }
-    }
+    } 
     return isPiece;
 }
 

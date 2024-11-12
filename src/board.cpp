@@ -13,6 +13,12 @@
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
     loadTextures();
+    background = Background(renderer);
+}
+Board::Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor) : renderer(renderer), primaryColor(primaryColor), secondaryColor(secondaryColor), backgroundColor(backgroundColor)
+{
+    loadTextures();
+    background = Background(renderer);
 }
 
 SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
@@ -495,6 +501,12 @@ void Board::renderChessboard()
 }
 void Board::render()
 {
+    background.render(backgroundColor);
     renderChessboard();
     renderFromBoard();
+}
+
+void Board::setBackground(colorRGBA bg)
+{
+    backgroundColor = bg;
 }

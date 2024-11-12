@@ -5,18 +5,21 @@
 #include <math.h>
 #include <string.h>
 #include <vector>
+#include "background.h"
 #include "colorScheme.h"
 #include "coordinate.h"
 class Board
 {
 private:
     SDL_Renderer *renderer = NULL;
+    Background background;
     const int MARGIN = 80;
     const int SIDE_LENGTH = 70;
     static const int BOARD_SIZE = 8;
     char board[BOARD_SIZE][BOARD_SIZE];
     colorRGBA primaryColor;
     colorRGBA secondaryColor;
+    colorRGBA backgroundColor;
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
     int isPlayerTurn; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
     bool whiteKingSide;
@@ -42,6 +45,7 @@ private:
 
 public:
     Board(SDL_Renderer *renderer);
+    Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor);
 
     // Clear renderer
     void clear() const { SDL_RenderClear(renderer); }
@@ -135,4 +139,5 @@ public:
     void setColor(colorRGBA primary, colorRGBA secondary);
 
     void render();
+    void setBackground(colorRGBA bg);
 };

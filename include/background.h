@@ -9,4 +9,5 @@ private:
 public:
     void render(colorRGBA color);
     Background(SDL_Renderer *renderer);
+    Background();
 };

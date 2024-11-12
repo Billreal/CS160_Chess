@@ -64,10 +64,10 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    Background background(renderer);
-    background.render(bgColor);
+    // Background background(renderer);
+    // background.render(bgColor);
 
-    Board board(renderer);
+    Board board(renderer, board1Primary, board2Primary, bgColor);
 
     // Handling SDL_events
     SDL_Event event;

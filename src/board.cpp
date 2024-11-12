@@ -346,7 +346,7 @@ void Board::renderPiece(int pieceName, int color, int x, int y)
 }
 void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
 {
-    renderPiece(pieceName, color, x - SIDE_LENGTH / x, y - SIDE_LENGTH / 2);
+    renderPiece(pieceName, color, x - SIDE_LENGTH / 2, y - SIDE_LENGTH / 2);
     // SDL_Log("Rendering chess pieces at %d %d", x, y);
 }
 

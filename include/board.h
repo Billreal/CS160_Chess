@@ -32,8 +32,8 @@ private:
 
     // FEN Notation
     std::string boardSequence[6] = {""};
-    // std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
+    std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
     const float IMG_SCALE = 1.5;
@@ -45,6 +45,7 @@ private:
 
 public:
     Board(SDL_Renderer *renderer);
+    
     Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor);
 
     // Clear renderer
@@ -65,22 +66,33 @@ public:
 
     // Game Update, with data taken in as boardSequence[1 -> 5], which are strings
     void updatePlayerStatus(std::string player);
+    
     void updateCastlingStatus(std::string seq);
+    
     void updateEnPassantStatus(std::string seq);
+    
     void countHalfmove(std::string num); // used to enforce the 50-move draw rule
+    
     void countTotalMove(std::string num);
 
     // Main functions
     void renderChessboard(colorRGBA primary, colorRGBA secondary);
+    
     void renderChessboard();
+    
     void renderStartingPosition(std::string seq);
+    
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
+    
     void renderPieces();
 
     // Infos
     bool checkBoardSeq();
+    
     int getMargin();
+    
     int getSideLength();
+    
     void setRendererColor(colorRGBA color);
 
     // Utilities
@@ -98,10 +110,7 @@ public:
 
     bool isChessPiece(char c, int &indicator);
 
-    bool isNum(char c)
-    {
-        return 0 <= (c - '0') && (c - '0') <= 9;
-    }
+    bool isNum(char c);
 
     int stringToNum(std::string str);
 
@@ -114,7 +123,9 @@ public:
     Coordinate getPieceCoord(int x, int y);
 
     void renderPieceByCoordinate(int pieceName, int color, int x, int y);
+    
     void renderPieceByCursor(int pieceName, int color, int x, int y);
+    
     void renderPieceByCursor(char piece, int x, int y);
 
     void parseFENToBoard(std::string fenConfig);
@@ -130,14 +141,20 @@ public:
     char getPiece(Coordinate coord);
 
     void deleteCell(int x, int y);
+    
     void deleteCell(Coordinate coord);
 
     void writeCell(int x, int y, char piece);
+    
     void writeCell(Coordinate coord, char piece);
+    
     void debugBoard();
 
     void setColor(colorRGBA primary, colorRGBA secondary);
 
     void render();
+    
     void setBackground(colorRGBA bg);
+
+    void renderMove();
 };

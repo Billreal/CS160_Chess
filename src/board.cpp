@@ -4,12 +4,12 @@
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
-
+// #include "./../include/colorScheme.h"
 #define NANOSVG_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
-
+// #include "colorScheme.cpp"
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
     loadTextures();
@@ -151,9 +151,6 @@ void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFla
             bool cellType = (i + j) % 2 ^ 1; // As to contrast the cell's color
             int currentX = MARGIN + SIDE_LENGTH * (i - 1);
             int currentY = MARGIN + SIDE_LENGTH * (j - 1);
-            // if (i == BOARD_SIZE)
-
-            // if (j == 1)
         }
 }
 
@@ -357,6 +354,7 @@ void Board::renderPiece(int pieceName, int color, int x, int y)
     drawTexture(pieces[pieceIndex], x, y, SIDE_LENGTH, SIDE_LENGTH);
     // SDL_Log("Rendering chess pieces at %d %d", x, y);
 }
+
 void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
 {
     // std::swap(x, y);
@@ -369,6 +367,7 @@ void Board::renderPieceByCursor(char piece, int x, int y)
 {
     renderPieceByCursor(getPieceName(piece), getPieceColor(piece), x, y);
 }
+
 void Board::renderPieceByCoordinate(int pieceName, int color, int x, int y)
 {
     renderPiece(pieceName, color, MARGIN + x * SIDE_LENGTH, MARGIN + y * SIDE_LENGTH);
@@ -451,12 +450,14 @@ int Board::getPieceName(char piece)
 }
 
 // TODO: Implement chess piece moving
+
 char Board::getPiece(int x, int y)
 {
     std::swap(x, y);
     // Coordinate boardCoordinate = getPieceCoord(x, y);
     return board[x][y];
 }
+
 char Board::getPiece(Coordinate coord)
 {
     return getPiece(coord.getX(), coord.getY());
@@ -467,15 +468,18 @@ void Board::deleteCell(int x, int y)
     std::swap(x, y);
     board[x][y] = '0';
 }
+
 void Board::writeCell(int x, int y, char piece)
 {
     std::swap(x, y);
     board[x][y] = piece;
 }
+
 void Board::deleteCell(Coordinate coord)
 {
     deleteCell(coord.getX(), coord.getY());
 }
+
 void Board::writeCell(Coordinate coord, char piece)
 {
     writeCell(coord.getX(), coord.getY(), piece);
@@ -499,6 +503,7 @@ void Board::renderChessboard()
 {
     renderChessboard(primaryColor, secondaryColor);
 }
+
 void Board::render()
 {
     background.render(backgroundColor);
@@ -509,4 +514,19 @@ void Board::render()
 void Board::setBackground(colorRGBA bg)
 {
     backgroundColor = bg;
+}
+
+bool Board::isNum(char c)
+{
+    return 0 <= (c - '0') && (c - '0') <= 9;
+}
+// TODO: render next move possible for a chess
+
+// colorRGBA indicator(75, 72, 71, 127);
+void Board::renderMove()
+{
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    setRendererColor(moveIndicator);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
 }

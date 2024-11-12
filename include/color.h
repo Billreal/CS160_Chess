@@ -13,5 +13,6 @@ public:
     int getG();
     int getB();
     int getA();
-    
+     
+    colorRGBA();
 };

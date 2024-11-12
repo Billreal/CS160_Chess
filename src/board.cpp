@@ -102,7 +102,7 @@ void Board::renderPieces()
         countTotalMove(boardSequence[5]);
     }
 
-    std::cerr << "Rendering Done\n";
+    // std::cerr << "Rendering Done\n";
     // flush();
 }
 
@@ -217,7 +217,7 @@ void Board::renderStartingPosition(std::string seq)
 void Board::updatePlayerStatus(std::string player)
 {
     isPlayerTurn = player == "w" ? 1 : 0; // 1 stands for white turn, 0 for black turn
-    std::cerr << "Player " << isPlayerTurn << " is playing\n";
+    // std::cerr << "Player " << isPlayerTurn << " is playing\n";
 }
 
 void Board::updateCastlingStatus(std::string seq)
@@ -318,10 +318,10 @@ void Board::log(SDL_MouseButtonEvent ev, std::string status)
     printf("The mouse is %s, its position is: %f %f\n", status.c_str(), mouseX, mouseY);
 }
 
-Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
+Coordinate Board::getPieceCoord(int x, int y)
 {
-    int mouseX = ev.x;
-    int mouseY = ev.y;
+    int mouseX = x;
+    int mouseY = y;
     int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
     int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
     // Fix out of bound cell
@@ -336,8 +336,15 @@ Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
     return Coordinate(horizontalCell, verticalCell);
 }
 
+Coordinate Board::getPieceCoord(SDL_MouseButtonEvent ev)
+{
+    return getPieceCoord(ev.x, ev.y);
+}
+
 void Board::renderPiece(int pieceName, int color, int x, int y)
 {
+    // std::swap(x, y);
+    // Swapped x and y for real positioning
     if (color < 0 || pieceName < 0)
         return;
     int pieceIndex = pieceName + color * 6;
@@ -346,10 +353,16 @@ void Board::renderPiece(int pieceName, int color, int x, int y)
 }
 void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
 {
+    // std::swap(x, y);
+    // Swapped x and y
     renderPiece(pieceName, color, x - SIDE_LENGTH / 2, y - SIDE_LENGTH / 2);
     // SDL_Log("Rendering chess pieces at %d %d", x, y);
 }
 
+void Board::renderPieceByCursor(char piece, int x, int y)
+{
+    renderPieceByCursor(getPieceName(piece), getPieceColor(piece), x, y);
+}
 void Board::renderPieceByCoordinate(int pieceName, int color, int x, int y)
 {
     renderPiece(pieceName, color, MARGIN + x * SIDE_LENGTH, MARGIN + y * SIDE_LENGTH);
@@ -357,7 +370,7 @@ void Board::renderPieceByCoordinate(int pieceName, int color, int x, int y)
 
 void Board::parseFENToBoard(std::string fenConfig)
 {
-    std::cerr << fenConfig << "\n";
+    // std::cerr << fenConfig << "\n";
     int row = 0;
     int col = 0;
     for (int i = 0; i < 8; i++)
@@ -381,9 +394,9 @@ void Board::parseFENToBoard(std::string fenConfig)
         board[row][col] = chr;
         col++;
     }
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            std::cerr << board[i][j] << " \n"[j == 7];
+    // for (int i = 0; i < 8; i++)
+    //     for (int j = 0; j < 8; j++)
+    //         std::cerr << board[i][j] << " \n"[j == 7];
 }
 
 void Board::renderFromBoard()
@@ -429,4 +442,59 @@ int Board::getPieceName(char piece)
     default:
         return -1;
     }
+}
+
+// TODO: Implement chess piece moving
+char Board::getPiece(int x, int y)
+{
+    std::swap(x, y);
+    // Coordinate boardCoordinate = getPieceCoord(x, y);
+    return board[x][y];
+}
+char Board::getPiece(Coordinate coord)
+{
+    return getPiece(coord.getX(), coord.getY());
+}
+
+void Board::deleteCell(int x, int y)
+{
+    std::swap(x, y);
+    board[x][y] = '0';
+}
+void Board::writeCell(int x, int y, char piece)
+{
+    std::swap(x, y);
+    board[x][y] = piece;
+}
+void Board::deleteCell(Coordinate coord)
+{
+    deleteCell(coord.getX(), coord.getY());
+}
+void Board::writeCell(Coordinate coord, char piece)
+{
+    writeCell(coord.getX(), coord.getY(), piece);
+}
+
+void Board::debugBoard()
+{
+    for (int i = 0; i <= 7; i++)
+        for (int j = 0; j <= 7; j++)
+            std::cerr << board[i][j] << " \n"[j == 7];
+    std::cerr << "\n";
+}
+
+void Board::setColor(colorRGBA primary, colorRGBA secondary)
+{
+    primaryColor = primary;
+    secondaryColor = secondary;
+}
+
+void Board::renderChessboard()
+{
+    renderChessboard(primaryColor, secondaryColor);
+}
+void Board::render()
+{
+    renderChessboard();
+    renderFromBoard();
 }

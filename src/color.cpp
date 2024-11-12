@@ -27,3 +27,8 @@ int colorRGBA::getA()
 {
     return a;
 }
+
+colorRGBA::colorRGBA()
+{
+    r = g = b = a = 0;
+}

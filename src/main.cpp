@@ -80,18 +80,18 @@ int main(int argc, char *args[])
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
     bool isLeftMouseHolding = false;
+    char pickedPiece = ' ';
+    board.setColor(board1Primary, board2Primary);
+    board.renderPieces();
+    board.render();
+    board.present();
     while (running)
     {
         // Check if the window is running or not
-        while (SDL_PollEvent(&event) != 0)
+        do
         {
-            board.clear();
-            board.renderChessboard(board1Primary, board2Primary);
-            board.renderPieces();
-    
             switch (event.type)
             {
-
             case SDL_QUIT:
             {
                 running = false;
@@ -101,40 +101,53 @@ int main(int argc, char *args[])
             {
                 if (event.button.button != SDL_BUTTON_LEFT)
                     break;
-                if (!board.testInbound(event.button)) break;
+                if (!board.testInbound(event.button))
+                    break;
+                Coordinate selectedPlace = board.getPieceCoord(event.button);
+                pickedPiece = board.getPiece(selectedPlace);
+                if (pickedPiece == '0')
+                    break;
                 isLeftMouseHolding = true;
-                Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
-                // std::cerr << "Picked up at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
-                // board.log(event.button, "pressed");
+                // cerr << pickedPiece << " " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
+                // board.clear();
+                board.render();
+                board.present();
+                // board.debugBoard();
+                board.deleteCell(selectedPlace);
                 break;
             }
             case SDL_MOUSEMOTION:
             {
                 if (isLeftMouseHolding == false) // Mouse hover
-                {
-                    // board.log(event.button, "hovering");
-
                     break;
-                }
-                // Mouse drags
-                // board.log(event.button, "dragging"); // Mouse drag
-                board.renderPieceByCursor(ROOK, WHITE, event.button.x, event.button.y);
+                // board.clear();
+                // board.clear();
+                board.render();
+                board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
+                board.present();
                 break;
             }
             case SDL_MOUSEBUTTONUP:
             {
                 if (event.button.button != SDL_BUTTON_LEFT)
                     break;
-                if (!isLeftMouseHolding) break;
+                if (!isLeftMouseHolding)
+                    break;
                 isLeftMouseHolding = false;
-                Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
-                // std::cerr << "Dropped at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
+                Coordinate selectedPlace = board.getPieceCoord(event.button);
+                board.writeCell(selectedPlace, pickedPiece);
+                pickedPiece = ' ';
+                // std::cerr << "Dropped at " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
                 // board.log(event.button, "released");
+                // board.clear();
+                board.render();
+                board.present();
                 break;
             }
+                // default:
+                // board.present();
             }
-            board.present();
-        }
+        } while (SDL_PollEvent(&event) != 0);
     }
 
     // system("pause");

@@ -92,7 +92,9 @@ void Board::renderPieces()
 
     if (checkBoardSeq())
     {
-        renderStartingPosition(boardSequence[0]);
+        parseFENToBoard(boardSequence[0]);
+        renderFromBoard();
+        // renderStartingPosition(boardSequence[0]);
         updatePlayerStatus(boardSequence[1]);
         updateCastlingStatus(boardSequence[2]);
         updateEnPassantStatus(boardSequence[3]);
@@ -257,13 +259,14 @@ int Board::getSideLength()
 void Board::setRendererColor(colorRGBA color)
 {
     SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
-} 
+}
 
 // Utilities
 
 void Board::splitSequence(std::string str) // Input FEN Notation
 {
-    for (int i = 0; i <= 5; i++) boardSequence[i] = "";
+    for (int i = 0; i <= 5; i++)
+        boardSequence[i] = "";
     for (int i = 0, j = 0; i <= str.length(); i++)
     {
         if (str[i] == ' ' || str[i] == '\0')
@@ -286,7 +289,7 @@ bool Board::isChessPiece(char c, int &indicator)
             indicator = i;
             isPiece = true;
         }
-    } 
+    }
     return isPiece;
 }
 
@@ -299,7 +302,6 @@ int Board::stringToNum(std::string str)
     }
     return num;
 }
-
 
 bool Board::testInbound(SDL_MouseButtonEvent ev)
 {
@@ -323,17 +325,108 @@ Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
     int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
     int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
     // Fix out of bound cell
-    if (horizontalCell < 0) horizontalCell = 0;
-    if (horizontalCell > 7) horizontalCell = 7;
-    if (verticalCell < 0) verticalCell = 0;
-    if (verticalCell > 7) verticalCell = 7;
-    return Coordinate(horizontalCell, verticalCell); 
+    if (horizontalCell < 0)
+        horizontalCell = 0;
+    if (horizontalCell > 7)
+        horizontalCell = 7;
+    if (verticalCell < 0)
+        verticalCell = 0;
+    if (verticalCell > 7)
+        verticalCell = 7;
+    return Coordinate(horizontalCell, verticalCell);
 }
 
 void Board::renderPiece(int pieceName, int color, int x, int y)
 {
-    if (color < 0 || pieceName < 0) return;
+    if (color < 0 || pieceName < 0)
+        return;
     int pieceIndex = pieceName + color * 6;
-    drawTexture(pieces[pieceIndex], x - SIDE_LENGTH / 2, y - SIDE_LENGTH / 2, SIDE_LENGTH, SIDE_LENGTH);
+    drawTexture(pieces[pieceIndex], x, y, SIDE_LENGTH, SIDE_LENGTH);
     // SDL_Log("Rendering chess pieces at %d %d", x, y);
+}
+void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
+{
+    renderPiece(pieceName, color, x - SIDE_LENGTH / x, y - SIDE_LENGTH / 2);
+    // SDL_Log("Rendering chess pieces at %d %d", x, y);
+}
+
+void Board::renderPieceByCoordinate(int pieceName, int color, int x, int y)
+{
+    renderPiece(pieceName, color, MARGIN + x * SIDE_LENGTH, MARGIN + y * SIDE_LENGTH);
+}
+
+void Board::parseFENToBoard(std::string fenConfig)
+{
+    std::cerr << fenConfig << "\n";
+    int row = 0;
+    int col = 0;
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            board[i][j] = '0';
+    for (auto chr : fenConfig)
+    {
+        if ('0' <= chr && chr <= '9')
+        {
+            col = col + chr - '0';
+            continue;
+        }
+
+        if (chr == '/')
+        {
+            row++;
+            col = 0;
+            continue;
+        }
+
+        board[row][col] = chr;
+        col++;
+    }
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            std::cerr << board[i][j] << " \n"[j == 7];
+}
+
+void Board::renderFromBoard()
+{
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+        {
+            if (board[row][col] == '0')
+                continue;
+            int name = getPieceName(board[row][col]);
+            int color = getPieceColor(board[row][col]);
+            renderPieceByCoordinate(name, color, col, row);
+        }
+}
+
+int Board::getPieceColor(char piece)
+{
+    if ('A' <= piece && piece <= 'Z')
+        return 0;
+    if ('a' <= piece && piece <= 'z')
+        return 1;
+    return -1;
+}
+
+int Board::getPieceName(char piece)
+{
+    if ('A' <= piece && piece <= 'Z')
+        piece = piece - 'A' + 'a';
+    switch (piece)
+    {
+    case 'r':
+        return 0;
+    case 'n':
+        return 1;
+    case 'b':
+        return 2;
+    case 'q':
+        return 3;
+    case 'k':
+        return 4;
+    case 'p':
+        return 5;
+    default:
+        return -1;
+    }
 }

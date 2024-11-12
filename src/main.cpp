@@ -118,7 +118,7 @@ int main(int argc, char *args[])
                 }
                 // Mouse drags
                 // board.log(event.button, "dragging"); // Mouse drag
-                board.renderPiece(ROOK, WHITE, event.button.x, event.button.y);
+                board.renderPieceByCursor(ROOK, WHITE, event.button.x, event.button.y);
                 break;
             }
             case SDL_MOUSEBUTTONUP:

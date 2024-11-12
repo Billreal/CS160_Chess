@@ -3,7 +3,7 @@
 #include "coordinate.h"
 using std::string;
 using std::vector;
-enum chessName 
+enum chessName
 {
     CHESS_NONE = -1,
     ROOK,
@@ -22,18 +22,18 @@ enum chessColor
 };
 class chessPieces
 {
-    private:
+private:
     chessName name;
     Coordinate coordinate;
     chessColor color;
     bool isInRange(Coordinate coord);
     void addCell(vector<Coordinate> &vect, const Coordinate &coord);
-    public:
-    chessPieces(chessName name, chessColor color, int x, int y);  
-    chessPieces(int x, int y);  
+
+public:
+    chessPieces(chessName name, chessColor color, int x, int y);
+    chessPieces(int x, int y);
     int getX();
     int getY();
-    vector<Coordinate> listAllMove(); 
+    vector<Coordinate> listAllMove();
     vector<Coordinate> listAllMove(Coordinate current);
-
 };

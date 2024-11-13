@@ -38,7 +38,6 @@ int main(int argc, char *args[])
         SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
         return -1;
     }
-
     window = SDL_CreateWindow("CS160_Chess",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
@@ -66,6 +65,11 @@ int main(int argc, char *args[])
 
     // Background background(renderer);
     // background.render(bgColor);
+    // if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE) < 0)
+    // {
+    //     cerr << "Blending failure\n";
+    //     cerr << SDL_GetError() << "\n";
+    // }
 
     Board board(renderer, board1Primary, board2Primary, bgColor);
 
@@ -109,7 +113,7 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = true;
                 // cerr << pickedPiece << " " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
-                // board.clear();
+                board.clear();
                 board.render();
                 board.present();
                 // board.debugBoard();
@@ -121,7 +125,7 @@ int main(int argc, char *args[])
                 if (isLeftMouseHolding == false) // Mouse hover
                     break;
                 // board.clear();
-                // board.clear();
+                board.clear();
                 board.render();
                 board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                 board.present();
@@ -139,7 +143,7 @@ int main(int argc, char *args[])
                 pickedPiece = ' ';
                 // std::cerr << "Dropped at " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
                 // board.log(event.button, "released");
-                // board.clear();
+                board.clear();
                 board.render();
                 board.present();
                 break;
@@ -155,6 +159,5 @@ int main(int argc, char *args[])
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    // TODO: Render column and row indexing correctly
     return 0;
 }

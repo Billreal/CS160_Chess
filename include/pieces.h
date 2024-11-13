@@ -34,6 +34,6 @@ public:
     chessPieces(int x, int y);
     int getX();
     int getY();
-    vector<Coordinate> listAllMove();
-    vector<Coordinate> listAllMove(Coordinate current);
+    vector<vector<Coordinate>> listAllMove();
+    vector<vector<Coordinate>> listAllMove(Coordinate current);
 };

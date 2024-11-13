@@ -46,8 +46,8 @@ vector<vector<Coordinate>> chessPieces::listAllMove()
         res.resize(1);
         if (color == BLACK)
         {
-                addCell(res[0], coordinate + Coordinate(0, 1));
-                if (coordinate.getY() == 1) addCell(res[0], coordinate + Coordinate(0, 2));
+            addCell(res[0], coordinate + Coordinate(0, 1));
+            if (coordinate.getY() == 1) addCell(res[0], coordinate + Coordinate(0, 2));
         }
         else
         {
@@ -71,11 +71,12 @@ vector<vector<Coordinate>> chessPieces::listAllMove()
     }
     case KNIGHT:
     {
-        res.resize(1);
+        res.resize(8);
+        int idx = 0;
         for (int i = -2; i <= 2; i++)
             for (int j = -2; j <= 2; j++)
                 if (i * i + j * j == 5)
-                    addCell(res[0], coordinate + Coordinate(i, j));
+                    addCell(res[idx++], coordinate + Coordinate(i, j));
         break;
     }
 

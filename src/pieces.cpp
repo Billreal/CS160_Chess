@@ -24,7 +24,7 @@ int chessPieces::getY()
 
 bool chessPieces::isInRange(Coordinate coord)
 {
-    if (coord.getX() < 1 || coord.getX() > 8 || coord.getY() < 1 || coord.getY() > 8)
+    if (coord.getX() < 0 || coord.getX() > 7 || coord.getY() < 0 || coord.getY() > 7)
         return false;
     return true;
 }

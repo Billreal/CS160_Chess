@@ -39,6 +39,9 @@ private:
     std::vector<std::string> MOVES;
 
     const double IMG_SCALE = 1.5;
+    const double MOVE_INDICATOR_SCALE = 0.75;
+    const double CAPTURE_INDICATOR_SCALE = 1.5;
+
     std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;
     SDL_Texture *pieces[12];

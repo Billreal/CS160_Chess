@@ -83,8 +83,8 @@ void Board::loadTextures()
     pieces[9] = loadTexture("./assets/black_queen.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     pieces[10] = loadTexture("./assets/black_king.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     pieces[11] = loadTexture("./assets/black_pawn.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    possibleMoveIndicator = loadTexture("./assets/move_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    possibleCaptureIndicator = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    possibleMoveIndicator = loadTexture("./assets/move_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, MOVE_INDICATOR_SCALE);
+    possibleCaptureIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, CAPTURE_INDICATOR_SCALE);
     // pieces[0][0] = loadTexture("./assets/white_pawn.png");
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }

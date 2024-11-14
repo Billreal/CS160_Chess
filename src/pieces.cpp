@@ -1,37 +1,16 @@
 #pragma once
 
 #include <algorithm>
+#include <iostream>
 #include "./../include/pieces.h"
 #include <string.h>
 #include <stdio.h>
 
-#define NANOSVG_IMPLEMENTATION
-#define NANOSVGRAST_IMPLEMENTATION
-#include "./../include/nanosvg.h"
-#include "./../include/nanosvgrast.h"
+// ChessPieces::ChessPieces(SDL_Renderer *renderer) : renderer(renderer)
+// {
+//     initMap();
+// }
 
-ChessPieces::ChessPieces(SDL_Renderer *renderer) : renderer(renderer)
-{
-    initMap();
-}
-
-void ChessPieces::initMap(){
-    //init name map
-    nameMap[CHESS_NONE] = "NONE";
-    nameMap[PAWN] = "PAWN";
-    nameMap[ROOK] = "ROOK";
-    nameMap[KNIGHT] = "KNIGHT";
-    nameMap[BISHOP] = "BISHOP";
-    nameMap[QUEEN] = "QUEEN";
-    nameMap[KING] = "KING";
-    //init color map
-    colorMap[COLOR_NONE] = "NONE";
-    colorMap[BLACK] = "BLACK";
-    colorMap[WHITE] = "WHITE";
-}
-
-
-// textures[BLACK][KING] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
 void ChessPieces::update(chessColor color, chessName name, int row, int column)
 {
     ChessPieces::name = name;
@@ -48,47 +27,57 @@ void ChessPieces::update(chessColor color, chessName name)
 void ChessPieces::update(SDL_Renderer *renderer)
 {
     ChessPieces::renderer = renderer;
+    // std::cerr << "Renderer updated for " << getColor() << " " << getName() << "\n";
 }
 
-SDL_Texture *ChessPieces::loadTexture(const char *filePath, int width, int height)
+const std::string ChessPieces::getTexturePath()
 {
-    struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
-    if (!image)
+    if (color == COLOR_NONE || name == CHESS_NONE)
+        return "";
+
+    std::string PATH = "./assets/";
+
+    if (color == WHITE)  
     {
-        printf("Failed to load SVG file.\n");
-        return nullptr;
+        PATH += "white_";
     }
+    else
+        PATH += "black_";
 
-    // Rasterize SVG
-    struct NSVGrasterizer *rast = nsvgCreateRasterizer();
-    unsigned char *imageData = (unsigned char *)malloc(width * height * 10); // RGBA buffer
-    nsvgRasterize(rast, image, 0, 0, IMG_SCALE, imageData, width, height, width * 4);
 
-    // Create SDL surface and texture
-    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(
-        imageData, width, height, 32, width * 4,
-        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    switch (name)
+    {
+    case ROOK:
+        PATH += "rook";
+        break;
+    case KNIGHT:
+        PATH += "knight";
+        break;
+    case BISHOP:
+        PATH += "bishop";
+        break;
+    case QUEEN:
+        PATH += "queen";
+        break;
+    case KING:
+        PATH += "king";
+        break;
+    case PAWN:
+        PATH += "pawn";
+        break;
+    }
+    PATH += ".svg";
 
-    // Cleanup
-    SDL_FreeSurface(surface);
-    free(imageData);
-    nsvgDeleteRasterizer(rast);
-    nsvgDelete(image);
-
-    return texture;
+    return PATH;
 }
 
-SDL_Texture *ChessPieces::getTexture(){
-    const string PATH = "./assets/" + nameMap[name] + "_" + colorMap[color] + ".svg";
-    return loadTexture(PATH.c_str(), SIDE_LENGTH, SIDE_LENGTH);;
-}
-
-chessColor ChessPieces::getColor(){
+chessColor ChessPieces::getColor()
+{
     return color;
 }
 
-chessName ChessPieces::getName(){
+chessName ChessPieces::getName()
+{
     return name;
 }
 

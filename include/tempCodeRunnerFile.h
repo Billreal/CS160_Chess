@@ -6,23 +6,23 @@
 #include <utility>
 #include <string.h>
 #include <vector>
+#include <map>
 #include "colorScheme.h"
 #include "coordinate.h"
-#include "pieces.h"
+// #include "pieces.h"
 
 class Board
 {
 private:
     SDL_Renderer *renderer = NULL;
-    const int MARGIN = 70;
+    const int MARGIN = 80;
     const int SIDE_LENGTH = 70;
     const int BOARD_SIZE = 8;
-    const float IMG_SCALE = 1.5;
-    ChessPieces BOARD[8][8];
+
+    std::map<int, ChessPieces> BOARD;
 
     // Pieces
-    ChessPieces pieces[11];
-    // ChessPieces pieces(renderer);
+    std::map<int, ChessPieces> pieces;
 
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
     int isPlayerTurn; // contains either 0 or 1, whiÍÍÍch 1 stands for white turn, 0 for black turn
@@ -37,14 +37,16 @@ private:
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4PPN3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
+    // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
     // std::vector<SDL_Texture *> TextureList;
     // SDL_Texture *boardTexture;
     void initPieces();
+    void initPiecesRenderer();
 
 public:
+
     Board(SDL_Renderer *renderer);
 
     // Clear renderer
@@ -81,7 +83,6 @@ public:
     void setRendererColor(colorRGBA color);
 
     // Utilities
-    SDL_Texture *loadTexture(const char *filePath, int width, int height);
 
     /*
         Split FEN Notation in sequences, with

@@ -1,42 +1,58 @@
 #pragma once
 #include <iostream>
 #include "./../include/board.h"
+#include "./../include/pieces.h"
+
+#include <string.h>
+#include <stdio.h>
+#define NANOSVG_IMPLEMENTATION
+#define NANOSVGRAST_IMPLEMENTATION
+#include "./../include/nanosvg.h"
+#include "./../include/nanosvgrast.h"
 
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
     initPieces();
 }
 
-// SDL_Texture *Board::loadTexture(const std::string &path)
-// {
-//     SDL_Surface *surface = IMG_Load(path.c_str());
-//     // Check if surface is loaded
-//     if (!surface)
-//     {
-//         SDL_Log("Failed to load texture %s: %s", path.c_str(), SDL_GetError());
-//         return nullptr;
-//     }
-//     TextureList.push_back(SDL_CreateTextureFromSurface(renderer, surface));
-//     SDL_Texture *texture = TextureList.back();
-//     SDL_FreeSurface(surface);
-//     return texture;
-// }
+SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
+{
+    struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
+    if (!image)
+    {
+        printf("Failed to load SVG file.\n");
+        return nullptr;
+    }
 
-void Board::initPiecesRenderer(){
+    // Rasterize SVG
+    struct NSVGrasterizer *rast = nsvgCreateRasterizer();
+    unsigned char *imageData = (unsigned char *)malloc(width * height * 10); // RGBA buffer
+    nsvgRasterize(rast, image, 0, 0, IMG_SCALE, imageData, width, height, width * 4);
+
+    // Create SDL surface and texture
+    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(
+        imageData, width, height, 32, width * 4,
+        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    // Cleanup
+    SDL_FreeSurface(surface);
+    free(imageData);
+    nsvgDeleteRasterizer(rast);
+    nsvgDelete(image);
+
+    return texture;
 }
 
 void Board::initPieces()
 {
-    /*
-        0 -> 5: white
-        6 -> 11: black
-    */
-    for (int i = 0; i <= 11; i++) pieces[i].update(renderer);
-    // for (int color = WHITE; color <= BLACK; color++){
-    //     for(int name = ROOK; name <= PAWN; name++){
-    //         pieces[color * 6 + name].update(color, name);
-    //     }
-    // }
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            BOARD[i][j].update(COLOR_NONE, CHESS_NONE);
+        }
+    }
     pieces[0].update(WHITE, ROOK);
     pieces[1].update(WHITE, KNIGHT);
     pieces[2].update(WHITE, BISHOP);
@@ -49,6 +65,8 @@ void Board::initPieces()
     pieces[9].update(BLACK, QUEEN);
     pieces[10].update(BLACK, KING);
     pieces[11].update(BLACK, PAWN);
+    for (int i = 0; i <= 11; i++)
+        pieces[i].update(renderer);
 }
 
 void Board::ConvertFEN()
@@ -102,20 +120,29 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
 
 void Board::renderPieces(colorRGBA primary, colorRGBA secondary, bool rotationFlag)
 {
-    // * Bottom to up, left to right
-    for (int row = 1; row <= BOARD_SIZE; row++)
-        for (int column = 1; column <= BOARD_SIZE; column++)
+    for (int row = 0; row < BOARD_SIZE; row++)
+    {
+        for (int column = 0; column < BOARD_SIZE; column++)
         {
-            // Draw chess piece
-            drawTexture(BOARD[row * 8 + column].getTexture(),
-                        MARGIN + SIDE_LENGTH * column,
-                        MARGIN + SIDE_LENGTH * row,
-                        SIDE_LENGTH,
-                        SIDE_LENGTH);
-            // if (row == BOARD_SIZE)
+            // Get piece path for each board cell if exist
+            const std::string PATH = BOARD[row][column].getTexturePath();
+            // std::cerr << PATH << "\n";
 
-            // if (j == 1)
+            if (!PATH.empty())
+            {
+                // Load texture from paths stored in each pieces
+                SDL_Texture *texture = loadTexture(PATH.c_str(), SIDE_LENGTH, SIDE_LENGTH);
+
+                // Draw chess piece
+                drawTexture(texture,
+                            MARGIN + SIDE_LENGTH * column,
+                            MARGIN + SIDE_LENGTH * row,
+                            SIDE_LENGTH,
+                            SIDE_LENGTH);
+                // std::cerr << row << " " << column << "\n";
+            }
         }
+    }
 }
 
 bool Board::checkBoardSeq()
@@ -142,19 +169,20 @@ void Board::convertStartingPosition(std::string seq)
         if (isChessPiece(currentChar, pieceIndicator))
         {
             // board[row][column++] = currentChar;
+            // std::cerr << row << " " << column << " " << pieceIndicator << "\n";
             if (0 <= pieceIndicator && pieceIndicator < 12)
             {
-                BOARD[row * 8 + column].update(pieces[pieceIndicator].getColor(), 
-                                        pieces[pieceIndicator].getName(), 
-                                        row, 
-                                        column);
+                BOARD[row][column].update(pieces[pieceIndicator].getColor(),
+                                          pieces[pieceIndicator].getName(),
+                                          row,
+                                          column);
+
                 // drawTexture(pieces[pieceIndicator],
                 //             MARGIN + SIDE_LENGTH * column,
                 //             MARGIN + SIDE_LENGTH * row,
                 //             SIDE_LENGTH,
                 //             SIDE_LENGTH);
                 column++;
-                // std::cerr << row << " " << column << "\n";
             }
             continue;
         }
@@ -163,11 +191,8 @@ void Board::convertStartingPosition(std::string seq)
         if (isNum(currentChar))
         {
             int blankLength = int(currentChar) - '0';
+            // Skip cells
             column = column + blankLength;
-            // while (length--)
-            // {
-            //     board[row][column++] = '*';
-            // }
             continue;
         }
 
@@ -297,9 +322,13 @@ Coordinate Board::getPressedPieceCoord(SDL_MouseButtonEvent ev)
     int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
     int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
     // Fix out of bound cell
-    if (horizontalCell < 0) horizontalCell = 0;
-    if (horizontalCell > 7) horizontalCell = 7;
-    if (verticalCell < 0) verticalCell = 0;
-    if (verticalCell > 7) verticalCell = 7;
-    return Coordinate(horizontalCell, verticalCell); 
+    if (horizontalCell < 0)
+        horizontalCell = 0;
+    if (horizontalCell > 7)
+        horizontalCell = 7;
+    if (verticalCell < 0)
+        verticalCell = 0;
+    if (verticalCell > 7)
+        verticalCell = 7;
+    return Coordinate(horizontalCell, verticalCell);
 }

@@ -7,7 +7,7 @@
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
 #include "./../include/board.h"
-#include "./../include/pieces.h"
+// #include "./../include/pieces.h"
 #include "./../include/coordinate.h"
 using std::cerr, std::cout;
 
@@ -68,7 +68,7 @@ int main(int argc, char *args[])
     background.render(bgColor);
 
     Board board(renderer);
-    ChessPieces pieces(renderer);
+    // ChessPieces pieces(renderer);
 
     // Handling SDL_events
     SDL_Event event;
@@ -82,6 +82,7 @@ int main(int argc, char *args[])
 
     board.renderChessboard(board1Primary, board2Primary);
     board.ConvertFEN();
+    board.renderPieces(board1Primary, board2Primary, false);
     bool isLeftMouseHolding = false;
     while (running)
     {
@@ -102,7 +103,7 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = true;
                 Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
-                std::cerr << "Picked up at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
+                // std::cerr << "Picked up at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
                 // board.log(event.button, "pressed");
                 break;
             }
@@ -110,12 +111,12 @@ int main(int argc, char *args[])
             {
                 if (isLeftMouseHolding == false) // Mouse hover
                 {
-                    board.log(event.button, "hovering");
+                    // board.log(event.button, "hovering");
 
                     break;
                 }
                 // Mouse drags
-                board.log(event.button, "dragging"); // Mouse drag
+                // board.log(event.button, "dragging"); // Mouse drag
 
                 break;
             }
@@ -125,7 +126,7 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = false;
                 Coordinate selectedPiece = board.getPressedPieceCoord(event.button);
-                std::cerr << "Dropped at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
+                // std::cerr << "Dropped at " << selectedPiece.getX() << " " << selectedPiece.getY() << "\n";
                 // board.log(event.button, "released");
                 break;
             }

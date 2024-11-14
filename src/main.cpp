@@ -115,7 +115,7 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = true;
                 // cerr << pickedPiece << " " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
-                board.clear();
+                // board.clear();
                 board.render();
                 board.present();
                 // board.debugBoard();
@@ -127,7 +127,7 @@ int main(int argc, char *args[])
                 if (isLeftMouseHolding == false) // Mouse hover
                     break;
                 // board.clear();
-                board.clear();
+                // board.clear();
                 board.render();
                 board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                 board.present();
@@ -143,11 +143,11 @@ int main(int argc, char *args[])
                 // Coordinate selectedPlace = board.getPieceCoord(event.button);
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
                 board.writeCell(droppedPlace, pickedPiece);
-                board.clear();
+                // board.clear();
                 board.render();
                 if (droppedPlace == prevCoordinate)
                 {
-                    board.clear();
+                    // board.clear();
                     board.renderMove(pickedPiece, droppedPlace.getX(), droppedPlace.getY());
                 }
                 prevCoordinate = Coordinate(-1, -1);

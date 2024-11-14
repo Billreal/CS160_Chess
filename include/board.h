@@ -66,6 +66,7 @@ public:
     {
         SDL_Rect infos = {x, y, w, h};
         SDL_RenderCopy(renderer, texture, nullptr, &infos);
+        // std::cerr << "Rendering at " << x << " " << y << "\n";
     }
 
     // Game Update, with data taken in as boardSequence[1 -> 5], which are strings

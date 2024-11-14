@@ -410,7 +410,7 @@ void Board::renderFromBoard()
 {
     for (int row = 0; row < BOARD_SIZE; row++)
     {
-        
+
         for (int col = 0; col < BOARD_SIZE; col++)
         {
             std::cerr << board[row][col] << " ";
@@ -514,7 +514,9 @@ void Board::renderChessboard()
 
 void Board::render()
 {
-    background.render(backgroundColor);
+    setRendererColor(backgroundColor);
+    clear();
+    // background.render(backgroundColor);
     renderChessboard();
     renderFromBoard();
 }
@@ -534,40 +536,50 @@ bool Board::isNum(char c)
 void Board::renderMove(int pieceName, int color, int coordX, int coordY)
 {
     std::cerr << coordX << " " << coordY << std::endl;
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    setRendererColor(moveIndicator);
+    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    // setRendererColor(moveIndicator);
     vector<vector<Coordinate>> renderList = chessPiece.listAllMove(pieceName, color, coordX, coordY);
     for (int i = 0; i < renderList.size(); i++)
     {
         std::cerr << "Direction " << i << std::endl;
-        for (auto cell: renderList[i])
+        for (auto cell : renderList[i])
             std::cerr << cell.getX() << " " << cell.getY() << std::endl;
         std::cerr << std::endl;
     }
-            
+
     // std::swap(coordX, coordY);
     for (vector<Coordinate> moveDirection : renderList)
         for (Coordinate cell : moveDirection)
         {
             int row = cell.getY();
             int col = cell.getX();
+
+            int screenX = col * SIDE_LENGTH + MARGIN;
+            int screenY = col * SIDE_LENGTH + MARGIN;
             if ((board[row][col]) != '0')
             {
                 int targetColor = getPieceColor(board[row][col]);
                 if (targetColor != color && targetColor != COLOR_NONE)
                 {
-                    drawTexture(possibleCaptureIndicator, row * SIDE_LENGTH + MARGIN, col * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-                    std::cerr << "Can capture at " << row << " " << col << " " << board[row][col] << " " << targetColor << " " << color << std::endl;
-                    std::cerr << "Rendering capture at: " << row << " " << col << "\n";
+                    if (possibleCaptureIndicator)
+                    {
+
+                        drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+                        std::cerr << "Can capture at " << row << " " << col << " " << board[row][col] << " " << targetColor << " " << color << std::endl;
+                        std::cerr << "Rendering capture at: " << row << " " << col << "\n";
+                    }
                 }
 
                 break;
             }
-            drawTexture(possibleMoveIndicator, row * SIDE_LENGTH + MARGIN, col * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-            std::cerr << "Rendering move at: " << row << " " << col << "\n";
+            if (possibleMoveIndicator)
+            {
+                drawTexture(possibleMoveIndicator, row * SIDE_LENGTH + MARGIN, col * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+                std::cerr << "Rendering move at: " << row * SIDE_LENGTH + MARGIN << " " << col * SIDE_LENGTH + MARGIN << "\n";
+            }
         }
 
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 void Board::renderMove(char piece, int coordX, int coordY)
 {

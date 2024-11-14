@@ -38,7 +38,7 @@ private:
     // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
-    const float IMG_SCALE = 1.5;
+    const double IMG_SCALE = 1.5;
     std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;
     SDL_Texture *pieces[12];
@@ -58,7 +58,7 @@ public:
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }
 
-    SDL_Texture *loadTexture(const char *filePath, int width, int height);
+    SDL_Texture *loadTexture(const char *filePath, int width, int height, double scale);
 
     // SDL_Texture *loadTexture(const std::string &path);
 

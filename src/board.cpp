@@ -21,7 +21,7 @@ Board::Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondary
     // background = Background(renderer);
 }
 
-SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
+SDL_Texture *Board::loadTexture(const char *filePath, int width, int height, double scale)
 {
     struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
     if (!image)
@@ -33,7 +33,7 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height)
     // Rasterize SVG
     struct NSVGrasterizer *rast = nsvgCreateRasterizer();
     unsigned char *imageData = (unsigned char *)malloc(width * height * 10); // RGBA buffer
-    nsvgRasterize(rast, image, 0, 0, IMG_SCALE, imageData, width, height, width * 4);
+    nsvgRasterize(rast, image, 0, 0, scale, imageData, width, height, width * 4);
 
     // Create SDL surface and texture
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(
@@ -71,20 +71,20 @@ void Board::loadTextures()
         0 -> 5: white
         6 -> 11: black
     */
-    pieces[0] = loadTexture("./assets/white_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[1] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[2] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[3] = loadTexture("./assets/white_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[4] = loadTexture("./assets/white_king.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[5] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[6] = loadTexture("./assets/black_rook.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[7] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[8] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[9] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[10] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
-    pieces[11] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
-    possibleMoveIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH);
-    possibleCaptureIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH);
+    pieces[0] = loadTexture("./assets/white_rook.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[1] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[2] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[3] = loadTexture("./assets/white_queen.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[4] = loadTexture("./assets/white_king.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[5] = loadTexture("./assets/white_pawn.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[6] = loadTexture("./assets/black_rook.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[7] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[8] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[9] = loadTexture("./assets/black_queen.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[10] = loadTexture("./assets/black_king.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[11] = loadTexture("./assets/black_pawn.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    possibleMoveIndicator = loadTexture("./assets/move_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    possibleCaptureIndicator = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     // pieces[0][0] = loadTexture("./assets/white_pawn.png");
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
@@ -574,7 +574,7 @@ void Board::renderMove(int pieceName, int color, int coordX, int coordY)
             }
             if (possibleMoveIndicator)
             {
-                drawTexture(possibleMoveIndicator, row * SIDE_LENGTH + MARGIN, col * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+                drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
                 std::cerr << "Rendering move at: " << row * SIDE_LENGTH + MARGIN << " " << col * SIDE_LENGTH + MARGIN << "\n";
             }
         }

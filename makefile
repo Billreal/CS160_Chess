@@ -20,7 +20,7 @@ clean:
 # 	rm -f chess.exe
 
 # chess: main color board colorScheme background pieces coordinate
-chess: main color board colorScheme background coordinate pieces
+chess: main color board colorScheme coordinate pieces
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER)
 
 main:
@@ -35,8 +35,8 @@ color:
 colorScheme:
 	g++ -c src/colorScheme.cpp -o src/colorScheme.o $(COMPILER_FLAG) $(LINKER)
 
-background:
-	g++ -c src/background.cpp -o src/background.o $(COMPILER_FLAG) $(LINKER)
+# background:
+# 	g++ -c src/background.cpp -o src/background.o $(COMPILER_FLAG) $(LINKER)
 
 pieces:
 	g++ -c src/pieces.cpp -o src/pieces.o $(COMPILER_FLAG) $(LINKER)

@@ -3,7 +3,7 @@
 // #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include "./test.cpp"
-#include "./../include/background.h"
+// #include "./../include/background.h"
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
 #include "./../include/board.h"

@@ -5,7 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <vector>
-#include "background.h"
+// #include "background.h"
 #include "colorScheme.h"
 #include "coordinate.h"
 #include "pieces.h"
@@ -13,7 +13,7 @@ class Board
 {
 private:
     SDL_Renderer *renderer = NULL;
-    Background background;
+    // Background background;
     const int MARGIN = 80;
     const int SIDE_LENGTH = 70;
     static const int BOARD_SIZE = 8;

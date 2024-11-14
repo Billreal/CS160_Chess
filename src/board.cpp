@@ -83,6 +83,8 @@ void Board::loadTextures()
     pieces[9] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH);
     pieces[10] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH);
     pieces[11] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH);
+    possibleMoveIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH);
+    possibleCaptureIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH);
     // pieces[0][0] = loadTexture("./assets/white_pawn.png");
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
@@ -407,14 +409,20 @@ void Board::parseFENToBoard(std::string fenConfig)
 void Board::renderFromBoard()
 {
     for (int row = 0; row < BOARD_SIZE; row++)
+    {
+        
         for (int col = 0; col < BOARD_SIZE; col++)
         {
+            std::cerr << board[row][col] << " ";
             if (board[row][col] == '0')
                 continue;
             int name = getPieceName(board[row][col]);
             int color = getPieceColor(board[row][col]);
             renderPieceByCoordinate(name, color, col, row);
         }
+        std::cerr << std::endl;
+    }
+    std::cerr << std::endl;
 }
 
 int Board::getPieceColor(char piece)
@@ -523,10 +531,45 @@ bool Board::isNum(char c)
 // TODO: render next move possible for a chess
 
 // colorRGBA indicator(75, 72, 71, 127);
-void Board::renderMove()
+void Board::renderMove(int pieceName, int color, int coordX, int coordY)
 {
+    std::cerr << coordX << " " << coordY << std::endl;
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     setRendererColor(moveIndicator);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    vector<vector<Coordinate>> renderList = chessPiece.listAllMove(pieceName, color, coordX, coordY);
+    for (int i = 0; i < renderList.size(); i++)
+    {
+        std::cerr << "Direction " << i << std::endl;
+        for (auto cell: renderList[i])
+            std::cerr << cell.getX() << " " << cell.getY() << std::endl;
+        std::cerr << std::endl;
+    }
+            
+    // std::swap(coordX, coordY);
+    for (vector<Coordinate> moveDirection : renderList)
+        for (Coordinate cell : moveDirection)
+        {
+            int row = cell.getY();
+            int col = cell.getX();
+            if ((board[row][col]) != '0')
+            {
+                int targetColor = getPieceColor(board[row][col]);
+                if (targetColor != color && targetColor != COLOR_NONE)
+                {
+                    drawTexture(possibleCaptureIndicator, row * SIDE_LENGTH + MARGIN, col * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+                    std::cerr << "Can capture at " << row << " " << col << " " << board[row][col] << " " << targetColor << " " << color << std::endl;
+                    std::cerr << "Rendering capture at: " << row << " " << col << "\n";
+                }
 
+                break;
+            }
+            drawTexture(possibleMoveIndicator, row * SIDE_LENGTH + MARGIN, col * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+            std::cerr << "Rendering move at: " << row << " " << col << "\n";
+        }
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+}
+void Board::renderMove(char piece, int coordX, int coordY)
+{
+    renderMove(getPieceName(piece), getPieceColor(piece), coordX, coordY);
 }

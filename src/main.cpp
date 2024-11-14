@@ -84,6 +84,7 @@ int main(int argc, char *args[])
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
     bool isLeftMouseHolding = false;
+    Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
     board.setColor(board1Primary, board2Primary);
     board.renderPieces();
@@ -107,8 +108,9 @@ int main(int argc, char *args[])
                     break;
                 if (!board.testInbound(event.button))
                     break;
-                Coordinate selectedPlace = board.getPieceCoord(event.button);
-                pickedPiece = board.getPiece(selectedPlace);
+                Coordinate pickedPlace = board.getPieceCoord(event.button);
+                pickedPiece = board.getPiece(pickedPlace);
+                prevCoordinate = pickedPlace;
                 if (pickedPiece == '0')
                     break;
                 isLeftMouseHolding = true;
@@ -117,7 +119,7 @@ int main(int argc, char *args[])
                 board.render();
                 board.present();
                 // board.debugBoard();
-                board.deleteCell(selectedPlace);
+                board.deleteCell(pickedPlace);
                 break;
             }
             case SDL_MOUSEMOTION:
@@ -138,13 +140,20 @@ int main(int argc, char *args[])
                 if (!isLeftMouseHolding)
                     break;
                 isLeftMouseHolding = false;
-                Coordinate selectedPlace = board.getPieceCoord(event.button);
-                board.writeCell(selectedPlace, pickedPiece);
+                // Coordinate selectedPlace = board.getPieceCoord(event.button);
+                Coordinate droppedPlace = board.getPieceCoord(event.button);
+                board.writeCell(droppedPlace, pickedPiece);
+                board.clear();
+                board.render();
+                if (droppedPlace == prevCoordinate)
+                {
+                    board.clear();
+                    board.renderMove(pickedPiece, droppedPlace.getX(), droppedPlace.getY());
+                }
+                prevCoordinate = Coordinate(-1, -1);
                 pickedPiece = ' ';
                 // std::cerr << "Dropped at " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
                 // board.log(event.button, "released");
-                board.clear();
-                board.render();
                 board.present();
                 break;
             }

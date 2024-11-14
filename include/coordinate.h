@@ -17,4 +17,5 @@ class Coordinate
     Coordinate operator-(Coordinate x);
     Coordinate operator*(int x);
     bool operator<(Coordinate x);
+    bool operator==(Coordinate coord);
 };

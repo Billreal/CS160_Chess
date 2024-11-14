@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 #include "coordinate.h"
@@ -32,8 +33,10 @@ private:
 public:
     chessPieces(chessName name, chessColor color, int x, int y);
     chessPieces(int x, int y);
+    chessPieces();
     int getX();
     int getY();
     vector<vector<Coordinate>> listAllMove();
     vector<vector<Coordinate>> listAllMove(Coordinate current);
+    vector<vector<Coordinate>> listAllMove(int name, int color, int coordX, int coordY);
 };

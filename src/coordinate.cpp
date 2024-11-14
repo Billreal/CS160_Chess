@@ -49,3 +49,9 @@ bool Coordinate::operator<(Coordinate x)
         return (bool)(this -> y < x.y);
     return (bool)(this -> x < x.x);
 }
+
+bool Coordinate::operator==(Coordinate coord)
+{
+    if (x == coord.x && y == coord.y) return true;
+    return false;
+}

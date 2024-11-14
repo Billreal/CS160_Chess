@@ -8,6 +8,7 @@
 #include "background.h"
 #include "colorScheme.h"
 #include "coordinate.h"
+#include "pieces.h"
 class Board
 {
 private:
@@ -20,6 +21,7 @@ private:
     colorRGBA primaryColor;
     colorRGBA secondaryColor;
     colorRGBA backgroundColor;
+    chessPieces chessPiece;
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
     int isPlayerTurn; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
     bool whiteKingSide;
@@ -40,6 +42,8 @@ private:
     std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;
     SDL_Texture *pieces[12];
+    SDL_Texture *possibleMoveIndicator;
+    SDL_Texture *possibleCaptureIndicator;
     void loadTextures();
     void renderPiece(int pieceName, int color, int x, int y);
 
@@ -156,5 +160,6 @@ public:
     
     void setBackground(colorRGBA bg);
 
-    void renderMove();
+    void renderMove(int pieceName, int color, int coordX, int coordY);
+    void renderMove(char piece, int coordX, int coordY);
 };

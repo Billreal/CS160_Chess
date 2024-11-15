@@ -5,6 +5,7 @@
 #include "./../include/pieces.h"
 #include <string.h>
 #include <stdio.h>
+#include <vector>
 
 // chessPieces::chessPieces(chessName name, chessColor color, int x, int y) : name(name), color(color)
 // {
@@ -25,7 +26,7 @@ void ChessPieces::update(chessColor color, chessName name)
 
 void ChessPieces::update(SDL_Renderer *renderer)
 {
-    coordinate = Coordinate(x, y);
+    ChessPieces::renderer = renderer;
 }
 
 void ChessPieces::update(chessColor color, chessName name)

@@ -23,6 +23,7 @@ private:
 
     // Pieces
     ChessPieces pieces[11];
+    ChessPieces chessPiece;
     // ChessPieces pieces(renderer);
     char board[BOARD_SIZE][BOARD_SIZE];
     colorRGBA primaryColor;
@@ -99,9 +100,9 @@ public:
     
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
     
-    void renderPieces();
+    // void renderPieces();
 
-    // void renderPieces(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
+    void renderPieces(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
     
     void ConvertFEN();
 

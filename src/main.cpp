@@ -91,7 +91,7 @@ int main(int argc, char *args[])
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
     board.setColor(board1Primary, board2Primary);
-    board.renderPieces();
+    // board.renderPieces();
     board.render();
     board.present();
     while (running)

@@ -556,10 +556,12 @@ void Board::renderMove(int pieceName, int color, int coordX, int coordY)
 
             int screenX = col * SIDE_LENGTH + MARGIN;
             int screenY = col * SIDE_LENGTH + MARGIN;
+
+            // render oridnary captures
             if ((board[row][col]) != '0')
             {
                 int targetColor = getPieceColor(board[row][col]);
-                if (targetColor != color && targetColor != COLOR_NONE)
+                if (targetColor != color && targetColor != COLOR_NONE && pieceName != PAWN)
                 {
                     if (possibleCaptureIndicator)
                     {
@@ -569,16 +571,29 @@ void Board::renderMove(int pieceName, int color, int coordX, int coordY)
                         std::cerr << "Rendering capture at: " << row << " " << col << "\n";
                     }
                 }
-
                 break;
             }
+            // render ordinary moves
             if (possibleMoveIndicator)
             {
                 drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
                 std::cerr << "Rendering move at: " << row * SIDE_LENGTH + MARGIN << " " << col * SIDE_LENGTH + MARGIN << "\n";
             }
         }
+    
+    if (pieceName != PAWN) return;
+    // * Render pawn capture (if possible)
+    vector<Coordinate> possiblePawnCaptureMoves(2);
+    if (color == BLACK) possiblePawnCaptureMoves = {Coordinate(coordX + 1, coordY + 1), Coordinate(coordX - 1, coordY + 1)};
+    if (color == WHITE) possiblePawnCaptureMoves = {Coordinate(coordX + 1, coordY - 1), Coordinate(coordX - 1, coordY - 1)};
 
+    for (Coordinate cell: possiblePawnCaptureMoves)
+    {
+        int row = cell.getY();
+        int col = cell.getX();
+        if (getPieceColor(board[row][col]) != color && getPieceColor(board[row][col]) != COLOR_NONE) drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    }
+    return;
     // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 void Board::renderMove(char piece, int coordX, int coordY)

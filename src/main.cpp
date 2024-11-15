@@ -7,7 +7,7 @@
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
 #include "./../include/board.h"
-#include "./../include/pieces.h"
+// #include "./../include/pieces.h"
 #include "./../include/coordinate.h"
 using std::cerr, std::cout;
 
@@ -72,6 +72,7 @@ int main(int argc, char *args[])
     // }
 
     Board board(renderer, board1Primary, board2Primary, bgColor);
+    // ChessPieces pieces(renderer);
 
     // Handling SDL_events
     SDL_Event event;
@@ -83,6 +84,9 @@ int main(int argc, char *args[])
     // for (auto x : dbg)
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
+    board.renderChessboard(board1Primary, board2Primary);
+    board.ConvertFEN();
+    board.renderPieces(board1Primary, board2Primary, false);
     bool isLeftMouseHolding = false;
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';

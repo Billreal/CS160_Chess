@@ -1,42 +1,121 @@
+#pragma once
+
 #include <algorithm>
+#include <iostream>
 #include "./../include/pieces.h"
+#include <string.h>
+#include <stdio.h>
 
-chessPieces::chessPieces(chessName name, chessColor color, int x, int y) : name(name), color(color)
+// chessPieces::chessPieces(chessName name, chessColor color, int x, int y) : name(name), color(color)
+// {
+//     coordinate = Coordinate(x, y);
+// }
+void ChessPieces::update(chessColor color, chessName name, int row, int column)
+{
+    ChessPieces::name = name;
+    ChessPieces::color = color;
+    coordinate = Coordinate(row, column);
+}
+
+void ChessPieces::update(chessColor color, chessName name)
+{
+    ChessPieces::name = name;
+    ChessPieces::color = color;
+}
+
+void ChessPieces::update(SDL_Renderer *renderer)
 {
     coordinate = Coordinate(x, y);
 }
-chessPieces::chessPieces(int x, int y)
+
+void ChessPieces::update(chessColor color, chessName name)
 {
-    name = CHESS_NONE;
-    color = COLOR_NONE;
-    coordinate = Coordinate(x, y);
+    ChessPieces::name = name;
+    ChessPieces::color = color;
 }
 
-chessPieces::chessPieces()
+void ChessPieces::update(SDL_Renderer *renderer)
 {
-    name = CHESS_NONE;
-    color = COLOR_NONE;
-    coordinate = Coordinate(-1, -1);
+    ChessPieces::renderer = renderer;
+    // std::cerr << "Renderer updated for " << getColor() << " " << getName() << "\n";
 }
 
-int chessPieces::getX()
+const std::string ChessPieces::getTexturePath()
+{
+if (color == COLOR_NONE || name == CHESS_NONE)
+        return "";
+
+    std::string PATH = "./assets/";
+
+    if (color == WHITE)  
+    {
+        PATH += "white_";
+    }
+    else
+        PATH += "black_";
+
+
+    switch (name)
+    {
+    case ROOK:
+        PATH += "rook";
+        break;
+    case KNIGHT:
+        PATH += "knight";
+        break;
+    case BISHOP:
+        PATH += "bishop";
+        break;
+    case QUEEN:
+        PATH += "queen";
+        break;
+    case KING:
+        PATH += "king";
+        break;
+    case PAWN:
+        PATH += "pawn";
+        break;
+    }
+    PATH += ".svg";
+
+    return PATH;
+}
+
+chessColor ChessPieces::getColor()
+{
+    return color;
+}
+
+chessName ChessPieces::getName()
+{
+    return name;
+}
+
+// chessPieces::chessPieces()
+// {
+//     name = CHESS_NONE;
+//     color = COLOR_NONE;
+//     coordinate = Coordinate(-1, -1);
+// }
+
+int ChessPieces::getX()
 {
     return coordinate.getX();
 }
 
-int chessPieces::getY()
+int ChessPieces::getY()
 {
     return coordinate.getY();
 }
 
-bool chessPieces::isInRange(Coordinate coord)
+bool ChessPieces::isInRange(Coordinate coord)
 {
     if (coord.getX() < 0 || coord.getX() > 7 || coord.getY() < 0 || coord.getY() > 7)
         return false;
     return true;
 }
 
-void chessPieces::addCell(vector<Coordinate> &vect, const Coordinate &coord)
+void ChessPieces::addCell(vector<Coordinate> &vect, const Coordinate &coord)
 {
     if (isInRange(coord))
         vect.push_back(coord);

@@ -1,4 +1,7 @@
 #pragma once
+
+#include <SDL_image.h>
+#include <SDL.h>
 #include <string>
 #include <vector>
 #include "coordinate.h"
@@ -21,19 +24,35 @@ enum chessColor
     WHITE,
     BLACK,
 };
-class chessPieces
+
+class ChessPieces
 {
 private:
-    chessName name;
+    std::string nameMap[7];
+    std::string colorMap[3];
+
+    SDL_Renderer *renderer = NULL;
+
     Coordinate coordinate;
+    chessName name;
     chessColor color;
+
     bool isInRange(Coordinate coord);
     void addCell(vector<Coordinate> &vect, const Coordinate &coord);
 
 public:
-    chessPieces(chessName name, chessColor color, int x, int y);
-    chessPieces(int x, int y);
-    chessPieces();
+    // ChessPieces(SDL_Renderer *renderer);
+
+    SDL_Texture *loadTexture(const char *filePath, int width, int height);
+
+    void update(chessColor color, chessName name, int row, int column);
+    void update(chessColor color, chessName name);
+    void update(SDL_Renderer *renderer);
+
+    // Get Infos
+    const std::string getTexturePath();
+    chessColor getColor();
+    chessName getName();
     int getX();
     int getY();
     vector<vector<Coordinate>> listAllMove();

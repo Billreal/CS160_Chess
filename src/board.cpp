@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
 #include "./../include/board.h"
-#include <math.h>
+#include "./../include/pieces.h"
+
 #include <string.h>
 #include <stdio.h>
 // #include "./../include/colorScheme.h"
@@ -12,6 +13,7 @@
 // #include "colorScheme.cpp"
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
+    initPieces();
     loadTextures();
     // background = Background(renderer);
 }
@@ -50,46 +52,35 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height, dou
     return texture;
 }
 
-// SDL_Texture *Board::loadTexture(const std::string &path)
-// {
-//     SDL_Surface *surface = IMG_Load(path.c_str());
-//     // Check if surface is loaded
-//     if (!surface)
-//     {
-//         SDL_Log("Failed to load texture %s: %s", path.c_str(), SDL_GetError());
-//         return nullptr;
-//     }
-//     TextureList.push_back(SDL_CreateTextureFromSurface(renderer, surface));
-//     SDL_Texture *texture = TextureList.back();
-//     SDL_FreeSurface(surface);
-//     return texture;
-// }
-
-void Board::loadTextures()
+void Board::initPieces()
 {
-    /*
-        0 -> 5: white
-        6 -> 11: black
-    */
-    pieces[0] = loadTexture("./assets/white_rook.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[1] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[2] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[3] = loadTexture("./assets/white_queen.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[4] = loadTexture("./assets/white_king.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[5] = loadTexture("./assets/white_pawn.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[6] = loadTexture("./assets/black_rook.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[7] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[8] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[9] = loadTexture("./assets/black_queen.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[10] = loadTexture("./assets/black_king.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[11] = loadTexture("./assets/black_pawn.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            BOARD[i][j].update(COLOR_NONE, CHESS_NONE);
+        }
+    }
+    pieces[0].update(WHITE, ROOK);
+    pieces[1].update(WHITE, KNIGHT);
+    pieces[2].update(WHITE, BISHOP);
+    pieces[3].update(WHITE, QUEEN);
+    pieces[4].update(WHITE, KING);
+    pieces[5].update(WHITE, PAWN);
+    pieces[6].update(BLACK, ROOK);
+    pieces[7].update(BLACK, KNIGHT);
+    pieces[8].update(BLACK, BISHOP);
+    pieces[9].update(BLACK, QUEEN);
+    pieces[10].update(BLACK, KING);
+    pieces[11].update(BLACK, PAWN);
     possibleMoveIndicator = loadTexture("./assets/move_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, MOVE_INDICATOR_SCALE);
     possibleCaptureIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, CAPTURE_INDICATOR_SCALE);
-    // pieces[0][0] = loadTexture("./assets/white_pawn.png");
-    // pieces[1][0] = loadTexture("./assets/black_pawn.png");
+
+    for (int i = 0; i <= 11; i++)
+        pieces[i].update(renderer);
 }
 
-void Board::renderPieces()
+void Board::ConvertFEN()
 {
     // std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
@@ -140,20 +131,31 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
     // flush();
 }
 
-void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag)
+void Board::renderPieces(colorRGBA primary, colorRGBA secondary, bool rotationFlag)
 {
-    // i is row index
-    // j is column index
-    // * Bottom to up, left to right
-    for (int i = 1; i <= BOARD_SIZE; i++)
-        for (int j = 1; j <= BOARD_SIZE; j++)
+    for (int row = 0; row < BOARD_SIZE; row++)
+    {
+        for (int column = 0; column < BOARD_SIZE; column++)
         {
-            if (j != 1 || i != BOARD_SIZE)
-                continue;
-            bool cellType = (i + j) % 2 ^ 1; // As to contrast the cell's color
-            int currentX = MARGIN + SIDE_LENGTH * (i - 1);
-            int currentY = MARGIN + SIDE_LENGTH * (j - 1);
+            // Get piece path for each board cell if exist
+            const std::string PATH = BOARD[row][column].getTexturePath();
+            // std::cerr << PATH << "\n";
+
+            if (!PATH.empty())
+            {
+                // Load texture from paths stored in each pieces
+                SDL_Texture *texture = loadTexture(PATH.c_str(), SIDE_LENGTH, SIDE_LENGTH);
+
+                // Draw chess piece
+                drawTexture(texture,
+                            MARGIN + SIDE_LENGTH * column,
+                            MARGIN + SIDE_LENGTH * row,
+                            SIDE_LENGTH,
+                            SIDE_LENGTH);
+                // std::cerr << row << " " << column << "\n";
+            }
         }
+    }
 }
 
 bool Board::checkBoardSeq()
@@ -167,7 +169,7 @@ bool Board::checkBoardSeq()
     return true;
 }
 
-void Board::renderStartingPosition(std::string seq)
+void Board::convertStartingPosition(std::string seq)
 {
     // Translate FEN notation's chess placements into an 8x8 array
     // Direction: Left to Right, Top down
@@ -181,16 +183,20 @@ void Board::renderStartingPosition(std::string seq)
         if (isChessPiece(currentChar, pieceIndicator))
         {
             // board[row][column++] = currentChar;
+            // std::cerr << row << " " << column << " " << pieceIndicator << "\n";
             if (0 <= pieceIndicator && pieceIndicator < 12)
             {
-                // Draw chess piece
-                drawTexture(pieces[pieceIndicator],
-                            MARGIN + SIDE_LENGTH * column,
-                            MARGIN + SIDE_LENGTH * row,
-                            SIDE_LENGTH,
-                            SIDE_LENGTH);
+                BOARD[row][column].update(pieces[pieceIndicator].getColor(),
+                                          pieces[pieceIndicator].getName(),
+                                          row,
+                                          column);
+
+                // drawTexture(pieces[pieceIndicator],
+                //             MARGIN + SIDE_LENGTH * column,
+                //             MARGIN + SIDE_LENGTH * row,
+                //             SIDE_LENGTH,
+                //             SIDE_LENGTH);
                 column++;
-                std::cerr << row << " " << column << "\n";
             }
             continue;
         }
@@ -199,11 +205,8 @@ void Board::renderStartingPosition(std::string seq)
         if (isNum(currentChar))
         {
             int blankLength = int(currentChar) - '0';
+            // Skip cells
             column = column + blankLength;
-            // while (length--)
-            // {
-            //     board[row][column++] = '*';
-            // }
             continue;
         }
 
@@ -330,6 +333,15 @@ Coordinate Board::getPieceCoord(int x, int y)
     int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
     int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
     // Fix out of bound cell
+    if (horizontalCell < 0)
+        horizontalCell = 0;
+    if (horizontalCell > 7)
+        horizontalCell = 7;
+    if (verticalCell < 0)
+        verticalCell = 0;
+    if (verticalCell > 7)
+        verticalCell = 7;
+    return Coordinate(horizontalCell, verticalCell);
     if (horizontalCell < 0)
         horizontalCell = 0;
     if (horizontalCell > 7)

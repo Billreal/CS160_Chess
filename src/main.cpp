@@ -111,10 +111,11 @@ int main(int argc, char *args[])
                 Coordinate pickedPlace = board.getPieceCoord(event.button);
                 pickedPiece = board.getPiece(pickedPlace);
                 prevCoordinate = pickedPlace;
+                if (pickedPlace == Coordinate(-1, -1)) break;
                 if (pickedPiece == '0')
                     break;
                 isLeftMouseHolding = true;
-                // cerr << pickedPiece << " " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
+                cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
                 // board.clear();
                 board.render();
                 board.present();
@@ -142,7 +143,10 @@ int main(int argc, char *args[])
                 isLeftMouseHolding = false;
                 // Coordinate selectedPlace = board.getPieceCoord(event.button);
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
-                board.writeCell(droppedPlace, pickedPiece);
+                if (droppedPlace == Coordinate(-1, -1))
+                    board.writeCell(prevCoordinate, pickedPiece);
+                else
+                    board.writeCell(droppedPlace, pickedPiece);
                 // board.clear();
                 board.render();
                 if (droppedPlace == prevCoordinate)
@@ -152,8 +156,8 @@ int main(int argc, char *args[])
                 }
                 prevCoordinate = Coordinate(-1, -1);
                 pickedPiece = ' ';
-                // std::cerr << "Dropped at " << selectedPlace.getX() << " " << selectedPlace.getY() << "\n";
-                // board.log(event.button, "released");
+                std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
+                board.log(event.button, "released");
                 board.present();
                 break;
             }

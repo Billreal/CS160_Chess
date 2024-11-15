@@ -325,19 +325,20 @@ void Board::log(SDL_MouseButtonEvent ev, std::string status)
 
 Coordinate Board::getPieceCoord(int x, int y)
 {
+    Coordinate invalidMoves(-1, -1);
     int mouseX = x;
     int mouseY = y;
     int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
     int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
     // Fix out of bound cell
-    if (horizontalCell < 0)
-        horizontalCell = 0;
-    if (horizontalCell > 7)
-        horizontalCell = 7;
-    if (verticalCell < 0)
-        verticalCell = 0;
-    if (verticalCell > 7)
-        verticalCell = 7;
+    if (horizontalCell < 0 || mouseX - MARGIN < 0)
+        return invalidMoves;
+    if (horizontalCell > 7 || mouseX - (MARGIN + 8 * SIDE_LENGTH) > 0)
+        return invalidMoves;
+    if (verticalCell < 0 || mouseY - MARGIN < 0)
+        return invalidMoves;
+    if (verticalCell > 7 || mouseY - (MARGIN + 8 * SIDE_LENGTH) > 0)
+        return invalidMoves;
     return Coordinate(horizontalCell, verticalCell);
 }
 
@@ -413,16 +414,16 @@ void Board::renderFromBoard()
 
         for (int col = 0; col < BOARD_SIZE; col++)
         {
-            std::cerr << board[row][col] << " ";
+            // std::cerr << board[row][col] << " ";
             if (board[row][col] == '0')
                 continue;
             int name = getPieceName(board[row][col]);
             int color = getPieceColor(board[row][col]);
             renderPieceByCoordinate(name, color, col, row);
         }
-        std::cerr << std::endl;
+        // std::cerr << std::endl;
     }
-    std::cerr << std::endl;
+    // std::cerr << std::endl;
 }
 
 int Board::getPieceColor(char piece)

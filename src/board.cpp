@@ -71,18 +71,18 @@ void Board::loadTextures()
         0 -> 5: white
         6 -> 11: black
     */
-    pieces[0] = loadTexture("./assets/white_rook.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[0] = loadTexture("./assets/white_rook.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     pieces[1] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     pieces[2] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[3] = loadTexture("./assets/white_queen.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[4] = loadTexture("./assets/white_king.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[5] = loadTexture("./assets/white_pawn.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[6] = loadTexture("./assets/black_rook.svg",   SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[3] = loadTexture("./assets/white_queen.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[4] = loadTexture("./assets/white_king.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[5] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[6] = loadTexture("./assets/black_rook.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     pieces[7] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     pieces[8] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[9] = loadTexture("./assets/black_queen.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[10] = loadTexture("./assets/black_king.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[11] = loadTexture("./assets/black_pawn.svg",  SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[9] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[10] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[11] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     possibleMoveIndicator = loadTexture("./assets/move_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, MOVE_INDICATOR_SCALE);
     possibleCaptureIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, CAPTURE_INDICATOR_SCALE);
     // pieces[0][0] = loadTexture("./assets/white_pawn.png");
@@ -534,70 +534,93 @@ bool Board::isNum(char c)
 // TODO: render next move possible for a chess
 
 // colorRGBA indicator(75, 72, 71, 127);
-void Board::renderMove(int pieceName, int color, int coordX, int coordY)
+void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
 {
-    std::cerr << coordX << " " << coordY << std::endl;
-    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    // setRendererColor(moveIndicator);
-    vector<vector<Coordinate>> renderList = chessPiece.listAllMove(pieceName, color, coordX, coordY);
-    for (int i = 0; i < renderList.size(); i++)
+    for (Coordinate cell : moveList)
+        drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    for (Coordinate cell : captureList)
     {
-        std::cerr << "Direction " << i << std::endl;
-        for (auto cell : renderList[i])
-            std::cerr << cell.getX() << " " << cell.getY() << std::endl;
-        std::cerr << std::endl;
+        std::cerr << "Rendering capture move at " << cell.getX() << " " << cell.getY() << "\n";
+        drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     }
+}
 
-    // std::swap(coordX, coordY);
-    for (vector<Coordinate> moveDirection : renderList)
-        for (Coordinate cell : moveDirection)
+// * renderMove is gonna be replaced
+
+vector<Coordinate> Board::getPossibleMoves(int pieceName, int color, int coordX, int coordY)
+{
+
+    vector<vector<Coordinate>> allMoves = chessPiece.listAllMove(pieceName, color, coordX, coordY);
+    vector<Coordinate> res;
+    for (vector<Coordinate> direction : allMoves)
+        for (Coordinate cell : direction)
         {
             int row = cell.getY();
             int col = cell.getX();
+            if (board[row][col] != '0')
+                break;
+            res.push_back(cell);
+        }
+    return res;
+}
 
-            int screenX = col * SIDE_LENGTH + MARGIN;
-            int screenY = col * SIDE_LENGTH + MARGIN;
-
-            // render oridnary captures
-            if ((board[row][col]) != '0')
+vector<Coordinate> Board::getPossibleCaptures(int pieceName, int color, int coordX, int coordY)
+{
+    vector<vector<Coordinate>> allMoves = chessPiece.listAllMove(pieceName, color, coordX, coordY);
+    vector<Coordinate> res;
+    if (pieceName != PAWN)
+    {
+        for (vector<Coordinate> direction : allMoves)
+        {
+            for (Coordinate cell : direction)
             {
-                int targetColor = getPieceColor(board[row][col]);
-                if (targetColor != color && targetColor != COLOR_NONE && pieceName != PAWN)
-                {
-                    if (possibleCaptureIndicator)
-                    {
-
-                        drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-                        std::cerr << "Can capture at " << row << " " << col << " " << board[row][col] << " " << targetColor << " " << color << std::endl;
-                        std::cerr << "Rendering capture at: " << row << " " << col << "\n";
-                    }
-                }
+                int row = cell.getY();
+                int col = cell.getX();
+                if (board[row][col] == '0')
+                    continue;
+                if (getPieceColor(board[row][col]) != color)
+                    res.push_back(cell);
+                // std::cerr << "Can capture at " << row << " " << col << "\n";
                 break;
             }
-            // render ordinary moves
-            if (possibleMoveIndicator)
-            {
-                drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-                std::cerr << "Rendering move at: " << row * SIDE_LENGTH + MARGIN << " " << col * SIDE_LENGTH + MARGIN << "\n";
-            }
         }
-    
-    if (pieceName != PAWN) return;
-    // * Render pawn capture (if possible)
-    vector<Coordinate> possiblePawnCaptureMoves(2);
-    if (color == BLACK) possiblePawnCaptureMoves = {Coordinate(coordX + 1, coordY + 1), Coordinate(coordX - 1, coordY + 1)};
-    if (color == WHITE) possiblePawnCaptureMoves = {Coordinate(coordX + 1, coordY - 1), Coordinate(coordX - 1, coordY - 1)};
-
-    for (Coordinate cell: possiblePawnCaptureMoves)
-    {
-        int row = cell.getY();
-        int col = cell.getX();
-        if (getPieceColor(board[row][col]) != color && getPieceColor(board[row][col]) != COLOR_NONE) drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     }
-    return;
-    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    else
+    {
+        Coordinate leftDiagonalCapture, rightDiagonalCapture;
+        if (color == WHITE)
+        {
+            leftDiagonalCapture = Coordinate(coordX - 1, coordY - 1);
+            rightDiagonalCapture = Coordinate(coordX + 1, coordY - 1);
+        }
+        else
+        {
+            leftDiagonalCapture = Coordinate(coordX - 1, coordY + 1);
+            rightDiagonalCapture = Coordinate(coordX + 1, coordY + 1);
+        }
+
+        int leftColor = getPieceColor(board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()]);
+        int rightColor = getPieceColor(board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()]);
+        if (leftColor != color && leftColor != COLOR_NONE)
+            res.push_back(leftDiagonalCapture);
+        if (rightColor != color && rightColor != COLOR_NONE)
+            res.push_back(rightDiagonalCapture);
+    }
+    for (auto cell : res)
+        std::cerr << "Can capture at " << cell.getX() << " " << cell.getY() << "\n";
+    return res;
 }
-void Board::renderMove(char piece, int coordX, int coordY)
+
+vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
 {
-    renderMove(getPieceName(piece), getPieceColor(piece), coordX, coordY);
+    return getPossibleMoves(getPieceName(piece), getPieceColor(piece), coordX, coordY);
+}
+vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY)
+{
+    return getPossibleCaptures(getPieceName(piece), getPieceColor(piece), coordX, coordY);
+}
+bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate src, Coordinate dest)
+{
+    // ! Piece at src doesn't exist
+    // * Check if moving the piece doesn't put the king in danger and the destination is valid 
 }

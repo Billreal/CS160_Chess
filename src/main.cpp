@@ -90,6 +90,8 @@ int main(int argc, char *args[])
     board.renderPieces();
     board.render();
     board.present();
+    vector<Coordinate> possibleMoves;
+    vector<Coordinate> possibleCaptures;
     while (running)
     {
         // Check if the window is running or not
@@ -130,6 +132,7 @@ int main(int argc, char *args[])
                 // board.clear();
                 // board.clear();
                 board.render();
+                board.renderMove(possibleMoves, possibleCaptures);
                 board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                 board.present();
                 break;
@@ -141,9 +144,11 @@ int main(int argc, char *args[])
                 if (!isLeftMouseHolding)
                     break;
                 isLeftMouseHolding = false;
-                // Coordinate selectedPlace = board.getPieceCoord(event.button);
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
-                if (droppedPlace == Coordinate(-1, -1))
+                vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, droppedPlace.getX(), droppedPlace.getY());
+                vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, droppedPlace.getX(), droppedPlace.getY());
+                // Coordinate selectedPlace = board.getPieceCoord(event.button);
+                if (droppedPlace == Coordinate(-1, -1) && !board.isValidMove(possibleMoves, possibleCaptures, prevCoordinate, droppedPlace))
                     board.writeCell(prevCoordinate, pickedPiece);
                 else
                     board.writeCell(droppedPlace, pickedPiece);
@@ -152,7 +157,7 @@ int main(int argc, char *args[])
                 if (droppedPlace == prevCoordinate)
                 {
                     // board.clear();
-                    board.renderMove(pickedPiece, droppedPlace.getX(), droppedPlace.getY());
+                    board.renderMove(possibleMoves, possibleCaptures);
                 }
                 prevCoordinate = Coordinate(-1, -1);
                 pickedPiece = ' ';

@@ -92,6 +92,7 @@ int main(int argc, char *args[])
     board.present();
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
+    int currentMoveColor = WHITE;
     while (running)
     {
         // Check if the window is running or not
@@ -112,6 +113,8 @@ int main(int argc, char *args[])
                     break;
                 Coordinate pickedPlace = board.getPieceCoord(event.button);
                 pickedPiece = board.getPiece(pickedPlace);
+                int pickedColor = board.getPieceColor(pickedPiece);
+                if (pickedColor != currentMoveColor) break;
                 prevCoordinate = pickedPlace;
                 if (pickedPlace == Coordinate(-1, -1)) break;
                 if (pickedPiece == '0')
@@ -149,19 +152,32 @@ int main(int argc, char *args[])
                 vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                 // Coordinate selectedPlace = board.getPieceCoord(event.button);
 
-                if (droppedPlace != Coordinate(-1, -1) && board.isKingSafe(prevCoordinate, droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
-                    board.writeCell(droppedPlace, pickedPiece);
-                else
-                    board.writeCell(prevCoordinate, pickedPiece);
-                // board.clear();
-                board.render();
                 if (droppedPlace == prevCoordinate)
                 {
-                    // board.clear();
+                    // Dropping at same place
+                    board.writeCell(droppedPlace, pickedPiece);
+                    board.render();
                     board.renderMove(possibleMoves, possibleCaptures);
                 }
-                prevCoordinate = Coordinate(-1, -1);
-                pickedPiece = ' ';
+                else
+                if (droppedPlace != Coordinate(-1, -1) && board.isKingSafe(prevCoordinate, droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
+                {
+                    // dropping at different place, valid
+                    board.writeCell(droppedPlace, pickedPiece);
+                    board.render();
+                    prevCoordinate = Coordinate(-1, -1);
+                    pickedPiece = ' ';
+                    if (currentMoveColor == WHITE)
+                        currentMoveColor = BLACK;
+                    else if (currentMoveColor == BLACK)
+                        currentMoveColor = WHITE;
+                }
+                else // invalid move
+                {
+                    board.writeCell(prevCoordinate, pickedPiece);
+                    board.render();
+                }
+                // board.clear();
                 std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
                 board.log(event.button, "released");
                 board.present();

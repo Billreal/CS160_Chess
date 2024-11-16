@@ -71,7 +71,7 @@ int main(int argc, char *args[])
     //     cerr << SDL_GetError() << "\n";
     // }
 
-    Board board(renderer, board1Primary, board2Primary, bgColor);
+    Board board(renderer, classicboard1Primary, classicBoard2Primary, bgColor);
 
     // Handling SDL_events
     SDL_Event event;
@@ -86,7 +86,7 @@ int main(int argc, char *args[])
     bool isLeftMouseHolding = false;
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
-    board.setColor(board1Primary, board2Primary);
+    board.setColor(classicboard1Primary, classicBoard2Primary);
     board.renderPieces();
     board.render();
     board.present();
@@ -160,7 +160,7 @@ int main(int argc, char *args[])
                     board.renderMove(possibleMoves, possibleCaptures);
                 }
                 else
-                if (droppedPlace != Coordinate(-1, -1) && board.isKingSafe(prevCoordinate, droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
+                    if (droppedPlace != Coordinate(-1, -1) && board.testMovesKingSafety(droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
                 {
                     // dropping at different place, valid
                     board.writeCell(droppedPlace, pickedPiece);

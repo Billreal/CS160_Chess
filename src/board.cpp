@@ -646,41 +646,47 @@ bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordin
 
     // * Check if the king is in check after moving the piece
 }
-
-bool Board::isKingSafe(Coordinate src, Coordinate dest, char movingPiece)
+bool Board::testMovesKingSafety(Coordinate dest, char movingPiece)
 {
-    using std::cerr;
-    cerr << "Entering isKingSafe\n";
     char currentBoard[BOARD_SIZE][BOARD_SIZE];
     int destRow = dest.getY();
     int destCol = dest.getX();
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             currentBoard[i][j] = board[i][j];
-
-    int kingRow = 0;
-    int kingCol = 0;
     board[destRow][destCol] = movingPiece;
+    bool res = isKingSafe(getPieceColor(movingPiece));
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
-            if (getPieceName(board[i][j]) == KING && getPieceColor(board[i][j]) == getPieceColor(movingPiece))
+            board[i][j] = currentBoard[i][j];
+    return res;
+}
+bool Board::isKingSafe(int color)
+{
+    using std::cerr;
+    cerr << "Entering isKingSafe\n";
+
+    int kingRow, kingCol;
+    // Always have
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
+            if (getPieceName(board[i][j]) == KING && getPieceColor(board[i][j]) == color)
             {
                 kingRow = i;
                 kingCol = j;
                 break;
             }
     std::cerr << kingRow << " " << kingCol << "\n";
-    int currentColor = getPieceColor(movingPiece);
-    int oppositeColor = 1 - currentColor;
+    int oppositeColor = 1 - color;
 
-    cerr << "Current Color is " << currentColor << "\n";
+    cerr << "Current Color is " << color << "\n";
     cerr << "Opposite Color is " << oppositeColor << "\n";
     // * 3 - getPieceColor(movingPiece) return the opposite color to movingPiece
-    vector<Coordinate> pawnCheck = getPossibleCaptures(PAWN, currentColor, kingCol, kingRow);
-    vector<Coordinate> knightCheck = getPossibleCaptures(KNIGHT, currentColor, kingCol, kingRow);
-    vector<Coordinate> rookCheck = getPossibleCaptures(ROOK, currentColor, kingCol, kingRow);
-    vector<Coordinate> bishopCheck = getPossibleCaptures(BISHOP, currentColor, kingCol, kingRow);
-    vector<Coordinate> kingCheck = getPossibleCaptures(KING, currentColor, kingCol, kingRow);
+    vector<Coordinate> pawnCheck = getPossibleCaptures(PAWN, color, kingCol, kingRow);
+    vector<Coordinate> knightCheck = getPossibleCaptures(KNIGHT, color, kingCol, kingRow);
+    vector<Coordinate> rookCheck = getPossibleCaptures(ROOK, color, kingCol, kingRow);
+    vector<Coordinate> bishopCheck = getPossibleCaptures(BISHOP, color, kingCol, kingRow);
+    vector<Coordinate> kingCheck = getPossibleCaptures(KING, color, kingCol, kingRow);
     cerr << "Size of pawn, knight, roook, bishop and king check: " << pawnCheck.size() << " " << knightCheck.size() << " " << rookCheck.size() << " " << bishopCheck.size() << " " << kingCheck.size() << "\n";
     // Check the king's check status
     bool res = true;
@@ -729,9 +735,6 @@ bool Board::isKingSafe(Coordinate src, Coordinate dest, char movingPiece)
             if (getPieceName(checkingPiece) == KING && getPieceColor(checkingPiece) == oppositeColor)
                 res = false;
         }
-    for (int i = 0; i < BOARD_SIZE; i++)
-        for (int j = 0; j < BOARD_SIZE; j++)
-            board[i][j] = currentBoard[i][j];
     cerr << "Is danger? " << !res << "\n";
     return res;
 }

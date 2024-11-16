@@ -145,13 +145,14 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = false;
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
-                vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, droppedPlace.getX(), droppedPlace.getY());
-                vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, droppedPlace.getX(), droppedPlace.getY());
+                vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                 // Coordinate selectedPlace = board.getPieceCoord(event.button);
-                if (droppedPlace == Coordinate(-1, -1) && !board.isValidMove(possibleMoves, possibleCaptures, prevCoordinate, droppedPlace))
-                    board.writeCell(prevCoordinate, pickedPiece);
-                else
+
+                if (droppedPlace != Coordinate(-1, -1) && board.isKingSafe(prevCoordinate, droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
                     board.writeCell(droppedPlace, pickedPiece);
+                else
+                    board.writeCell(prevCoordinate, pickedPiece);
                 // board.clear();
                 board.render();
                 if (droppedPlace == prevCoordinate)

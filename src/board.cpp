@@ -9,6 +9,7 @@
 #define NANOSVGRAST_IMPLEMENTATION
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
+
 // #include "colorScheme.cpp"
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
@@ -428,6 +429,7 @@ void Board::renderFromBoard()
 
 int Board::getPieceColor(char piece)
 {
+    if (piece == '0') return -1;
     if ('A' <= piece && piece <= 'Z')
         return 0;
     if ('a' <= piece && piece <= 'z')
@@ -600,14 +602,18 @@ vector<Coordinate> Board::getPossibleCaptures(int pieceName, int color, int coor
         }
 
         int leftColor = getPieceColor(board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()]);
-        int rightColor = getPieceColor(board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()]);
-        if (leftColor != color && leftColor != COLOR_NONE)
-            res.push_back(leftDiagonalCapture);
-        if (rightColor != color && rightColor != COLOR_NONE)
-            res.push_back(rightDiagonalCapture);
+        // std::cerr << leftColor << " " << board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()] << "\n";
+        int rightColor = getPieceColor(board[rightDiagonalCapture.getY()][rightDiagonalCapture.getX()]);
+        // std::cerr << rightColor << " " << board[rightDiagonalCapture.getY()][rightDiagonalCapture.getX()] << "\n";
+        if (leftDiagonalCapture.getX() >= 0 && leftDiagonalCapture.getX() <= 7 && leftDiagonalCapture.getY() >= 0 && leftDiagonalCapture.getY() <= 7)
+            if (leftColor != color && leftColor != COLOR_NONE)
+                res.push_back(leftDiagonalCapture);
+        if (rightDiagonalCapture.getX() >= 0 && rightDiagonalCapture.getX() <= 7 && rightDiagonalCapture.getY() >= 0 && rightDiagonalCapture.getY() <= 7)
+            if (rightColor != color && rightColor != COLOR_NONE)
+                res.push_back(rightDiagonalCapture);
     }
-    for (auto cell : res)
-        std::cerr << "Can capture at " << cell.getX() << " " << cell.getY() << "\n";
+    // for (auto cell : res)
+    //     std::cerr << "Can capture at " << cell.getX() << " " << cell.getY() << "\n";
     return res;
 }
 
@@ -619,8 +625,113 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
 {
     return getPossibleCaptures(getPieceName(piece), getPieceColor(piece), coordX, coordY);
 }
-bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate src, Coordinate dest)
+bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate dest)
 {
     // ! Piece at src doesn't exist
-    // * Check if moving the piece doesn't put the king in danger and the destination is valid 
+    // * Check if moving the piece doesn't put the king in danger and the destination is valid
+    // Generating the next board
+    for (Coordinate cell : moveList)
+    {
+        // std::cerr << cell.getX() << " " << cell.getY() << " " << dest.getX() << " " << dest.getY() << "\n";
+        if (dest == cell)
+            return true;
+    }
+    for (Coordinate cell : captureList)
+    {
+        // std::cerr << cell.getX() << " " << cell.getY() << " " << dest.getX() << " " << dest.getY() << "\n";
+        if (dest == cell)
+            return true;
+    }
+    return false;
+
+    // * Check if the king is in check after moving the piece
+}
+
+bool Board::isKingSafe(Coordinate src, Coordinate dest, char movingPiece)
+{
+    using std::cerr;
+    cerr << "Entering isKingSafe\n";
+    char currentBoard[BOARD_SIZE][BOARD_SIZE];
+    int destRow = dest.getY();
+    int destCol = dest.getX();
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
+            currentBoard[i][j] = board[i][j];
+
+    int kingRow = 0;
+    int kingCol = 0;
+    board[destRow][destCol] = movingPiece;
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
+            if (getPieceName(board[i][j]) == KING && getPieceColor(board[i][j]) == getPieceColor(movingPiece))
+            {
+                kingRow = i;
+                kingCol = j;
+                break;
+            }
+    std::cerr << kingRow << " " << kingCol << "\n";
+    int currentColor = getPieceColor(movingPiece);
+    int oppositeColor = 1 - currentColor;
+
+    cerr << "Current Color is " << currentColor << "\n";
+    cerr << "Opposite Color is " << oppositeColor << "\n";
+    // * 3 - getPieceColor(movingPiece) return the opposite color to movingPiece
+    vector<Coordinate> pawnCheck = getPossibleCaptures(PAWN, currentColor, kingCol, kingRow);
+    vector<Coordinate> knightCheck = getPossibleCaptures(KNIGHT, currentColor, kingCol, kingRow);
+    vector<Coordinate> rookCheck = getPossibleCaptures(ROOK, currentColor, kingCol, kingRow);
+    vector<Coordinate> bishopCheck = getPossibleCaptures(BISHOP, currentColor, kingCol, kingRow);
+    vector<Coordinate> kingCheck = getPossibleCaptures(KING, currentColor, kingCol, kingRow);
+    cerr << "Size of pawn, knight, roook, bishop and king check: " << pawnCheck.size() << " " << knightCheck.size() << " " << rookCheck.size() << " " << bishopCheck.size() << " " << kingCheck.size() << "\n";
+    // Check the king's check status
+    bool res = true;
+    if (res)
+        for (Coordinate cell : pawnCheck)
+        {
+            int row = cell.getY(), col = cell.getX();
+            cerr << "checking pawn at: " << row << " " << col << "\n";
+            char checkingPiece = board[row][col];
+            if (getPieceColor(checkingPiece) == PAWN && getPieceColor(checkingPiece) == oppositeColor)
+                res = false;
+        }
+    if (res)
+        for (Coordinate cell : bishopCheck)
+        {
+            int row = cell.getY(), col = cell.getX();
+            cerr << "checking bishop and queen at: " << row << " " << col << "\n";
+            char checkingPiece = board[row][col];
+            if ((getPieceName(checkingPiece) == BISHOP || getPieceName(checkingPiece) == QUEEN) && getPieceColor(checkingPiece) == oppositeColor)
+                res = false;
+        }
+    if (res)
+        for (Coordinate cell : rookCheck)
+        {
+            int row = cell.getY(), col = cell.getX();
+            cerr << "checking rook and queen at: " << row << " " << col << "\n";
+            char checkingPiece = board[row][col];
+            if ((getPieceName(checkingPiece) == ROOK || getPieceName(checkingPiece) == QUEEN) && getPieceColor(checkingPiece) == oppositeColor)
+                res = false;
+        }
+    if (res)
+        for (Coordinate cell : knightCheck)
+        {
+            int row = cell.getY(), col = cell.getX();
+            cerr << "checking knight at: " << row << " " << col << "\n";
+            char checkingPiece = board[row][col];
+            if (getPieceName(checkingPiece) == KNIGHT && getPieceColor(checkingPiece) == oppositeColor)
+                res = false;
+        }
+    if (res)
+        for (Coordinate cell : kingCheck)
+        {
+            int row = cell.getY(), col = cell.getX();
+            cerr << "checking king at: " << row << " " << col << "\n";
+            char checkingPiece = board[row][col];
+            if (getPieceName(checkingPiece) == KING && getPieceColor(checkingPiece) == oppositeColor)
+                res = false;
+        }
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
+            board[i][j] = currentBoard[i][j];
+    cerr << "Is danger? " << !res << "\n";
+    return res;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 // #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include "./test.cpp"
@@ -93,6 +94,7 @@ int main(int argc, char *args[])
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
     int currentMoveColor = WHITE;
+    Coordinate enPassantCoord;
     while (running)
     {
         // Check if the window is running or not
@@ -114,9 +116,11 @@ int main(int argc, char *args[])
                 Coordinate pickedPlace = board.getPieceCoord(event.button);
                 pickedPiece = board.getPiece(pickedPlace);
                 int pickedColor = board.getPieceColor(pickedPiece);
-                if (pickedColor != currentMoveColor) break;
+                if (pickedColor != currentMoveColor)
+                    break;
                 prevCoordinate = pickedPlace;
-                if (pickedPlace == Coordinate(-1, -1)) break;
+                if (pickedPlace == Coordinate(-1, -1))
+                    break;
                 if (pickedPiece == '0')
                     break;
                 isLeftMouseHolding = true;
@@ -150,6 +154,10 @@ int main(int argc, char *args[])
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
                 vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                 vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                // if (board.getPieceName(pickedPiece) == PAWN && (enPassantCoord == (droppedPlace + Coordinate(1, 0))))
+                // {
+                //     if (board.getPieceColor(pickedPiece) == WHITE) possibleCaptures.push_back(droppedPlace + Coordinate(1, 1));
+                // }
                 // Coordinate selectedPlace = board.getPieceCoord(event.button);
 
                 if (droppedPlace == prevCoordinate)
@@ -159,12 +167,34 @@ int main(int argc, char *args[])
                     board.render();
                     board.renderMove(possibleMoves, possibleCaptures);
                 }
-                else
-                    if (droppedPlace != Coordinate(-1, -1) && board.testMovesKingSafety(droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
+                else if (droppedPlace != Coordinate(-1, -1) && board.testMovesKingSafety(droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
                 {
                     // dropping at different place, valid
+                    if (board.getPieceName(pickedPiece) == PAWN)
+                    {
+                        Coordinate displacement = droppedPlace - prevCoordinate;
+                        if (abs(displacement.getX()) == 1 && abs(displacement.getY() == 1))
+                            if (board.getPiece(droppedPlace) == '0')
+                            {
+                                // En passant move
+                                if (board.getPieceColor(pickedPiece) == WHITE)
+                                    board.deleteCell(droppedPlace + Coordinate(0, 1));
+                                if (board.getPieceColor(pickedPiece) == BLACK)
+                                    board.deleteCell(droppedPlace + Coordinate(0, -1));
+                            }
+                    }
                     board.writeCell(droppedPlace, pickedPiece);
                     board.render();
+                    if (pickedPiece == PAWN)
+                    {
+                        Coordinate coordChange = droppedPlace - prevCoordinate;
+                        if (coordChange == Coordinate(0, 2) || coordChange == Coordinate(0, -2))
+                            enPassantCoord = droppedPlace;
+                        else
+                            enPassantCoord = Coordinate(-1, -1);
+                    }
+                    else
+                        enPassantCoord = Coordinate(-1, -1);
                     prevCoordinate = Coordinate(-1, -1);
                     pickedPiece = ' ';
                     if (currentMoveColor == WHITE)

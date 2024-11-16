@@ -687,6 +687,7 @@ bool Board::isKingSafe(int color)
     vector<Coordinate> rookCheck = getPossibleCaptures(ROOK, color, kingCol, kingRow);
     vector<Coordinate> bishopCheck = getPossibleCaptures(BISHOP, color, kingCol, kingRow);
     vector<Coordinate> kingCheck = getPossibleCaptures(KING, color, kingCol, kingRow);
+    // * Queen check will be integrated in rook and bishop check
     cerr << "Size of pawn, knight, roook, bishop and king check: " << pawnCheck.size() << " " << knightCheck.size() << " " << rookCheck.size() << " " << bishopCheck.size() << " " << kingCheck.size() << "\n";
     // Check the king's check status
     bool res = true;

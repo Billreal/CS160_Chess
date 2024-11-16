@@ -125,6 +125,28 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = true;
                 cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
+                possibleMoves.clear();
+                possibleCaptures.clear();
+                possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                if (board.getPieceName(pickedPiece) == PAWN && (enPassantCoord == (prevCoordinate + Coordinate(1, 0))))
+                {
+
+                    std::cerr << "Can enpassant\n";
+                    if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(1, -1)))
+                        possibleCaptures.push_back(prevCoordinate + Coordinate(1, -1));
+                    if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(1, 1)))
+                        possibleCaptures.push_back(prevCoordinate + Coordinate(1, 1));
+                }
+
+                if (board.getPieceName(pickedPiece) == PAWN && (enPassantCoord == (prevCoordinate + Coordinate(-1, 0))))
+                {
+                    std::cerr << "Can enpassant\n";
+                    if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(-1, -1)))
+                        possibleCaptures.push_back(prevCoordinate + Coordinate(-1, -1));
+                    if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(-1, 1)))
+                        possibleCaptures.push_back(prevCoordinate + Coordinate(-1, 1));
+                }
                 // board.clear();
                 board.render();
                 board.present();
@@ -152,12 +174,9 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = false;
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
-                vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                // if (board.getPieceName(pickedPiece) == PAWN && (enPassantCoord == (droppedPlace + Coordinate(1, 0))))
-                // {
-                //     if (board.getPieceColor(pickedPiece) == WHITE) possibleCaptures.push_back(droppedPlace + Coordinate(1, 1));
-                // }
+                std::cerr << "Possible enpassant Piece: ";
+                std::cerr << enPassantCoord.getX() << " " << enPassantCoord.getY() << "\n";
+
                 // Coordinate selectedPlace = board.getPieceCoord(event.button);
 
                 if (droppedPlace == prevCoordinate)
@@ -173,7 +192,7 @@ int main(int argc, char *args[])
                     if (board.getPieceName(pickedPiece) == PAWN)
                     {
                         Coordinate displacement = droppedPlace - prevCoordinate;
-                        if (abs(displacement.getX()) == 1 && abs(displacement.getY() == 1))
+                        if (abs(displacement.getX()) == 1 && abs(displacement.getY()) == 1)
                             if (board.getPiece(droppedPlace) == '0')
                             {
                                 // En passant move
@@ -185,9 +204,12 @@ int main(int argc, char *args[])
                     }
                     board.writeCell(droppedPlace, pickedPiece);
                     board.render();
-                    if (pickedPiece == PAWN)
+                    if (board.getPieceName(pickedPiece) == PAWN)
                     {
                         Coordinate coordChange = droppedPlace - prevCoordinate;
+                        std::cerr << "Moved from " << prevCoordinate.getX() << " " << prevCoordinate.getY() << " to " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
+                        cerr << droppedPlace.getX() - prevCoordinate.getX() << " " << droppedPlace.getY() - prevCoordinate.getY() << "\n";
+                        cerr << coordChange.getX() << " " << coordChange.getY() << "\n";
                         if (coordChange == Coordinate(0, 2) || coordChange == Coordinate(0, -2))
                             enPassantCoord = droppedPlace;
                         else

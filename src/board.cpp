@@ -542,7 +542,7 @@ void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordina
         drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     for (Coordinate cell : captureList)
     {
-        std::cerr << "Rendering capture move at " << cell.getX() << " " << cell.getY() << "\n";
+        // std::cerr << "Rendering capture move at " << cell.getX() << " " << cell.getY() << "\n";
         drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     }
 }
@@ -664,7 +664,7 @@ bool Board::testMovesKingSafety(Coordinate dest, char movingPiece)
 bool Board::isKingSafe(int color)
 {
     using std::cerr;
-    cerr << "Entering isKingSafe\n";
+    // cerr << "Entering isKingSafe\n";
 
     int kingRow, kingCol;
     // Always have
@@ -679,8 +679,8 @@ bool Board::isKingSafe(int color)
     std::cerr << kingRow << " " << kingCol << "\n";
     int oppositeColor = 1 - color;
 
-    cerr << "Current Color is " << color << "\n";
-    cerr << "Opposite Color is " << oppositeColor << "\n";
+    // cerr << "Current Color is " << color << "\n";
+    // cerr << "Opposite Color is " << oppositeColor << "\n";
     // * 3 - getPieceColor(movingPiece) return the opposite color to movingPiece
     vector<Coordinate> pawnCheck = getPossibleCaptures(PAWN, color, kingCol, kingRow);
     vector<Coordinate> knightCheck = getPossibleCaptures(KNIGHT, color, kingCol, kingRow);
@@ -688,14 +688,14 @@ bool Board::isKingSafe(int color)
     vector<Coordinate> bishopCheck = getPossibleCaptures(BISHOP, color, kingCol, kingRow);
     vector<Coordinate> kingCheck = getPossibleCaptures(KING, color, kingCol, kingRow);
     // * Queen check will be integrated in rook and bishop check
-    cerr << "Size of pawn, knight, roook, bishop and king check: " << pawnCheck.size() << " " << knightCheck.size() << " " << rookCheck.size() << " " << bishopCheck.size() << " " << kingCheck.size() << "\n";
+    // cerr << "Size of pawn, knight, roook, bishop and king check: " << pawnCheck.size() << " " << knightCheck.size() << " " << rookCheck.size() << " " << bishopCheck.size() << " " << kingCheck.size() << "\n";
     // Check the king's check status
     bool res = true;
     if (res)
         for (Coordinate cell : pawnCheck)
         {
             int row = cell.getY(), col = cell.getX();
-            cerr << "checking pawn at: " << row << " " << col << "\n";
+            // cerr << "checking pawn at: " << row << " " << col << "\n";
             char checkingPiece = board[row][col];
             if (getPieceColor(checkingPiece) == PAWN && getPieceColor(checkingPiece) == oppositeColor)
                 res = false;
@@ -704,7 +704,7 @@ bool Board::isKingSafe(int color)
         for (Coordinate cell : bishopCheck)
         {
             int row = cell.getY(), col = cell.getX();
-            cerr << "checking bishop and queen at: " << row << " " << col << "\n";
+            // cerr << "checking bishop and queen at: " << row << " " << col << "\n";
             char checkingPiece = board[row][col];
             if ((getPieceName(checkingPiece) == BISHOP || getPieceName(checkingPiece) == QUEEN) && getPieceColor(checkingPiece) == oppositeColor)
                 res = false;
@@ -713,7 +713,7 @@ bool Board::isKingSafe(int color)
         for (Coordinate cell : rookCheck)
         {
             int row = cell.getY(), col = cell.getX();
-            cerr << "checking rook and queen at: " << row << " " << col << "\n";
+            // cerr << "checking rook and queen at: " << row << " " << col << "\n";
             char checkingPiece = board[row][col];
             if ((getPieceName(checkingPiece) == ROOK || getPieceName(checkingPiece) == QUEEN) && getPieceColor(checkingPiece) == oppositeColor)
                 res = false;
@@ -722,7 +722,7 @@ bool Board::isKingSafe(int color)
         for (Coordinate cell : knightCheck)
         {
             int row = cell.getY(), col = cell.getX();
-            cerr << "checking knight at: " << row << " " << col << "\n";
+            // cerr << "checking knight at: " << row << " " << col << "\n";
             char checkingPiece = board[row][col];
             if (getPieceName(checkingPiece) == KNIGHT && getPieceColor(checkingPiece) == oppositeColor)
                 res = false;
@@ -731,11 +731,21 @@ bool Board::isKingSafe(int color)
         for (Coordinate cell : kingCheck)
         {
             int row = cell.getY(), col = cell.getX();
-            cerr << "checking king at: " << row << " " << col << "\n";
+            // cerr << "checking king at: " << row << " " << col << "\n";
             char checkingPiece = board[row][col];
             if (getPieceName(checkingPiece) == KING && getPieceColor(checkingPiece) == oppositeColor)
                 res = false;
         }
-    cerr << "Is danger? " << !res << "\n";
+    // cerr << "Is danger? " << !res << "\n";
     return res;
+}
+
+bool Board::isInBound(Coordinate coord)
+{
+    if (coord.getX() < 0) return false;
+    if (coord.getX() >= BOARD_SIZE) return false;
+    if (coord.getY() < 0) return false;
+    if (coord.getY() >= BOARD_SIZE) return false;
+    return true;
+
 }

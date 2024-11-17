@@ -34,6 +34,8 @@ private:
     int halfmoves = 0;
     int totalmoves = 0;
 
+    // Castling status
+
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -78,6 +80,7 @@ public:
     void updatePlayerStatus(std::string player);
 
     void updateCastlingStatus(std::string seq);
+    void updateCastlingStatus();
 
     void updateEnPassantStatus(std::string seq);
 
@@ -179,4 +182,10 @@ public:
     bool testMovesKingSafety(Coordinate dest, char movingPiece);
 
     bool isInBound(Coordinate coord);
+    void markMoved(Coordinate dest);
+
+    bool canWhiteCastlingKing();
+    bool canWhiteCastlingQueen();
+    bool canBlackCastlingKing();
+    bool canBlackCastlingQueen();
 };

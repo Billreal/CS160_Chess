@@ -14,11 +14,17 @@
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
     loadTextures();
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
+            isMoved[i][j] = false;
     // background = Background(renderer);
 }
 Board::Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor) : renderer(renderer), primaryColor(primaryColor), secondaryColor(secondaryColor), backgroundColor(backgroundColor)
 {
     loadTextures();
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
+            isMoved[i][j] = false;
     // background = Background(renderer);
 }
 
@@ -429,7 +435,8 @@ void Board::renderFromBoard()
 
 int Board::getPieceColor(char piece)
 {
-    if (piece == '0') return -1;
+    if (piece == '0')
+        return -1;
     if ('A' <= piece && piece <= 'Z')
         return 0;
     if ('a' <= piece && piece <= 'z')
@@ -742,10 +749,142 @@ bool Board::isKingSafe(int color)
 
 bool Board::isInBound(Coordinate coord)
 {
-    if (coord.getX() < 0) return false;
-    if (coord.getX() >= BOARD_SIZE) return false;
-    if (coord.getY() < 0) return false;
-    if (coord.getY() >= BOARD_SIZE) return false;
+    if (coord.getX() < 0)
+        return false;
+    if (coord.getX() >= BOARD_SIZE)
+        return false;
+    if (coord.getY() < 0)
+        return false;
+    if (coord.getY() >= BOARD_SIZE)
+        return false;
     return true;
+}
 
+void Board::updateCastlingStatus()
+{
+    char leftWhiteRook = board[BOARD_SIZE - 1][0];
+    char rightWhiteRook = board[BOARD_SIZE - 1][BOARD_SIZE - 1];
+    char whiteKing = board[BOARD_SIZE - 1][4];
+    char leftBlackRook = board[0][0];
+    char rightBlackRook = board[0][BOARD_SIZE - 1];
+    char blackKing = board[0][4];
+    if (getPieceColor(leftWhiteRook) != WHITE || getPieceName(leftWhiteRook) != ROOK)
+        whiteQueenSide = false;
+    if (getPieceColor(rightWhiteRook) != WHITE || getPieceName(rightWhiteRook) != ROOK)
+        whiteKingSide = false;
+    if (getPieceColor(leftBlackRook) != BLACK || getPieceName(leftBlackRook) != ROOK)
+        blackQueenSide = false;
+    if (getPieceColor(rightBlackRook) != BLACK || getPieceName(rightBlackRook) != ROOK)
+        blackKingSide = false;
+    if (getPieceColor(whiteKing) != WHITE || getPieceName(whiteKing) != KING)
+    {
+        whiteKingSide = false;
+        whiteQueenSide = false;
+    }
+    if (getPieceColor(blackKing) != BLACK || getPieceName(blackKing) != KING)
+    {
+        blackKingSide = false;
+        blackQueenSide = false;
+    }
+    // std::cerr << whiteKingSide << whiteQueenSide << blackKingSide << blackQueenSide << "\n";
+}
+
+bool Board::canWhiteCastlingKing()
+{
+    if (!whiteKingSide) return false;
+    bool res = true;
+    board[BOARD_SIZE - 1][4] = '0';
+    board[BOARD_SIZE - 1][BOARD_SIZE - 1] = '0';
+    for (int col = 4; col <= 6 && res; col++)
+    {
+        if (getPieceName(board[BOARD_SIZE - 1][col]) != -1) 
+        {
+            res = false;
+            continue;
+        }
+        board[BOARD_SIZE - 1][col] = 'K';
+        if (!isKingSafe(WHITE)) res = false;
+        board[BOARD_SIZE - 1][col] = '0';
+    }
+    board[BOARD_SIZE - 1][4] = 'K';
+    board[BOARD_SIZE - 1][BOARD_SIZE - 1] = 'R';
+    return res;
+}
+bool Board::canWhiteCastlingQueen()
+{
+    if (!whiteQueenSide) return false;
+    bool res = true;
+    board[BOARD_SIZE - 1][4] = '0';
+    board[BOARD_SIZE - 1][0] = '0';
+    for (int col = 4; col >= 2 && res; col--)
+    {
+        if (getPieceName(board[BOARD_SIZE - 1][col]) != -1)
+        {
+            res = false;
+            continue;
+        }
+        board[BOARD_SIZE - 1][col] = 'K';
+        if (!isKingSafe(WHITE)) res = false;
+        board[BOARD_SIZE - 1][col] = '0';
+    }
+    board[BOARD_SIZE - 1][4] = 'K';
+    board[BOARD_SIZE - 1][0] = 'R';
+    if (getPieceName(board[BOARD_SIZE - 1][1]) != -1) res = false;
+    return res;
+}
+bool Board::canBlackCastlingKing()
+{
+    if (!blackKingSide) return false;
+    bool res = true;
+    board[0][4] = '0';
+    board[0][BOARD_SIZE - 1] = '0';
+    for (int col = 4; col <= 6 && res; col++)
+    {
+        if (getPieceName(board[0][col]) != -1)
+        {
+            res = false;
+            continue;
+        }
+
+        board[0][col] = 'k';
+        if (!isKingSafe(BLACK)) res = false;
+        board[0][col] = '0';
+    }
+    board[0][4] = 'k';
+    board[0][BOARD_SIZE - 1] = 'r';
+    return res;
+}
+bool Board::canBlackCastlingQueen()
+{
+    if (!blackQueenSide) return false;
+    bool res = true;
+    board[0][4] = '0';
+    board[0][0] = '0';
+    for (int col = 4; col >= 2 && res; col--)
+    {
+        // std::cerr << "Checking black queen castling at: " << 0 << " " << col << ": ";
+        // std::cerr << getPieceName(board[0][col]) << "\n";
+        if (getPieceName(board[0][col]) != -1)
+        {
+            res = false;
+            // std::cerr << "Exist piece at " << 0 << " " << col << "\n";
+            continue;
+        }
+
+        board[0][col] = 'k';
+        if (!isKingSafe(BLACK))
+        {
+            // std::cerr << "King is not safe at: " << 0 << " " << col << "\n";
+            res = false;
+        } 
+        board[0][col] = '0';
+    }
+    board[0][4] = 'k';
+    board[0][0] = 'r';
+    if (getPieceName(board[0][1]) != -1) 
+    {
+        // std::cerr << "Exist piece at " << 0 << " " << 1 << "\n";
+        res = false;
+    }
+    return res;
 }

@@ -129,23 +129,42 @@ int main(int argc, char *args[])
                 possibleCaptures.clear();
                 possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                 possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                if (board.getPieceName(pickedPiece) == PAWN && (enPassantCoord == (prevCoordinate + Coordinate(1, 0))))
+                // Check en passant
+                if (board.getPieceName(pickedPiece) == PAWN)
                 {
 
-                    std::cerr << "Can enpassant\n";
-                    if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(1, -1)))
-                        possibleCaptures.push_back(prevCoordinate + Coordinate(1, -1));
-                    if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(1, 1)))
-                        possibleCaptures.push_back(prevCoordinate + Coordinate(1, 1));
+                    if (enPassantCoord == (prevCoordinate + Coordinate(1, 0)))
+                    {
+                        std::cerr << "Can enpassant\n";
+                        if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(1, -1)))
+                            possibleCaptures.push_back(prevCoordinate + Coordinate(1, -1));
+                        if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(1, 1)))
+                            possibleCaptures.push_back(prevCoordinate + Coordinate(1, 1));
+                    }
+
+                    if (enPassantCoord == (prevCoordinate + Coordinate(-1, 0)))
+                    {
+                        std::cerr << "Can enpassant\n";
+                        if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(-1, -1)))
+                            possibleCaptures.push_back(prevCoordinate + Coordinate(-1, -1));
+                        if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(-1, 1)))
+                            possibleCaptures.push_back(prevCoordinate + Coordinate(-1, 1));
+                    }
                 }
-
-                if (board.getPieceName(pickedPiece) == PAWN && (enPassantCoord == (prevCoordinate + Coordinate(-1, 0))))
+                // Check castling
+                if (board.getPieceName(pickedPiece) == KING)
                 {
-                    std::cerr << "Can enpassant\n";
-                    if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(-1, -1)))
-                        possibleCaptures.push_back(prevCoordinate + Coordinate(-1, -1));
-                    if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(-1, 1)))
-                        possibleCaptures.push_back(prevCoordinate + Coordinate(-1, 1));
+                    if (board.getPieceColor(pickedPiece) == WHITE)
+                    {
+                        if (board.canWhiteCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
+                        if (board.canWhiteCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
+                    }
+                    if (board.getPieceColor(pickedPiece) == BLACK)
+                    {
+                        if (board.canBlackCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
+                        if (board.canBlackCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
+
+                    }
                 }
                 // board.clear();
                 board.render();
@@ -202,8 +221,32 @@ int main(int argc, char *args[])
                                     board.deleteCell(droppedPlace + Coordinate(0, -1));
                             }
                     }
+                    if (board.getPieceName(pickedPiece) == KING)
+                    {
+                        Coordinate displacement = droppedPlace - prevCoordinate;
+                        if (abs(displacement.getX()) == 2 && abs(displacement.getY()) == 0)
+                        {
+                            if (board.getPiece(droppedPlace) == '0') // Put it as safety guard to condition checking of castling
+                            {
+                                char rookPiece;
+                                if (board.getPieceColor(pickedPiece) == WHITE) rookPiece = 'R';
+                                if (board.getPieceColor(pickedPiece) == BLACK) rookPiece = 'r';
+                                if (displacement.getX() == 2) // King side castling
+                                {
+                                    board.deleteCell(droppedPlace + Coordinate(1, 0));
+                                    board.writeCell(droppedPlace + Coordinate(-1, 0), rookPiece);
+                                }
+                                if (displacement.getX() == -2)
+                                {
+                                    board.deleteCell(droppedPlace + Coordinate(-2, 0));
+                                    board.writeCell(droppedPlace + Coordinate(1, 0), rookPiece);
+                                }
+                            }
+                        }
+                    }
                     board.writeCell(droppedPlace, pickedPiece);
                     board.render();
+                    // Record en passant
                     if (board.getPieceName(pickedPiece) == PAWN)
                     {
                         Coordinate coordChange = droppedPlace - prevCoordinate;
@@ -217,6 +260,7 @@ int main(int argc, char *args[])
                     }
                     else
                         enPassantCoord = Coordinate(-1, -1);
+                    board.updateCastlingStatus();
                     prevCoordinate = Coordinate(-1, -1);
                     pickedPiece = ' ';
                     if (currentMoveColor == WHITE)

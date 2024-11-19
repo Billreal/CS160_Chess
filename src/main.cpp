@@ -129,46 +129,8 @@ int main(int argc, char *args[])
                 possibleCaptures.clear();
                 possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                 possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                // Check en passant
-                // {
-
-                //     if (enPassantCoord == (prevCoordinate + Coordinate(1, 0)))
-                //     {
-                //         std::cerr << "Can enpassant\n";
-                //         if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(1, -1)))
-                //             possibleCaptures.push_back(prevCoordinate + Coordinate(1, -1));
-                //         if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(1, 1)))
-                //             possibleCaptures.push_back(prevCoordinate + Coordinate(1, 1));
-                //     }
-
-                //     if (enPassantCoord == (prevCoordinate + Coordinate(-1, 0)))
-                //     {
-                //         std::cerr << "Can enpassant\n";
-                //         if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(-1, -1)))
-                //             possibleCaptures.push_back(prevCoordinate + Coordinate(-1, -1));
-                //         if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(-1, 1)))
-                //             possibleCaptures.push_back(prevCoordinate + Coordinate(-1, 1));
-                //     }
-                // }
-                // Check castling
-                // if (board.getPieceName(pickedPiece) == KING)
-                // {
-                //     if (board.getPieceColor(pickedPiece) == WHITE)
-                //     {
-                //         if (board.canWhiteCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
-                //         if (board.canWhiteCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
-                //     }
-                //     if (board.getPieceColor(pickedPiece) == BLACK)
-                //     {
-                //         if (board.canBlackCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
-                //         if (board.canBlackCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
-
-                //     }
-                // }
-                // board.clear();
                 board.render();
                 board.present();
-                // board.debugBoard();
                 board.deleteCell(pickedPlace);
                 break;
             }
@@ -176,8 +138,6 @@ int main(int argc, char *args[])
             {
                 if (isLeftMouseHolding == false) // Mouse hover
                     break;
-                // board.clear();
-                // board.clear();
                 board.render();
                 board.renderMove(possibleMoves, possibleCaptures);
                 board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
@@ -192,10 +152,6 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = false;
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
-                // std::cerr << "Possible enpassant Piece: ";
-                // std::cerr << enPassantCoord.getX() << " " << enPassantCoord.getY() << "\n";
-
-                // Coordinate selectedPlace = board.getPieceCoord(event.button);
 
                 if (droppedPlace == prevCoordinate)
                 {

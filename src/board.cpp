@@ -1061,7 +1061,3 @@ void Board::log(std::string message)
 {
     std::cerr << message << std::endl;
 }
-
-void Board::genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList)
-{
-}

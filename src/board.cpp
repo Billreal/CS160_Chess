@@ -556,11 +556,14 @@ void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordina
 
 // * renderMove is gonna be replaced
 
-vector<Coordinate> Board::getPossibleMoves(int pieceName, int color, int coordX, int coordY)
+vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
 {
-
+    int originCol = coordX, originRow = coordY;
+    int pieceName = getPieceName(piece);
+    int color = getPieceColor(piece);
     vector<vector<Coordinate>> allMoves = chessPiece.listAllMove(pieceName, color, coordX, coordY);
     vector<Coordinate> res;
+    // Processing of ordinary move, take king's check status in consider
     for (vector<Coordinate> direction : allMoves)
         for (Coordinate cell : direction)
         {
@@ -568,13 +571,46 @@ vector<Coordinate> Board::getPossibleMoves(int pieceName, int color, int coordX,
             int col = cell.getX();
             if (board[row][col] != '0')
                 break;
-            res.push_back(cell);
+            board[originRow][originCol] = '0';
+            int prevDest = board[row][col];
+            board[row][col] = piece;
+
+            if (isKingSafe(color))
+                res.push_back(cell);
+
+            board[row][col] = prevDest;
+            board[originRow][originCol] = piece;
         }
+
+    // Generating castling
+    if (pieceName == KING)
+    {
+        if (color == BLACK)
+        {
+            if (canBlackCastlingKing())
+                res.push_back({coordX + 2, coordY});
+            if (canBlackCastlingQueen())
+                res.push_back({coordX - 2, coordY});
+        }
+        if (color == WHITE)
+        {
+            if (canWhiteCastlingKing())
+                res.push_back({coordX + 2, coordY});
+            if (canBlackCastlingQueen())
+                res.push_back({coordX - 2, coordY});
+        }
+    }
     return res;
 }
 
-vector<Coordinate> Board::getPossibleCaptures(int pieceName, int color, int coordX, int coordY)
+vector<Coordinate> Board::getPossibleCaptures(int pieceName, int pieceColor, int coordX, int coordY)
 {
+    return getPossibleCaptures(getPieceFromInfo(pieceName, pieceColor), coordX, coordY);
+}
+vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY)
+{
+    int pieceName = getPieceName(piece);
+    int color = getPieceColor(piece);
     vector<vector<Coordinate>> allMoves = chessPiece.listAllMove(pieceName, color, coordX, coordY);
     vector<Coordinate> res;
     if (pieceName != PAWN)
@@ -612,10 +648,10 @@ vector<Coordinate> Board::getPossibleCaptures(int pieceName, int color, int coor
         // std::cerr << leftColor << " " << board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()] << "\n";
         int rightColor = getPieceColor(board[rightDiagonalCapture.getY()][rightDiagonalCapture.getX()]);
         // std::cerr << rightColor << " " << board[rightDiagonalCapture.getY()][rightDiagonalCapture.getX()] << "\n";
-        if (leftDiagonalCapture.getX() >= 0 && leftDiagonalCapture.getX() <= 7 && leftDiagonalCapture.getY() >= 0 && leftDiagonalCapture.getY() <= 7)
+        if (isInBound(leftDiagonalCapture))
             if (leftColor != color && leftColor != COLOR_NONE)
                 res.push_back(leftDiagonalCapture);
-        if (rightDiagonalCapture.getX() >= 0 && rightDiagonalCapture.getX() <= 7 && rightDiagonalCapture.getY() >= 0 && rightDiagonalCapture.getY() <= 7)
+        if (isInBound(rightDiagonalCapture))
             if (rightColor != color && rightColor != COLOR_NONE)
                 res.push_back(rightDiagonalCapture);
     }
@@ -624,14 +660,6 @@ vector<Coordinate> Board::getPossibleCaptures(int pieceName, int color, int coor
     return res;
 }
 
-vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
-{
-    return getPossibleMoves(getPieceName(piece), getPieceColor(piece), coordX, coordY);
-}
-vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY)
-{
-    return getPossibleCaptures(getPieceName(piece), getPieceColor(piece), coordX, coordY);
-}
 bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate dest)
 {
     // ! Piece at src doesn't exist
@@ -661,11 +689,13 @@ bool Board::testMovesKingSafety(Coordinate dest, char movingPiece)
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             currentBoard[i][j] = board[i][j];
+    
     board[destRow][destCol] = movingPiece;
     bool res = isKingSafe(getPieceColor(movingPiece));
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             board[i][j] = currentBoard[i][j];
+    
     return res;
 }
 bool Board::isKingSafe(int color)
@@ -791,19 +821,21 @@ void Board::updateCastlingStatus()
 
 bool Board::canWhiteCastlingKing()
 {
-    if (!whiteKingSide) return false;
+    if (!whiteKingSide)
+        return false;
     bool res = true;
     board[BOARD_SIZE - 1][4] = '0';
     board[BOARD_SIZE - 1][BOARD_SIZE - 1] = '0';
     for (int col = 4; col <= 6 && res; col++)
     {
-        if (getPieceName(board[BOARD_SIZE - 1][col]) != -1) 
+        if (getPieceName(board[BOARD_SIZE - 1][col]) != -1)
         {
             res = false;
             continue;
         }
         board[BOARD_SIZE - 1][col] = 'K';
-        if (!isKingSafe(WHITE)) res = false;
+        if (!isKingSafe(WHITE))
+            res = false;
         board[BOARD_SIZE - 1][col] = '0';
     }
     board[BOARD_SIZE - 1][4] = 'K';
@@ -812,7 +844,8 @@ bool Board::canWhiteCastlingKing()
 }
 bool Board::canWhiteCastlingQueen()
 {
-    if (!whiteQueenSide) return false;
+    if (!whiteQueenSide)
+        return false;
     bool res = true;
     board[BOARD_SIZE - 1][4] = '0';
     board[BOARD_SIZE - 1][0] = '0';
@@ -824,17 +857,20 @@ bool Board::canWhiteCastlingQueen()
             continue;
         }
         board[BOARD_SIZE - 1][col] = 'K';
-        if (!isKingSafe(WHITE)) res = false;
+        if (!isKingSafe(WHITE))
+            res = false;
         board[BOARD_SIZE - 1][col] = '0';
     }
     board[BOARD_SIZE - 1][4] = 'K';
     board[BOARD_SIZE - 1][0] = 'R';
-    if (getPieceName(board[BOARD_SIZE - 1][1]) != -1) res = false;
+    if (getPieceName(board[BOARD_SIZE - 1][1]) != -1)
+        res = false;
     return res;
 }
 bool Board::canBlackCastlingKing()
 {
-    if (!blackKingSide) return false;
+    if (!blackKingSide)
+        return false;
     bool res = true;
     board[0][4] = '0';
     board[0][BOARD_SIZE - 1] = '0';
@@ -847,7 +883,8 @@ bool Board::canBlackCastlingKing()
         }
 
         board[0][col] = 'k';
-        if (!isKingSafe(BLACK)) res = false;
+        if (!isKingSafe(BLACK))
+            res = false;
         board[0][col] = '0';
     }
     board[0][4] = 'k';
@@ -856,7 +893,8 @@ bool Board::canBlackCastlingKing()
 }
 bool Board::canBlackCastlingQueen()
 {
-    if (!blackQueenSide) return false;
+    if (!blackQueenSide)
+        return false;
     bool res = true;
     board[0][4] = '0';
     board[0][0] = '0';
@@ -876,15 +914,58 @@ bool Board::canBlackCastlingQueen()
         {
             // std::cerr << "King is not safe at: " << 0 << " " << col << "\n";
             res = false;
-        } 
+        }
         board[0][col] = '0';
     }
     board[0][4] = 'k';
     board[0][0] = 'r';
-    if (getPieceName(board[0][1]) != -1) 
+    if (getPieceName(board[0][1]) != -1)
     {
         // std::cerr << "Exist piece at " << 0 << " " << 1 << "\n";
         res = false;
+    }
+    return res;
+}
+
+char Board::getPieceFromInfo(int pieceName, int color)
+{
+    char res;
+    switch (pieceName)
+    {
+    case PAWN:
+        res = 'p';
+        break;
+    case ROOK:
+        res = 'r';
+        break;
+    case KNIGHT:
+        res = 'n';
+        break;
+    case BISHOP:
+        res = 'b';
+        break;
+    case QUEEN:
+        res = 'q';
+        break;
+    case KING:
+        res = 'k';
+        break;
+    case CHESS_NONE:
+        return '0';
+    default:
+        return '0';
+    }
+    switch (color)
+    {
+    case WHITE:
+        res = res - 'a' + 'A';
+        break;
+    case BLACK:
+        break;
+    case COLOR_NONE:
+        return '0';
+    default:
+        return '0';
     }
     return res;
 }

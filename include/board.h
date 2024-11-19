@@ -188,4 +188,6 @@ public:
     bool canWhiteCastlingQueen();
     bool canBlackCastlingKing();
     bool canBlackCastlingQueen();
+
+    char getPieceFromInfo(int pieceName, int color);
 };

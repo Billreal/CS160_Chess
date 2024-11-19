@@ -78,7 +78,7 @@ int main(int argc, char *args[])
     SDL_Event event;
 
     // Chessboard rendering
-
+ 
     // chessPieces chess(QUEEN, WHITE, 4, 4);
     // auto dbg = chess.listAllMove();
     // for (auto x : dbg)
@@ -152,20 +152,20 @@ int main(int argc, char *args[])
                     }
                 }
                 // Check castling
-                if (board.getPieceName(pickedPiece) == KING)
-                {
-                    if (board.getPieceColor(pickedPiece) == WHITE)
-                    {
-                        if (board.canWhiteCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
-                        if (board.canWhiteCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
-                    }
-                    if (board.getPieceColor(pickedPiece) == BLACK)
-                    {
-                        if (board.canBlackCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
-                        if (board.canBlackCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
+                // if (board.getPieceName(pickedPiece) == KING)
+                // {
+                //     if (board.getPieceColor(pickedPiece) == WHITE)
+                //     {
+                //         if (board.canWhiteCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
+                //         if (board.canWhiteCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
+                //     }
+                //     if (board.getPieceColor(pickedPiece) == BLACK)
+                //     {
+                //         if (board.canBlackCastlingKing()) possibleMoves.push_back(prevCoordinate + Coordinate(2, 0));
+                //         if (board.canBlackCastlingQueen()) possibleMoves.push_back(prevCoordinate + Coordinate(-2, 0));
 
-                    }
-                }
+                //     }
+                // }
                 // board.clear();
                 board.render();
                 board.present();
@@ -205,8 +205,9 @@ int main(int argc, char *args[])
                     board.render();
                     board.renderMove(possibleMoves, possibleCaptures);
                 }
-                else if (droppedPlace != Coordinate(-1, -1) && board.testMovesKingSafety(droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
+                else if (droppedPlace != Coordinate(-1, -1) && /* board.testMovesKingSafety(droppedPlace, pickedPiece) && */ board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
                 {
+                    board.makeMove(prevCoordinate, droppedPlace, pickedPiece)
                     // dropping at different place, valid
                     if (board.getPieceName(pickedPiece) == PAWN)
                     {

@@ -130,27 +130,26 @@ int main(int argc, char *args[])
                 possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                 possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                 // Check en passant
-                if (board.getPieceName(pickedPiece) == PAWN)
-                {
+                // {
 
-                    if (enPassantCoord == (prevCoordinate + Coordinate(1, 0)))
-                    {
-                        std::cerr << "Can enpassant\n";
-                        if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(1, -1)))
-                            possibleCaptures.push_back(prevCoordinate + Coordinate(1, -1));
-                        if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(1, 1)))
-                            possibleCaptures.push_back(prevCoordinate + Coordinate(1, 1));
-                    }
+                //     if (enPassantCoord == (prevCoordinate + Coordinate(1, 0)))
+                //     {
+                //         std::cerr << "Can enpassant\n";
+                //         if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(1, -1)))
+                //             possibleCaptures.push_back(prevCoordinate + Coordinate(1, -1));
+                //         if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(1, 1)))
+                //             possibleCaptures.push_back(prevCoordinate + Coordinate(1, 1));
+                //     }
 
-                    if (enPassantCoord == (prevCoordinate + Coordinate(-1, 0)))
-                    {
-                        std::cerr << "Can enpassant\n";
-                        if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(-1, -1)))
-                            possibleCaptures.push_back(prevCoordinate + Coordinate(-1, -1));
-                        if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(-1, 1)))
-                            possibleCaptures.push_back(prevCoordinate + Coordinate(-1, 1));
-                    }
-                }
+                //     if (enPassantCoord == (prevCoordinate + Coordinate(-1, 0)))
+                //     {
+                //         std::cerr << "Can enpassant\n";
+                //         if (board.getPieceColor(pickedPiece) == WHITE && board.isInBound(prevCoordinate + Coordinate(-1, -1)))
+                //             possibleCaptures.push_back(prevCoordinate + Coordinate(-1, -1));
+                //         if (board.getPieceColor(pickedPiece) == BLACK && board.isInBound(prevCoordinate + Coordinate(-1, 1)))
+                //             possibleCaptures.push_back(prevCoordinate + Coordinate(-1, 1));
+                //     }
+                // }
                 // Check castling
                 // if (board.getPieceName(pickedPiece) == KING)
                 // {
@@ -193,8 +192,8 @@ int main(int argc, char *args[])
                     break;
                 isLeftMouseHolding = false;
                 Coordinate droppedPlace = board.getPieceCoord(event.button);
-                std::cerr << "Possible enpassant Piece: ";
-                std::cerr << enPassantCoord.getX() << " " << enPassantCoord.getY() << "\n";
+                // std::cerr << "Possible enpassant Piece: ";
+                // std::cerr << enPassantCoord.getX() << " " << enPassantCoord.getY() << "\n";
 
                 // Coordinate selectedPlace = board.getPieceCoord(event.button);
 
@@ -205,62 +204,9 @@ int main(int argc, char *args[])
                     board.render();
                     board.renderMove(possibleMoves, possibleCaptures);
                 }
-                else if (droppedPlace != Coordinate(-1, -1) && /* board.testMovesKingSafety(droppedPlace, pickedPiece) && */ board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
+                else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                 {
-                    board.makeMove(prevCoordinate, droppedPlace, pickedPiece)
-                    // dropping at different place, valid
-                    if (board.getPieceName(pickedPiece) == PAWN)
-                    {
-                        Coordinate displacement = droppedPlace - prevCoordinate;
-                        if (abs(displacement.getX()) == 1 && abs(displacement.getY()) == 1)
-                            if (board.getPiece(droppedPlace) == '0')
-                            {
-                                // En passant move
-                                if (board.getPieceColor(pickedPiece) == WHITE)
-                                    board.deleteCell(droppedPlace + Coordinate(0, 1));
-                                if (board.getPieceColor(pickedPiece) == BLACK)
-                                    board.deleteCell(droppedPlace + Coordinate(0, -1));
-                            }
-                    }
-                    if (board.getPieceName(pickedPiece) == KING)
-                    {
-                        Coordinate displacement = droppedPlace - prevCoordinate;
-                        if (abs(displacement.getX()) == 2 && abs(displacement.getY()) == 0)
-                        {
-                            if (board.getPiece(droppedPlace) == '0') // Put it as safety guard to condition checking of castling
-                            {
-                                char rookPiece;
-                                if (board.getPieceColor(pickedPiece) == WHITE) rookPiece = 'R';
-                                if (board.getPieceColor(pickedPiece) == BLACK) rookPiece = 'r';
-                                if (displacement.getX() == 2) // King side castling
-                                {
-                                    board.deleteCell(droppedPlace + Coordinate(1, 0));
-                                    board.writeCell(droppedPlace + Coordinate(-1, 0), rookPiece);
-                                }
-                                if (displacement.getX() == -2)
-                                {
-                                    board.deleteCell(droppedPlace + Coordinate(-2, 0));
-                                    board.writeCell(droppedPlace + Coordinate(1, 0), rookPiece);
-                                }
-                            }
-                        }
-                    }
-                    board.writeCell(droppedPlace, pickedPiece);
                     board.render();
-                    // Record en passant
-                    if (board.getPieceName(pickedPiece) == PAWN)
-                    {
-                        Coordinate coordChange = droppedPlace - prevCoordinate;
-                        std::cerr << "Moved from " << prevCoordinate.getX() << " " << prevCoordinate.getY() << " to " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
-                        cerr << droppedPlace.getX() - prevCoordinate.getX() << " " << droppedPlace.getY() - prevCoordinate.getY() << "\n";
-                        cerr << coordChange.getX() << " " << coordChange.getY() << "\n";
-                        if (coordChange == Coordinate(0, 2) || coordChange == Coordinate(0, -2))
-                            enPassantCoord = droppedPlace;
-                        else
-                            enPassantCoord = Coordinate(-1, -1);
-                    }
-                    else
-                        enPassantCoord = Coordinate(-1, -1);
                     board.updateCastlingStatus();
                     prevCoordinate = Coordinate(-1, -1);
                     pickedPiece = ' ';

@@ -4,6 +4,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
+#include <algorithm>
 // #include "./../include/colorScheme.h"
 #define NANOSVG_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION
@@ -244,6 +245,7 @@ void Board::updateCastlingStatus(std::string seq)
 void Board::updateEnPassantStatus(std::string seq)
 {
     enPassant = seq == "-" ? false : true;
+    enPassantCoord = Coordinate(seq[0] - 'a', seq[1] - '1');
 }
 
 // Halfmoves, used to enforce the 50-move draw rule
@@ -600,6 +602,7 @@ vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
                 res.push_back({coordX - 2, coordY});
         }
     }
+
     return res;
 }
 
@@ -655,6 +658,28 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
             if (rightColor != color && rightColor != COLOR_NONE)
                 res.push_back(rightDiagonalCapture);
     }
+
+    // Generating en passant capture
+    if (getPieceName(piece) == PAWN)
+    {
+        Coordinate curr(coordX, coordY);
+        if (!enPassant)
+            return res;
+        Coordinate difference = curr - enPassantCoord;
+        difference = Coordinate(abs(difference.getX()), abs(difference.getY()));
+        if (!(difference.getX() == 1 && difference.getY() == 0))
+            return res;
+        char piece = getPiece(curr);
+        char EPSPiece = getPiece(enPassantCoord);
+        int color = getPieceColor(piece);
+        if (color == getPieceColor(EPSPiece))
+            return res;
+        if (color == WHITE)
+            res.push_back(enPassantCoord - Coordinate(0, 1));
+        if (color == BLACK)
+            res.push_back(enPassantCoord + Coordinate(0, 1));
+    }
+
     // for (auto cell : res)
     //     std::cerr << "Can capture at " << cell.getX() << " " << cell.getY() << "\n";
     return res;
@@ -689,13 +714,13 @@ bool Board::testMovesKingSafety(Coordinate dest, char movingPiece)
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             currentBoard[i][j] = board[i][j];
-    
+
     board[destRow][destCol] = movingPiece;
     bool res = isKingSafe(getPieceColor(movingPiece));
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             board[i][j] = currentBoard[i][j];
-    
+
     return res;
 }
 bool Board::isKingSafe(int color)
@@ -968,4 +993,75 @@ char Board::getPieceFromInfo(int pieceName, int color)
         return '0';
     }
     return res;
+}
+
+bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
+{
+    if (dest == Coordinate(-1, -1))
+        return false;
+    log("Done checking out of bound");
+    if (!isValidMove(moveList, captureList, dest))
+        return false;
+    log("Done checking violation of moving rules");
+    // * Check king's safety
+    if (!testMovesKingSafety(dest, piece))
+        return false;
+    log("done checking King's safety");
+    // * Record change in position
+    log("Done updating current piece");
+    Coordinate displacement = dest - src;
+    // * Consider special moves: En passant
+    std::cerr << enPassant << " " 
+             << getPieceName(piece) << " " 
+             << getPieceColor(piece) << " " 
+             << getPieceColor(getPiece(enPassantCoord)) << " "
+             << getPiece(dest) << std::endl;
+    std::cerr << displacement.getX() << " " << displacement.getY() << std::endl;            
+    if (enPassant && getPieceName(piece) == PAWN && getPieceColor(piece) != getPieceColor(getPiece(enPassantCoord)) && getPiece(dest) == '0')
+    {
+        if (abs(displacement.getX()) == 1 && abs(displacement.getY()) == 1)
+            deleteCell(enPassantCoord);
+    }
+    if (getPieceName(piece) == PAWN && abs(displacement.getX() == 0) && abs(displacement.getY()) == 2)
+    {
+        enPassant = true;
+        enPassantCoord = dest;
+    }
+    else
+    {
+        enPassant = false;
+        enPassantCoord = Coordinate(-1, -1);
+    }
+    // * Consider special moves: Castling
+    if (getPieceName(piece) == KING)
+    {
+        if (abs(displacement.getX()) == 2 && abs(displacement.getY()) == 0)
+        {
+            // * Can already castling
+            int startKingX = src.getX();
+            int finalKingX = dest.getX();
+            int startRookX, finalRookX;
+            int startRookY = src.getY();
+            int finalRookY = dest.getY();
+            if (finalKingX < startKingX)
+                startRookX = 0;
+            else
+                startRookX = BOARD_SIZE - 1;
+            finalRookX = (startKingX + finalKingX) / 2;
+            writeCell(Coordinate(finalRookX, finalRookY), getPieceColor(piece) == WHITE ? 'R' : 'r');
+            deleteCell(Coordinate(startRookX, startRookY));
+        }
+    }
+    writeCell(dest, piece);
+    deleteCell(src);
+    return true;
+}
+
+void Board::log(std::string message)
+{
+    std::cerr << message << std::endl;
+}
+
+void Board::genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList)
+{
 }

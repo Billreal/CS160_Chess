@@ -190,4 +190,10 @@ public:
     bool canBlackCastlingQueen();
 
     char getPieceFromInfo(int pieceName, int color);
+
+    bool makeMove(Coordinate src, Coordinate dest, char piece, const vector<Coordinate> &moveList, const vector<Coordinate> &captureList); // Perform move, then return 1 if success, 0 otherwise
+
+    void log(std::string message);
+
+    void genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList);
 };

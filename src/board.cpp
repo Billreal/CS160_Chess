@@ -429,7 +429,8 @@ void Board::renderFromBoard()
 
 int Board::getPieceColor(char piece)
 {
-    if (piece == '0') return -1;
+    if (piece == '0')
+        return -1;
     if ('A' <= piece && piece <= 'Z')
         return 0;
     if ('a' <= piece && piece <= 'z')
@@ -539,7 +540,7 @@ bool Board::isNum(char c)
 void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
 {
     for (Coordinate cell : moveList)
-        drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+        drawTexture(possibleMoveIndicator, (cell.getX() + 1 - MOVE_INDICATOR_SCALE) * SIDE_LENGTH + MARGIN, (cell.getY() + 1 - MOVE_INDICATOR_SCALE) * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     for (Coordinate cell : captureList)
     {
         std::cerr << "Rendering capture move at " << cell.getX() << " " << cell.getY() << "\n";

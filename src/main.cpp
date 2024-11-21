@@ -11,6 +11,8 @@
 #include "./../include/pieces.h"
 #include "./../include/coordinate.h"
 #include "./../include/button.h"
+#include "./../include/nanosvg.h"
+#include "./../include/nanosvgrast.h"
 using std::cerr, std::cout;
 
 SDL_Renderer *renderer;
@@ -19,6 +21,21 @@ SDL_Surface *winSurface;
 
 const int SCREEN_WIDTH = 700;
 const int SCREEN_HEIGHT = 700;
+const int SVG_SCALE = 1;
+
+SDL_Texture *loadTexture(const std::string &path)
+{
+    SDL_Surface *surface = IMG_Load(path.c_str());
+    // Check if surface is loaded
+    if (!surface)
+    {
+        SDL_Log("Failed to load texture %s: %s", path.c_str(), SDL_GetError());
+        return nullptr;
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
 
 int main(int argc, char *args[])
 {
@@ -118,9 +135,20 @@ int main(int argc, char *args[])
     // board.render();
     // board.present();
 
-    Button startBtn(renderer, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 100, 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Start", font);
-    Button loadBtn(renderer, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 25, 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Load", font);
-    Button quitBtn(renderer, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 + 50, 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Quit", font);
+    // Render logo
+    const int logoWidth = 500;
+    const int logoHeight = 177;
+    SDL_Rect logoInfos = {(SCREEN_WIDTH - logoHeight) / 2 , 240, logoWidth, logoHeight};
+    SDL_RenderCopy(renderer, loadTexture("assets/logo.png"), nullptr, &logoInfos);
+
+    // Initialize buttons
+    const int startMenuBtnWidth = 500;
+    const int startMenuBtnHeight = 100;
+    SDL_Color startMenuBtnColor = {118, 150, 85, 255};
+    SDL_Color white = {255, 255, 255, 255};
+    Button startBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 350, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Start", font);
+    Button loadBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 500, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Load", font);
+    Button quitBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 650, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Quit", font);
 
     while (running)
     {
@@ -145,9 +173,9 @@ int main(int argc, char *args[])
             SDL_RenderClear(renderer);
 
             // Render button
-            startBtn.render();
-            loadBtn.render();
-            quitBtn.render();
+            startBtn.renderSVG("/assets/start_menu_button.svg", SVG_SCALE);
+            loadBtn.renderSVG("/assets/start_menu_button.svg", SVG_SCALE);
+            quitBtn.renderSVG("/assets/start_menu_button.svg", SVG_SCALE);
 
             // Update screen
             SDL_RenderPresent(renderer);

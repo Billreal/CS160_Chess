@@ -214,6 +214,12 @@ int main(int argc, char *args[])
             {
                 board.setBackground(black);
                 board.clear();
+                switch(event.type)
+                {
+                    case SDL_QUIT:
+                        running = false;
+                        break;
+                }
             }
             // board.log("Done checking stalemate");
         } while (SDL_PollEvent(&event) != 0);

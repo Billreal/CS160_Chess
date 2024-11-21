@@ -8,7 +8,7 @@ LINKER = -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -Lsrc/SDL2/lib -Lsrc/SDL2/bin
 COMPILER_FLAG= -std=c++20 -lmingw32 
 
 # Target to clean up object files and initialize Chess.exe
-all: clean chess
+all: clean chess compile
 	./chess
 # Target to clean up object files
 clean:
@@ -20,8 +20,9 @@ clean:
 # 	rm -f chess.exe
 
 # chess: main color board colorScheme background pieces coordinate
-chess: main color board colorScheme coordinate pieces button
+compile:
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER)
+chess: main color board colorScheme coordinate pieces button
 
 main:
 	g++ -c src/main.cpp -o src/main.o $(COMPILER_FLAG) $(LINKER)

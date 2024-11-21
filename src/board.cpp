@@ -1090,7 +1090,7 @@ bool Board::isStatemate(int color)
 
 bool Board::isSafeMove(int color, char piece, Coordinate src, Coordinate dest)
 {
-    return true;
+    // return true;
     int rowDest = dest.getY();
     int colDest = dest.getX();
     int rowSrc = src.getY();

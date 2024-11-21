@@ -762,7 +762,7 @@ bool Board::isKingSafe(int color)
     int cardinalCol[8] = {-1, 0, 1, 1, 1, 0, -1, -1};
 
     int horseRow[8] = {-1, -2, -2, -1, 1, 2, 2, 1};
-    int horseCol[8] = {-2, -1, 1, 2, 2, 2, -2, -1};
+    int horseCol[8] = {-2, -1, 1, 2, 2, 1, -1, -2};
 
     bool isWhite = color == WHITE;
     bool pawnDirection[8] = {isWhite, false, isWhite, false, !isWhite, false, !isWhite, false};

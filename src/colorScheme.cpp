@@ -1,4 +1,3 @@
-#pragma once
 #include "./../include/colorScheme.h"
 #include "./../include/color.h"
 

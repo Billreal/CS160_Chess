@@ -1,6 +1,5 @@
+#include <iostream>
 #include "../include/button.h"
-#define NANOSVG_IMPLEMENTATION
-#define NANOSVGRAST_IMPLEMENTATION
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 
@@ -24,6 +23,7 @@ void Button::renderSVG(const char *svgFilePath, double scale)
 {
     const int width = rect.w;
     const int height = rect.h;
+    // std::cerr<< "Width: " << width << " Height: "<< height << "\n";
     if(!width || !height) {
         printf("Width or height is 0.\n");
         return;
@@ -73,12 +73,11 @@ void Button::renderSVG(const char *svgFilePath, double scale)
     nsvgDelete(image);
 
     // Render button rect
-    SDL_Rect rect = {rect.x, rect.y, width, height};
-    renderRect(renderer, rect, color);
+    // std::cerr << rect.x << rect.y <<  width << height << "\n";
+    // renderRect(renderer, rect, color);
 
     // Render SVG texture
-    SDL_Rect svgRect = {rect.x + (width - width) / 2, rect.y + (height - height) / 2, width, height};
-    SDL_RenderCopy(renderer, svgTexture, NULL, &svgRect);
+    SDL_RenderCopy(renderer, svgTexture, NULL, &rect);
     SDL_DestroyTexture(svgTexture);
 
     // Render text

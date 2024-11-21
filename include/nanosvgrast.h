@@ -21,6 +21,7 @@
  * by Sean Barrett - http://nothings.org/
  *
  */
+#pragma once
 
 #ifndef NANOSVGRAST_H
 #define NANOSVGRAST_H

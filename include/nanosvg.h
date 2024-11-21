@@ -26,6 +26,8 @@
  *
  */
 
+#pragma once
+
 #ifndef NANOSVG_H
 #define NANOSVG_H
 

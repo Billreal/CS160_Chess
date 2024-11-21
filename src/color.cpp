@@ -1,4 +1,3 @@
-#pragma once
 #include "./../include/color.h"
 colorRGBA ::colorRGBA(int r, int g, int b, int a)
 {

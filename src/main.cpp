@@ -1,8 +1,8 @@
-#pragma once
 #include <iostream>
 // #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 #include "./test.cpp"
 // #include "./../include/background.h"
 #include "./../include/color.h"
@@ -11,17 +11,16 @@
 #include "./../include/pieces.h"
 #include "./../include/coordinate.h"
 #include "./../include/button.h"
-#include "./../include/nanosvg.h"
-#include "./../include/nanosvgrast.h"
 using std::cerr, std::cout;
 
 SDL_Renderer *renderer;
 SDL_Window *window;
 SDL_Surface *winSurface;
 
-const int SCREEN_WIDTH = 700;
-const int SCREEN_HEIGHT = 700;
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 1000;
 const int SVG_SCALE = 1;
+const int FONT_SIZE = 32;
 
 SDL_Texture *loadTexture(const std::string &path)
 {
@@ -91,7 +90,7 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    TTF_Font *font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 20);
+    TTF_Font *font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", FONT_SIZE);
     if (!font)
     {
         SDL_Log("Failed to load font: %s", TTF_GetError());
@@ -129,17 +128,17 @@ int main(int argc, char *args[])
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
 
+    // Init logo
+    const int logoWidth = 500;
+    const int logoHeight = 177;
+    SDL_Rect logoInfos = {(SCREEN_WIDTH - logoWidth) / 2, 120, logoWidth, logoHeight};
+    SDL_Texture *logoTexture = loadTexture("./assets/logo.png");
+
     bool isOnStartMenu = false;
     bool renderOnce = false;
     // board.renderPieces();
     // board.render();
     // board.present();
-
-    // Render logo
-    const int logoWidth = 500;
-    const int logoHeight = 177;
-    SDL_Rect logoInfos = {(SCREEN_WIDTH - logoHeight) / 2 , 240, logoWidth, logoHeight};
-    SDL_RenderCopy(renderer, loadTexture("assets/logo.png"), nullptr, &logoInfos);
 
     // Initialize buttons
     const int startMenuBtnWidth = 500;
@@ -153,6 +152,7 @@ int main(int argc, char *args[])
     while (running)
     {
         // Start menu
+        // Clear screen
         if (!isOnStartMenu)
         {
             while (SDL_PollEvent(&event) != 0)
@@ -168,14 +168,13 @@ int main(int argc, char *args[])
                 quitBtn.handleEvent(&event);
             }
 
-            // Clear screen
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
-            SDL_RenderClear(renderer);
+            // Render logo
+            SDL_RenderCopy(renderer, logoTexture, NULL, &logoInfos);
 
             // Render button
-            startBtn.renderSVG("/assets/start_menu_button.svg", SVG_SCALE);
-            loadBtn.renderSVG("/assets/start_menu_button.svg", SVG_SCALE);
-            quitBtn.renderSVG("/assets/start_menu_button.svg", SVG_SCALE);
+            startBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
+            loadBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
+            quitBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
 
             // Update screen
             SDL_RenderPresent(renderer);
@@ -198,6 +197,8 @@ int main(int argc, char *args[])
                 running = false;
                 quitBtn.reset(); // Reset button state
             }
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
+            SDL_RenderClear(renderer);
 
             startBtn.clear();
             loadBtn.clear();
@@ -206,6 +207,7 @@ int main(int argc, char *args[])
         else
         {
             // std::cerr << isOnStartMenu << "\n";
+            // Clear screen
             if (!renderOnce)
             {
                 board.renderPieces();

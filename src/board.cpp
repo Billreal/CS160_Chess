@@ -593,7 +593,7 @@ vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
         {
             if (canWhiteCastlingKing())
                 res.push_back({coordX + 2, coordY});
-            if (canBlackCastlingQueen())
+            if (canWhiteCastlingQueen())
                 res.push_back({coordX - 2, coordY});
         }
     }
@@ -1098,7 +1098,7 @@ bool Board::isSafeMove(int color, char piece, Coordinate src, Coordinate dest)
     char originDestPiece = getPiece(dest);
     writeCell(dest, piece);
     deleteCell(src);
-    std::cerr << "Checking move of " << piece << " to " << dest.getX() << " " << dest.getY() << "\n";
+    // std::cerr << "Checking move of " << piece << " to " << dest.getX() << " " << dest.getY() << "\n";
     bool res = isKingSafe(color);
     writeCell(src, piece);
     writeCell(dest, originDestPiece);

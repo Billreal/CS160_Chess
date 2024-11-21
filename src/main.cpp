@@ -78,7 +78,7 @@ int main(int argc, char *args[])
     SDL_Event event;
 
     // Chessboard rendering
- 
+
     // chessPieces chess(QUEEN, WHITE, 4, 4);
     // auto dbg = chess.listAllMove();
     // for (auto x : dbg)
@@ -95,96 +95,109 @@ int main(int argc, char *args[])
     vector<Coordinate> possibleCaptures;
     int currentMoveColor = WHITE;
     Coordinate enPassantCoord;
+    bool isEnded = false;
     while (running)
     {
         // Check if the window is running or not
         do
         {
-            switch (event.type)
-            {
-            case SDL_QUIT:
-            {
-                running = false;
-                break;
-            }
-            case SDL_MOUSEBUTTONDOWN:
-            {
-                if (event.button.button != SDL_BUTTON_LEFT)
+            if (!isEnded)
+                switch (event.type)
+                {
+                case SDL_QUIT:
+                {
+                    running = false;
                     break;
-                if (!board.testInbound(event.button))
-                    break;
-                Coordinate pickedPlace = board.getPieceCoord(event.button);
-                pickedPiece = board.getPiece(pickedPlace);
-                int pickedColor = board.getPieceColor(pickedPiece);
-                if (pickedColor != currentMoveColor)
-                    break;
-                prevCoordinate = pickedPlace;
-                if (pickedPlace == Coordinate(-1, -1))
-                    break;
-                if (pickedPiece == '0')
-                    break;
-                isLeftMouseHolding = true;
-                cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
-                possibleMoves.clear();
-                possibleCaptures.clear();
-                possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                board.render();
-                board.present();
-                board.deleteCell(pickedPlace);
-                break;
-            }
-            case SDL_MOUSEMOTION:
-            {
-                if (isLeftMouseHolding == false) // Mouse hover
-                    break;
-                board.render();
-                board.renderMove(possibleMoves, possibleCaptures);
-                board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                board.present();
-                break;
-            }
-            case SDL_MOUSEBUTTONUP:
-            {
-                if (event.button.button != SDL_BUTTON_LEFT)
-                    break;
-                if (!isLeftMouseHolding)
-                    break;
-                isLeftMouseHolding = false;
-                Coordinate droppedPlace = board.getPieceCoord(event.button);
+                }
+                case SDL_MOUSEBUTTONDOWN:
+                {
+                    if (event.button.button != SDL_BUTTON_LEFT)
+                        break;
+                    if (!board.testInbound(event.button))
+                        break;
+                    Coordinate pickedPlace = board.getPieceCoord(event.button);
+                    pickedPiece = board.getPiece(pickedPlace);
+                    int pickedColor = board.getPieceColor(pickedPiece);
+                    // if (pickedColor != currentMoveColor)
+                    //     break;
+                    prevCoordinate = pickedPlace;
+                    if (pickedPlace == Coordinate(-1, -1))
+                        break;
+                    if (pickedPiece == '0')
+                        break;
+                    isLeftMouseHolding = true;
+                    cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
+                    possibleMoves.clear();
+                    possibleCaptures.clear();
+                    possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
 
-                if (droppedPlace == prevCoordinate)
-                {
-                    // Dropping at same place
-                    board.writeCell(droppedPlace, pickedPiece);
+                    // board.log("Done getting moves");
+                    possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                    // board.log("Done getting captures");
                     board.render();
+                    // board.log("Done render");
+                    board.present();
+                    // board.log("Done present");
+                    board.deleteCell(pickedPlace);
+                    // board.log("Done delete");
+                    break;
+                }
+                case SDL_MOUSEMOTION:
+                {
+                    if (isLeftMouseHolding == false) // Mouse hover
+                        break;
+                    board.render();
+                    // board.log("Done render");
                     board.renderMove(possibleMoves, possibleCaptures);
+                    board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
+                    // board.log("Done render animation");
+                    board.present();
+                    break;
                 }
-                else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
+                case SDL_MOUSEBUTTONUP:
                 {
-                    board.render();
-                    board.updateCastlingStatus();
-                    prevCoordinate = Coordinate(-1, -1);
-                    pickedPiece = ' ';
-                    if (currentMoveColor == WHITE)
-                        currentMoveColor = BLACK;
-                    else if (currentMoveColor == BLACK)
-                        currentMoveColor = WHITE;
+                    if (event.button.button != SDL_BUTTON_LEFT)
+                        break;
+                    if (!isLeftMouseHolding)
+                        break;
+                    isLeftMouseHolding = false;
+                    Coordinate droppedPlace = board.getPieceCoord(event.button);
+
+                    if (droppedPlace == prevCoordinate)
+                    {
+                        // Dropping at same place
+                        board.writeCell(droppedPlace, pickedPiece);
+                        board.render();
+                        board.renderMove(possibleMoves, possibleCaptures);
+                    }
+                    else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
+                    {
+                        board.render();
+                        board.updateCastlingStatus();
+                        prevCoordinate = Coordinate(-1, -1);
+                        pickedPiece = ' ';
+                        if (currentMoveColor == WHITE)
+                            currentMoveColor = BLACK;
+                        else if (currentMoveColor == BLACK)
+                            currentMoveColor = WHITE;
+                        // if (board.isStatemate(WHITE) || board.isStatemate(BLACK)) isEnded = true;
+                    }
+                    else // invalid move
+                    {
+                        board.writeCell(prevCoordinate, pickedPiece);
+                        board.render();
+                    }
+                    // board.clear();
+                    std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
+                    board.log(event.button, "released");
+                    board.present();
+                    break;
                 }
-                else // invalid move
-                {
-                    board.writeCell(prevCoordinate, pickedPiece);
-                    board.render();
+                    // default:
+                    // board.present();
                 }
-                // board.clear();
-                std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
-                board.log(event.button, "released");
-                board.present();
-                break;
-            }
-                // default:
-                // board.present();
-            }
+            else;
+            // board.log("Done checking stalemate");
         } while (SDL_PollEvent(&event) != 0);
     }
 

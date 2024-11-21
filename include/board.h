@@ -196,4 +196,8 @@ public:
     void log(std::string message);
 
     void genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList);
+
+    bool isStatemate(int color);
+
+    bool isSafeMove(int color, char piece, Coordinate src, Coordinate dest);
 };

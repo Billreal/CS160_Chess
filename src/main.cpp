@@ -102,6 +102,7 @@ int main(int argc, char *args[])
         do
         {
             if (!isEnded)
+            {
                 switch (event.type)
                 {
                 case SDL_QUIT:
@@ -180,7 +181,19 @@ int main(int argc, char *args[])
                             currentMoveColor = BLACK;
                         else if (currentMoveColor == BLACK)
                             currentMoveColor = WHITE;
-                        // if (board.isStatemate(WHITE) || board.isStatemate(BLACK)) isEnded = true;
+                        if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
+                        {
+                            isEnded = true;
+                            SDL_Log("End game: Statemate");
+                        }
+                        int opponentColor = 1 - currentMoveColor;
+                        if (board.isCheckmate(opponentColor))
+                        {
+                            isEnded = true;
+                            SDL_Log("End game: Checkmate");
+                        }
+                        
+                        std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
                     }
                     else // invalid move
                     {
@@ -188,7 +201,7 @@ int main(int argc, char *args[])
                         board.render();
                     }
                     // board.clear();
-                    std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
+                    // std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
                     board.log(event.button, "released");
                     board.present();
                     break;
@@ -196,7 +209,12 @@ int main(int argc, char *args[])
                     // default:
                     // board.present();
                 }
-            else;
+            }
+            else
+            {
+                board.setBackground(black);
+                board.clear();
+            }
             // board.log("Done checking stalemate");
         } while (SDL_PollEvent(&event) != 0);
     }

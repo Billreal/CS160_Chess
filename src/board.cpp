@@ -198,7 +198,7 @@ void Board::renderStartingPosition(std::string seq)
                             SIDE_LENGTH,
                             SIDE_LENGTH);
                 column++;
-                std::cerr << row << " " << column << "\n";
+                // std::cerr << row << " " << column << "\n";
             }
             continue;
         }
@@ -560,7 +560,7 @@ void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordina
 
 vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
 {
-    std::cerr << "Begin getting possible moves at: " << coordX << " " << coordY << "\n";
+    // std::cerr << "Begin getting possible moves at: " << coordX << " " << coordY << "\n";
     int originCol = coordX, originRow = coordY;
     int pieceName = getPieceName(piece);
     int color = getPieceColor(piece);
@@ -577,7 +577,7 @@ vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
             if (isSafeMove(color, piece, Coordinate(coordX, coordY), cell))
                 res.push_back(cell);
         }
-    std::cerr << "Done getting possible moves at: " << coordX << " " << coordY << "\n";
+    // std::cerr << "Done getting possible moves at: " << coordX << " " << coordY << "\n";
 
     // Generating castling
     if (pieceName == KING)
@@ -612,7 +612,7 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
     int color = getPieceColor(piece);
     vector<vector<Coordinate>> allMoves = chessPiece.listAllMove(pieceName, color, coordX, coordY);
     vector<Coordinate> res;
-    std::cerr << "Begin checking ordinary moves of: " << piece << " at " << coordX << " " << coordY << "\n";
+    // std::cerr << "Begin checking ordinary moves of: " << piece << " at " << coordX << " " << coordY << "\n";
 
     if (pieceName != PAWN)
     {
@@ -657,7 +657,7 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
             if (rightColor != color && rightColor != COLOR_NONE && isSafeMove(color, piece, currentCoordinate, rightDiagonalCapture))
                 res.push_back(rightDiagonalCapture);
     }
-    std::cerr << "Done ordinary moves of: " << piece << " at: " << coordX << " " << coordY << std::endl;
+    // std::cerr << "Done ordinary moves of: " << piece << " at: " << coordX << " " << coordY << std::endl;
     // Generating en passant capture
     if (getPieceName(piece) == PAWN)
     {
@@ -673,7 +673,7 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
         int color = getPieceColor(piece);
         if (color == getPieceColor(EPSPiece))
             return res;
-        std::cerr << "Can enpassant at: " << enPassantCoord.getX() << " " << enPassantCoord.getY() << "\n";
+        // std::cerr << "Can enpassant at: " << enPassantCoord.getX() << " " << enPassantCoord.getY() << "\n";
         if (color == WHITE)
         {
             Coordinate enPassantMove = enPassantCoord - Coordinate(0, 1);
@@ -686,7 +686,7 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
             if (isSafeMove(color, piece, currentCoordinate, enPassantMove))
                 res.push_back(enPassantMove);
         }
-        std::cerr << "Done checking en passant at: " << coordX << " " << coordY << "\n";
+        // std::cerr << "Done checking en passant at: " << coordX << " " << coordY << "\n";
     }
 
     // for (auto cell : res)
@@ -742,7 +742,7 @@ bool Board::isKingSafe(int color)
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            cerr << board[i][j] << " ";
+            // cerr << board[i][j] << " ";
 
             if (getPieceName(board[i][j]) == KING && getPieceColor(board[i][j]) == color)
             {
@@ -751,8 +751,8 @@ bool Board::isKingSafe(int color)
                 break;
             }
         }
-    cerr << "\n";
-    std::cerr << kingRow << " " << kingCol << " " << color << "\n";
+    // cerr << "\n";
+    // std::cerr << kingRow << " " << kingCol << " " << color << "\n";
     int oppositeColor = 1 - color;
     bool res = true;
     // cerr << "Current Color is " << color << "\n";
@@ -1103,4 +1103,24 @@ bool Board::isSafeMove(int color, char piece, Coordinate src, Coordinate dest)
     writeCell(src, piece);
     writeCell(dest, originDestPiece);
     return res;
+}
+
+bool Board::isCheckmate(int color)
+{
+    if (isKingSafe(color))
+        return false;
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+        {
+            if (getPieceColor(board[row][col]) == color)
+            {
+                int coordX = col;
+                int coordY = row;
+                if (getPossibleMoves(board[row][col], coordX, coordY).size() != 0)
+                    return false;
+                if (getPossibleCaptures(board[row][col], coordX, coordY).size() != 0)
+                    return false;
+            }
+        }
+    return true;
 }

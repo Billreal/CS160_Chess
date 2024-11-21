@@ -200,4 +200,6 @@ public:
     bool isStatemate(int color);
 
     bool isSafeMove(int color, char piece, Coordinate src, Coordinate dest);
+
+    bool isCheckmate(int color);
 };

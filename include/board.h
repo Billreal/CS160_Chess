@@ -34,6 +34,8 @@ private:
     int halfmoves = 0;
     int totalmoves = 0;
 
+    // Castling status
+
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -78,6 +80,7 @@ public:
     void updatePlayerStatus(std::string player);
 
     void updateCastlingStatus(std::string seq);
+    void updateCastlingStatus();
 
     void updateEnPassantStatus(std::string seq);
 
@@ -175,5 +178,28 @@ public:
     void renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList);
 
     bool isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate dest);
-    bool isKingSafe(Coordinate src, Coordinate dest, char movingPiece);
+    bool isKingSafe(int color);
+    bool testMovesKingSafety(Coordinate dest, char movingPiece);
+
+    bool isInBound(Coordinate coord);
+    void markMoved(Coordinate dest);
+
+    bool canWhiteCastlingKing();
+    bool canWhiteCastlingQueen();
+    bool canBlackCastlingKing();
+    bool canBlackCastlingQueen();
+
+    char getPieceFromInfo(int pieceName, int color);
+
+    bool makeMove(Coordinate src, Coordinate dest, char piece, const vector<Coordinate> &moveList, const vector<Coordinate> &captureList); // Perform move, then return 1 if success, 0 otherwise
+
+    void log(std::string message);
+
+    void genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList);
+
+    bool isStatemate(int color);
+
+    bool isSafeMove(int color, char piece, Coordinate src, Coordinate dest);
+
+    bool isCheckmate(int color);
 };

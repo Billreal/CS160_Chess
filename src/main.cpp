@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 // #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -93,7 +94,7 @@ int main(int argc, char *args[])
     //     cerr << SDL_GetError() << "\n";
     // }
 
-    Board board(renderer, board1Primary, board2Primary, bgColor);
+    Board board(renderer, classicboard1Primary, classicBoard2Primary, bgColor);
 
     // Handling SDL_events
     SDL_Event event;
@@ -108,9 +109,15 @@ int main(int argc, char *args[])
     bool isLeftMouseHolding = false;
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
-    board.setColor(board1Primary, board2Primary);
+    board.setColor(classicboard1Primary, classicBoard2Primary);
+    board.renderPieces();
+    board.render();
+    board.present();
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
+    int currentMoveColor = WHITE;
+    Coordinate enPassantCoord;
+    bool isEnded = false;
 
     bool isOnStartMenu = false;
     bool renderOnce = false;
@@ -124,6 +131,8 @@ int main(int argc, char *args[])
 
     while (running)
     {
+        // Check if the window is running or not
+
         // Start menu
         if (!isOnStartMenu)
         {
@@ -188,80 +197,127 @@ int main(int argc, char *args[])
             // Check if the window is running or not do
             do
             {
-                switch (event.type)
+                if (!isEnded)
                 {
-                case SDL_QUIT:
-                {
-                    running = false;
-                    break;
-                }
-                case SDL_MOUSEBUTTONDOWN:
-                {
-                    if (event.button.button != SDL_BUTTON_LEFT)
-                        break;
-                    if (!board.testInbound(event.button))
-                        break;
-                    Coordinate pickedPlace = board.getPieceCoord(event.button);
-                    pickedPiece = board.getPiece(pickedPlace);
-                    prevCoordinate = pickedPlace;
-                    if (pickedPlace == Coordinate(-1, -1))
-                        break;
-                    if (pickedPiece == '0')
-                        break;
-                    isLeftMouseHolding = true;
-                    cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
-                    // board.clear();
-                    board.render();
-                    board.present();
-                    // board.debugBoard();
-                    board.deleteCell(pickedPlace);
-                    break;
-                }
-                case SDL_MOUSEMOTION:
-                {
-                    if (isLeftMouseHolding == false) // Mouse hover
-                        break;
-                    // board.clear();
-                    // board.clear();
-                    board.render();
-                    board.renderMove(possibleMoves, possibleCaptures);
-                    board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                    board.present();
-                    break;
-                }
-                case SDL_MOUSEBUTTONUP:
-                {
-                    if (event.button.button != SDL_BUTTON_LEFT)
-                        break;
-                    if (!isLeftMouseHolding)
-                        break;
-                    isLeftMouseHolding = false;
-                    Coordinate droppedPlace = board.getPieceCoord(event.button);
-                    vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    // Coordinate selectedPlace = board.getPieceCoord(event.button);
-
-                    if (droppedPlace != Coordinate(-1, -1) && board.isKingSafe(prevCoordinate, droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
-                        board.writeCell(droppedPlace, pickedPiece);
-                    else
-                        board.writeCell(prevCoordinate, pickedPiece);
-                    // board.clear();
-                    board.render();
-                    if (droppedPlace == prevCoordinate)
+                    switch (event.type)
                     {
-                        // board.clear();
-                        board.renderMove(possibleMoves, possibleCaptures);
+                    case SDL_QUIT:
+                    {
+                        running = false;
+                        break;
                     }
-                    prevCoordinate = Coordinate(-1, -1);
-                    pickedPiece = ' ';
-                    std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
-                    board.log(event.button, "released");
-                    board.present();
-                    break;
+                    case SDL_MOUSEBUTTONDOWN:
+                    {
+                        if (event.button.button != SDL_BUTTON_LEFT)
+                            break;
+                        if (!board.testInbound(event.button))
+                            break;
+                        Coordinate pickedPlace = board.getPieceCoord(event.button);
+                        pickedPiece = board.getPiece(pickedPlace);
+                        int pickedColor = board.getPieceColor(pickedPiece);
+                        // if (pickedColor != currentMoveColor)
+                        //     break;
+                        prevCoordinate = pickedPlace;
+                        if (pickedPlace == Coordinate(-1, -1))
+                            break;
+                        if (pickedPiece == '0')
+                            break;
+                        isLeftMouseHolding = true;
+                        cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
+                        possibleMoves.clear();
+                        possibleCaptures.clear();
+                        possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+
+                        // board.log("Done getting moves");
+                        possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                        // board.log("Done getting captures");
+                        board.render();
+                        // board.log("Done render");
+                        board.present();
+                        // board.log("Done present");
+                        board.deleteCell(pickedPlace);
+                        // board.log("Done delete");
+                        break;
+                    }
+                    case SDL_MOUSEMOTION:
+                    {
+                        if (isLeftMouseHolding == false) // Mouse hover
+                            break;
+                        board.render();
+                        // board.log("Done render");
+                        board.renderMove(possibleMoves, possibleCaptures);
+                        board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
+                        // board.log("Done render animation");
+                        board.present();
+                        break;
+                    }
+                    case SDL_MOUSEBUTTONUP:
+                    {
+                        if (event.button.button != SDL_BUTTON_LEFT)
+                            break;
+                        if (!isLeftMouseHolding)
+                            break;
+                        isLeftMouseHolding = false;
+                        Coordinate droppedPlace = board.getPieceCoord(event.button);
+
+                        if (droppedPlace == prevCoordinate)
+                        {
+                            // Dropping at same place
+                            board.writeCell(droppedPlace, pickedPiece);
+                            board.render();
+                            board.renderMove(possibleMoves, possibleCaptures);
+                        }
+                        else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
+                        {
+                            board.render();
+                            board.updateCastlingStatus();
+                            prevCoordinate = Coordinate(-1, -1);
+                            pickedPiece = ' ';
+                            if (currentMoveColor == WHITE)
+                                currentMoveColor = BLACK;
+                            else if (currentMoveColor == BLACK)
+                                currentMoveColor = WHITE;
+                            if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
+                            {
+                                isEnded = true;
+                                SDL_Log("End game: Statemate");
+                            }
+                            int opponentColor = 1 - currentMoveColor;
+                            if (board.isCheckmate(opponentColor))
+                            {
+                                isEnded = true;
+                                SDL_Log("End game: Checkmate");
+                            }
+
+                            std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
+                        }
+                        else // invalid move
+                        {
+                            board.writeCell(prevCoordinate, pickedPiece);
+                            board.render();
+                        }
+                        // board.clear();
+                        // std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
+                        board.log(event.button, "released");
+                        board.present();
+                        break;
+                    }
+                        // default:
+                        // board.present();
+                    }
                 }
-                    // default:
-                    // board.present();
+                else
+                {
+                    board.setBackground(black);
+                    board.clear();
+                    switch (event.type)
+                    {
+                    case SDL_QUIT:
+                        running = false;
+                        break;
+                    }
                 }
+                // board.log("Done checking stalemate");
             } while (SDL_PollEvent(&event) != 0);
         }
     }

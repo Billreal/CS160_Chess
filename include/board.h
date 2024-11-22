@@ -15,7 +15,7 @@ private:
     SDL_Renderer *renderer = NULL;
     // Background background;
     const int MARGIN = 80;
-    const int SIDE_LENGTH = 70;
+    const int SIDE_LENGTH = 80;
     static const int BOARD_SIZE = 8;
     char board[BOARD_SIZE][BOARD_SIZE];
     bool isMoved[BOARD_SIZE][BOARD_SIZE];
@@ -40,9 +40,9 @@ private:
     // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
-    const double IMG_SCALE = 1.5;
-    const double MOVE_INDICATOR_SCALE = 0.75;
-    const double CAPTURE_INDICATOR_SCALE = 1.5;
+    const double IMG_SCALE = 1.8;
+    const double MOVE_INDICATOR_SCALE = 0.9;
+    const double CAPTURE_INDICATOR_SCALE = 1.8;
 
     std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;

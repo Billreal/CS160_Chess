@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "./../include/board.h"
-#include "./../include/board.h"
+#include "./../include/colorScheme.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -373,6 +373,32 @@ void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
     // std::swap(x, y);
     // Swapped x and y
     renderPiece(pieceName, color, x - SIDE_LENGTH / 2, y - SIDE_LENGTH / 2);
+    int leftEdge = x - SIDE_LENGTH / 2;
+    int rightEdge = x + SIDE_LENGTH / 2;
+    int upperEdge = y - SIDE_LENGTH / 2;
+    int lowerEdge  = y + SIDE_LENGTH / 2;
+    SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
+    if (upperEdge < MARGIN)
+    {
+        SDL_Rect fillRect = {leftEdge, upperEdge, SIDE_LENGTH, MARGIN - upperEdge};
+        SDL_RenderFillRect(renderer, &fillRect);
+    } 
+    if (lowerEdge > MARGIN + SIDE_LENGTH * 8)
+    {
+        SDL_Rect fillRect = {leftEdge, MARGIN + SIDE_LENGTH * 8, SIDE_LENGTH, lowerEdge - (MARGIN + SIDE_LENGTH * 8)};
+        SDL_RenderFillRect(renderer, &fillRect);
+    }
+    if (leftEdge < MARGIN)
+    {
+        SDL_Rect fillRect = {leftEdge, upperEdge, MARGIN - leftEdge, SIDE_LENGTH};
+        SDL_RenderFillRect(renderer, &fillRect);
+    }
+    if (rightEdge > MARGIN + SIDE_LENGTH * 8)
+    {
+        SDL_Rect fillRect = {MARGIN + SIDE_LENGTH * 8, upperEdge, rightEdge - (MARGIN + SIDE_LENGTH * 8), SIDE_LENGTH};
+        SDL_RenderFillRect(renderer, &fillRect);
+    }
+
     // SDL_Log("Rendering chess pieces at %d %d", x, y);
 }
 

@@ -139,7 +139,9 @@ int main(int argc, char *args[])
     Button ingameColorSwitchModern(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Modern", font);
     Button ingameColorSwitchFuturistic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Futuristic", font);
     Button ingameColorSwitchClassic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Classic", font);
-    vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary}, {ingameColorSwitchClassic, classicPrimary, classicSecondary}, {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
+    vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
+                                   {ingameColorSwitchClassic, classicPrimary, classicSecondary},
+                                   {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
     int currentThemeIndex = 0;
     Button *currentThemeButton = &ingameColorSwitchModern;
     while (running)

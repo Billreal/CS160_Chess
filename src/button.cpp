@@ -8,17 +8,23 @@ Button::Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color col
     rect = {x, y, w, h};
 }
 
-void Button::renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color)
+void Button::renderRect(SDL_Rect rect, SDL_Color color)
 {
     SDL_Rect fillRect = {rect.x, rect.y, rect.w, rect.h};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(renderer, &fillRect);
+}
+void Button::renderRect(SDL_Rect rect, colorRGBA color)
+{
+    SDL_Rect fillRect = {rect.x, rect.y, rect.w, rect.h};
+    SDL_SetRenderDrawColor(renderer, color.getR(), color.getG(), color.getB(), color.getA());
     SDL_RenderFillRect(renderer, &fillRect);
 }
 
 void Button::render()
 {
     // Render button with rounded corners
-    renderRect(renderer, rect, color);
+    renderRect(rect, color);
 
     // // Render text
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
@@ -71,4 +77,9 @@ bool Button::clicked() const
 void Button::reset()
 {
     isClicked = false;
+}
+
+void Button::clear()
+{
+    renderRect(rect, bgColor);
 }

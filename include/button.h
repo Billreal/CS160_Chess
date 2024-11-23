@@ -3,7 +3,8 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
-
+#include "color.h"
+#include "colorScheme.h"
 class Button
 {
 private:
@@ -16,7 +17,8 @@ private:
     SDL_Surface *surface;
     bool isClicked;
 
-    void renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
+    void renderRect(SDL_Rect rect, SDL_Color color);
+    void renderRect(SDL_Rect rect, colorRGBA color);
 
 public:
     Button(SDL_Renderer *renderer);
@@ -26,7 +28,7 @@ public:
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }
     // Clear renderer
-    void clear() const { SDL_RenderClear(renderer); }
+    void clear();
     
     void handleEvent(SDL_Event *e);
     bool clicked() const;

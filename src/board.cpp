@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "./../include/board.h"
+#include "./../include/board.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -526,8 +527,8 @@ void Board::renderChessboard()
 
 void Board::render()
 {
-    setRendererColor(backgroundColor);
-    clear();
+    // setRendererColor(backgroundColor);
+    // clear();
     // background.render(backgroundColor);
     renderChessboard();
     renderFromBoard();

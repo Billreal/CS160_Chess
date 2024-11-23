@@ -19,7 +19,7 @@ SDL_Window *window;
 SDL_Surface *winSurface;
 
 const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 700;
+const int SCREEN_HEIGHT = 750;
 
 int main(int argc, char *args[])
 {
@@ -109,10 +109,12 @@ int main(int argc, char *args[])
     bool isLeftMouseHolding = false;
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
+    SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
+    SDL_RenderClear(renderer);
     board.setColor(modernPrimary, modernSecondary);
-    board.renderPieces();
-    board.render();
-    board.present();
+    // board.renderPieces();
+    // board.render();
+    // board.present();
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
     int currentMoveColor = WHITE;
@@ -131,7 +133,7 @@ int main(int argc, char *args[])
     Button ingameColorSwitchModern(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Modern", font);
     Button ingameColorSwitchFuturistic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Futuristic", font);
     Button ingameColorSwitchClassic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Classic", font);
-    Button* currentThemeButton = &ingameColorSwitchModern;
+    Button *currentThemeButton = &ingameColorSwitchModern;
     while (running)
     {
         // Check if the window is running or not
@@ -154,7 +156,6 @@ int main(int argc, char *args[])
 
             // Clear screen
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
-            SDL_RenderClear(renderer);
 
             // Render button
             startBtn.render();
@@ -192,11 +193,13 @@ int main(int argc, char *args[])
             // std::cerr << isOnStartMenu << "\n";
             if (!renderOnce)
             {
+
                 board.renderPieces();
                 board.render();
-                currentThemeButton -> render();
-                board.present();
+                currentThemeButton->render();
+                // board.present();
                 renderOnce = true;
+                continue;
             }
             // Check if the window is running or not do
             do
@@ -218,7 +221,7 @@ int main(int argc, char *args[])
                         {
                             SDL_Log("Pressed theme changing button");
                             // * Not pressed inside of chessboard
-                            currentThemeButton -> handleEvent(&event);
+                            currentThemeButton->handleEvent(&event);
                             if (currentThemeButton->clicked())
                             {
                                 currentThemeButton->reset();
@@ -228,23 +231,20 @@ int main(int argc, char *args[])
                                     currentThemeButton = &ingameColorSwitchFuturistic;
                                     board.setColor(futuristicPrimary, futuristicSecondary);
                                 }
-                                else
-                                if (currentThemeButton == &ingameColorSwitchFuturistic)
+                                else if (currentThemeButton == &ingameColorSwitchFuturistic)
                                 {
                                     currentThemeButton = &ingameColorSwitchClassic;
                                     board.setColor(classicPrimary, classicSecondary);
                                 }
-                                else
-                                if (currentThemeButton == &ingameColorSwitchClassic)
+                                else if (currentThemeButton == &ingameColorSwitchClassic)
                                 {
                                     currentThemeButton = &ingameColorSwitchModern;
                                     board.setColor(modernPrimary, modernSecondary);
                                 }
+                                currentThemeButton->render();
                                 board.render();
-                                currentThemeButton -> render();
-                                board.present();
+                                // board.present();
                             }
-
                             break;
                         }
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
@@ -263,14 +263,9 @@ int main(int argc, char *args[])
                         possibleCaptures.clear();
                         possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
 
-                        // board.log("Done getting moves");
                         possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                        // board.log("Done getting captures");
                         board.render();
-                        currentThemeButton -> render();
-                        // board.log("Done render");
-                        board.present();
-                        // currentThemeButton -> present();
+                        currentThemeButton->render();
                         // board.log("Done present");
                         board.deleteCell(pickedPlace);
                         // board.log("Done delete");
@@ -281,13 +276,10 @@ int main(int argc, char *args[])
                         if (isLeftMouseHolding == false) // Mouse hover
                             break;
                         board.render();
-                        currentThemeButton -> render();
-                        // board.log("Done render");
+                        currentThemeButton->render();
                         board.renderMove(possibleMoves, possibleCaptures);
                         board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                         // board.log("Done render animation");
-                        board.present();
-                        currentThemeButton -> render();
                         break;
                     }
                     case SDL_MOUSEBUTTONUP:
@@ -305,12 +297,11 @@ int main(int argc, char *args[])
                             board.writeCell(droppedPlace, pickedPiece);
                             board.render();
                             board.renderMove(possibleMoves, possibleCaptures);
-                            currentThemeButton -> render();
                         }
                         else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                         {
                             board.render();
-                            currentThemeButton -> render();
+                            // currentThemeButton -> render();
                             board.updateCastlingStatus();
                             prevCoordinate = Coordinate(-1, -1);
                             pickedPiece = ' ';
@@ -336,13 +327,9 @@ int main(int argc, char *args[])
                         {
                             board.writeCell(prevCoordinate, pickedPiece);
                             board.render();
-                            currentThemeButton -> render();
+                            currentThemeButton->render();
                         }
-                        // board.clear();
-                        // std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
                         board.log(event.button, "released");
-                        board.present();
-                        // currentThemeButton -> present();
                         break;
                     }
                         // default:
@@ -360,6 +347,7 @@ int main(int argc, char *args[])
                         break;
                     }
                 }
+                board.present();
                 // board.log("Done checking stalemate");
             } while (SDL_PollEvent(&event) != 0);
         }

@@ -21,6 +21,12 @@ SDL_Surface *winSurface;
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 750;
 
+struct ThemeList
+{
+    Button button;
+    colorRGBA primaryColor;
+    colorRGBA secondaryColor;
+};
 int main(int argc, char *args[])
 {
     // ! Temporary variable, will change in later version
@@ -133,6 +139,8 @@ int main(int argc, char *args[])
     Button ingameColorSwitchModern(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Modern", font);
     Button ingameColorSwitchFuturistic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Futuristic", font);
     Button ingameColorSwitchClassic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Classic", font);
+    vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary}, {ingameColorSwitchClassic, classicPrimary, classicSecondary}, {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
+    int currentThemeIndex = 0;
     Button *currentThemeButton = &ingameColorSwitchModern;
     while (running)
     {
@@ -226,21 +234,9 @@ int main(int argc, char *args[])
                             {
                                 currentThemeButton->reset();
                                 // * To next color in circle
-                                if (currentThemeButton == &ingameColorSwitchModern)
-                                {
-                                    currentThemeButton = &ingameColorSwitchFuturistic;
-                                    board.setColor(futuristicPrimary, futuristicSecondary);
-                                }
-                                else if (currentThemeButton == &ingameColorSwitchFuturistic)
-                                {
-                                    currentThemeButton = &ingameColorSwitchClassic;
-                                    board.setColor(classicPrimary, classicSecondary);
-                                }
-                                else if (currentThemeButton == &ingameColorSwitchClassic)
-                                {
-                                    currentThemeButton = &ingameColorSwitchModern;
-                                    board.setColor(modernPrimary, modernSecondary);
-                                }
+                                currentThemeIndex = (currentThemeIndex + 1) % 3;
+                                currentThemeButton = &themeList[currentThemeIndex].button;
+                                board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
                                 currentThemeButton->render();
                                 board.render();
                                 // board.present();

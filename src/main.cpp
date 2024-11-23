@@ -275,8 +275,8 @@ int main(int argc, char *args[])
                     {
                         if (isLeftMouseHolding == false) // Mouse hover
                             break;
-                        SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
-                        SDL_RenderClear(renderer);
+                        // SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
+                        // SDL_RenderClear(renderer);
                         board.render();
                         board.renderMove(possibleMoves, possibleCaptures);
                         board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);

@@ -18,7 +18,7 @@ SDL_Renderer *renderer;
 SDL_Window *window;
 SDL_Surface *winSurface;
 
-const int SCREEN_WIDTH = 1000;
+const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 750;
 
 struct ThemeList
@@ -132,13 +132,14 @@ int main(int argc, char *args[])
     // board.renderPieces();
     // board.render();
     // board.present();
-
+    const int X_COLUMN_BUTTON[2] = {700, 1000};
+    const int Y_ROW_BUTTON[7] = {80, 180, 280, 380, 480, 580, 680};
     Button startBtn(renderer, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 100, 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Start", font);
     Button loadBtn(renderer, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 25, 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Load", font);
     Button quitBtn(renderer, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 + 50, 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Quit", font);
-    Button ingameColorSwitchModern(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Modern", font);
-    Button ingameColorSwitchFuturistic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Futuristic", font);
-    Button ingameColorSwitchClassic(renderer, 800, SCREEN_HEIGHT / 2 - 100, 100, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Classic", font);
+    Button ingameColorSwitchModern(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Modern", font);
+    Button ingameColorSwitchFuturistic(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Futuristic", font);
+    Button ingameColorSwitchClassic(renderer, X_COLUMN_BUTTON[0]   , Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Classic", font);
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
                                    {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
@@ -229,11 +230,11 @@ int main(int argc, char *args[])
                             break;
                         if (!board.testInbound(event.button))
                         {
-                            SDL_Log("Pressed theme changing button");
                             // * Not pressed inside of chessboard
                             currentThemeButton->handleEvent(&event);
                             if (currentThemeButton->clicked())
                             {
+                                SDL_Log("Pressed theme changing button");
                                 currentThemeButton->reset();
                                 // * To next color in circle
                                 currentThemeIndex = (currentThemeIndex + 1) % 3;

@@ -53,6 +53,10 @@ private:
     SDL_Texture *possibleCaptureIndicator;
     void loadTextures();
     void renderPiece(int pieceName, int color, int x, int y);
+    // For rendering of last move
+    Coordinate currentCoordinate = Coordinate(-1, -1);
+    Coordinate previousCoordinate = Coordinate(-1, -1);
+    Coordinate dangerCoordinate = Coordinate(-1, -1);
 
 public:
     Board(SDL_Renderer *renderer);
@@ -202,4 +206,13 @@ public:
     bool isSafeMove(int color, char piece, Coordinate src, Coordinate dest);
 
     bool isCheckmate(int color);
+
+    void recordMove(Coordinate src, Coordinate coord);
+
+    void renderLastMove();
+    void renderBlendCell(Coordinate coordinate, colorRGBA color);
+
+    void setRenderCheck(chessColor color);
+
+    void renderCheck();
 };

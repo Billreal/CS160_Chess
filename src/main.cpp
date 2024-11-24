@@ -279,7 +279,7 @@ int main(int argc, char *args[])
                         board.render();
                         board.renderMove(possibleMoves, possibleCaptures);
                         board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                        currentThemeButton->render();
+                        // currentThemeButton->render();
                         // board.log("Done render animation");
                         break;
                     }
@@ -301,11 +301,13 @@ int main(int argc, char *args[])
                         }
                         else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                         {
-                            board.render();
+                            board.setRenderCheck(COLOR_NONE);
                             // currentThemeButton -> render();
                             board.updateCastlingStatus();
                             prevCoordinate = Coordinate(-1, -1);
                             pickedPiece = ' ';
+                            if (!board.isKingSafe(1 - currentMoveColor)) board.setRenderCheck(chessColor(1 - currentMoveColor));
+                            board.render();
                             if (currentMoveColor == WHITE)
                                 currentMoveColor = BLACK;
                             else if (currentMoveColor == BLACK)

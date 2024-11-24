@@ -557,6 +557,8 @@ void Board::render()
     // clear();
     // background.render(backgroundColor);
     renderChessboard();
+    renderLastMove();
+    renderCheck();
     renderFromBoard();
 }
 
@@ -1087,6 +1089,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
     }
     writeCell(dest, piece);
     deleteCell(src);
+    recordMove(src, dest);
     return true;
 }
 
@@ -1150,4 +1153,56 @@ bool Board::isCheckmate(int color)
             }
         }
     return true;
+}
+
+void Board::recordMove(Coordinate src, Coordinate dest)
+{
+    previousCoordinate = Coordinate(src.getX(), src.getY());
+    currentCoordinate = Coordinate(dest.getX(), dest.getY());
+}
+void Board::renderLastMove()
+{
+    // if (previousCoordinate == Coordinate(-1, -1) || currentCoordinate == Coordinate(-1, -1)) return;
+    renderBlendCell(previousCoordinate, moveIndicator);
+    renderBlendCell(currentCoordinate, moveIndicator);
+}
+
+void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
+{
+    if (coordinate == Coordinate(-1, -1)) return;
+    coordinate = coordinate * SIDE_LENGTH + Coordinate(MARGIN, MARGIN);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    bool cellType = (coordinate.getX() + coordinate.getY()) % 2;
+    setRendererColor(color);
+    // if (cellType)
+    //     setRendererColor(primaryColor);
+    // else setRendererColor(secondaryColor);
+    SDL_Rect renderRect = {coordinate.getX(), coordinate.getY(), SIDE_LENGTH, SIDE_LENGTH};
+    SDL_RenderFillRect(renderer, &renderRect);
+    // SDL_Log(SDL_GetError());
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
+}
+
+void Board::setRenderCheck(chessColor color)
+{
+    std::cerr << "Entering set render check\n";
+    Coordinate kingPlace = Coordinate(-1, -1);
+    if (color != COLOR_NONE)
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+            if (board[row][col] == getPieceFromInfo(KING, color))
+            {
+                kingPlace = Coordinate(col, row); // col as x, row as y
+                std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
+            }
+    dangerCoordinate = kingPlace;
+}
+
+void Board::renderCheck()
+{
+    if (dangerCoordinate == Coordinate(-1, -1)) return;
+    // std::cerr << "Rendering check indicator at" << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n";
+    renderBlendCell(dangerCoordinate, checkIndicator);
 }

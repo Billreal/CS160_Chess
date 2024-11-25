@@ -3,7 +3,11 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <string>
 #include "./test.cpp"
+#include <fstream>
+#include <filesystem>
+#include <vector>
 // #include "./../include/background.h"
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
@@ -24,7 +28,9 @@ const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 1000;
 const int SVG_SCALE = 1;
 const int FONT_SIZE = 32;
-const int MARGIN = 80;
+const int TOP_MARGIN = 200;
+const int BOTOTM_MARGIN = 80;
+const int SIDE_MARGIN = 80;
 const int SIDE_LENGTH = 80;
 
 SDL_Texture *loadTexture(const std::string &path)
@@ -70,6 +76,57 @@ SDL_Texture *loadSVGTexture(const char *filePath, int width, int height, double 
     return texture;
 }
 
+void saveGame(Board &board, const std::string &filename)
+{
+    std::ofstream saveFile;
+    saveFile.open(filename);
+    if (!saveFile)
+    {
+        cerr << "Failed to open file for saving: " << filename << "\n";
+        return;
+    }
+    saveFile << board.getFen();
+
+    saveFile.close();
+}
+
+void loadGame(Board &board, const std::string &filename)
+{
+    std::ifstream saveFile;
+    saveFile.open(filename);
+    std::string FEN;
+    if (!saveFile)
+    {
+        cerr << "Failed to open file for loading: " << filename << "\n";
+        return;
+    }
+
+    std::getline(std::cin, FEN);
+    board.updateFen(FEN);
+
+    saveFile.close();
+}
+
+std::vector<std::string> getSaveFiles(const std::string &directory)
+{
+    std::vector<std::string> files;
+    for (const auto &entry : std::filesystem::directory_iterator(directory))
+    {
+        if (entry.is_regular_file())
+        {
+            files.push_back(entry.path().string());
+        }
+    }
+    return files;
+}
+
+enum GUI_State
+{
+    START,
+    LOAD,
+    GAME
+};
+
 int main(int argc, char *args[])
 {
     // ! Temporary variable, will change in later version
@@ -81,6 +138,7 @@ int main(int argc, char *args[])
     debug();
 
     // Initializing main components
+    GUI_State isOn = START;
     renderer = NULL;
     window = NULL;
 
@@ -183,23 +241,62 @@ int main(int argc, char *args[])
     Button loadBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 500, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Load", font);
     Button quitBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 650, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Quit", font);
 
+    // Initialize right panel
     const int panelMargin = 60;
     const int rightPanelWidth = 180;
     const int rightPanelHeight = 640;
-    SDL_Rect rightPanelInfos = {SCREEN_WIDTH - panelMargin - rightPanelWidth, MARGIN, rightPanelWidth, rightPanelHeight};
+    SDL_Rect rightPanelInfos = {SCREEN_WIDTH - panelMargin - rightPanelWidth, TOP_MARGIN, rightPanelWidth, rightPanelHeight};
     SDL_Texture *rightPanelTexture = loadTexture("./assets/right_panel.svg");
 
+    // Initialize bottom panel
     const int bottomPanelWidth = 640;
     const int bottomPanelHeight = 70;
-    SDL_Rect bottomPanelInfos = {MARGIN, SCREEN_HEIGHT - panelMargin - bottomPanelHeight, bottomPanelWidth, bottomPanelHeight};
+    SDL_Rect bottomPanelInfos = {SIDE_MARGIN, SCREEN_HEIGHT - panelMargin - bottomPanelHeight, bottomPanelWidth, bottomPanelHeight};
     SDL_Texture *bottomPanelTexture = loadTexture("./assets/bottom_panel.svg");
+
+    // Initialize load menu
+    SDL_Rect loadInfos = {SIDE_MARGIN, SIDE_MARGIN, 933, 988};
+    SDL_Texture *loadMenuTexture = loadTexture("./assets/load.png");
+    TTF_Font *loadMenuFont = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
+    if (!font)
+    {
+        SDL_Log("Failed to load Load_menu font: %s", TTF_GetError());
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        TTF_Quit();
+        SDL_Quit();
+        return -1;
+    }
+
+    std::vector<std::string> files = getSaveFiles("./saves");
+
+    std::vector<Button> loadFileBtns;
+
+    for (int i = 0; i < files.size(); i++)
+    {
+        string name = "";
+        for (int j = 0; j < files[i].length() - 3; j++)
+        {
+            if (files[i].substr(j, 4) == ".txt")
+            {
+                name = files[i].substr(j - 7, 7);
+                break;
+            }
+
+            loadFileBtns.push_back(Button(renderer, SIDE_MARGIN, 240 + i * 90, 250, 60, startMenuBtnColor, white, name.c_str(), loadMenuFont));
+        }
+    }
 
     while (running)
     {
         // Start menu
         // Clear screen
-        if (!isOnStartMenu)
+        switch (isOn)
         {
+        case START:
+        {
+            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
+            SDL_RenderClear(renderer);
             while (SDL_PollEvent(&event) != 0)
             {
                 if (event.type == SDL_QUIT)
@@ -218,6 +315,7 @@ int main(int argc, char *args[])
 
             // Render button
             startBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
+            startBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
             loadBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
             quitBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
 
@@ -228,12 +326,13 @@ int main(int argc, char *args[])
             if (startBtn.clicked())
             {
                 SDL_Log("Button clicked!");
-                isOnStartMenu = true;
+                isOn = GAME;
                 startBtn.reset(); // Reset button state
             }
             if (loadBtn.clicked())
             {
                 SDL_Log("Button clicked!");
+                isOn = LOAD;
                 loadBtn.reset(); // Reset button state
             }
             if (quitBtn.clicked())
@@ -242,14 +341,62 @@ int main(int argc, char *args[])
                 running = false;
                 quitBtn.reset(); // Reset button state
             }
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
-            SDL_RenderClear(renderer);
 
             startBtn.clear();
             loadBtn.clear();
             quitBtn.clear();
+            break;
         }
-        else
+        case LOAD:
+        {
+            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
+            SDL_RenderClear(renderer);
+
+            SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
+
+            while (SDL_PollEvent(&event) != 0)
+            {
+                if (event.type == SDL_QUIT)
+                {
+                    running = false;
+                }
+
+                //     // Handle button events
+                for (int i = 0; i < files.size(); i++)
+                {
+                    loadFileBtns[i].handleEvent(&event);
+                }
+            }
+
+            // Update screen
+            SDL_RenderPresent(renderer);
+
+            //Render Buttons
+            for (int i = 0; i < files.size(); i++)
+            {
+                loadFileBtns[i].render();
+            }
+    
+            // Handle button click
+            for (int i = 0; i < files.size(); i++)
+            {
+                if (loadFileBtns[i].clicked())
+                {
+                    SDL_Log("Button clicked!");
+                    loadGame(board, files[i]);
+                    isOn = GAME;
+                    loadFileBtns[i].reset(); // Reset button state
+                }
+            }
+
+            for (int i = 0; i < files.size(); i++)
+            {
+                loadFileBtns[i].clear();
+            }
+
+            break;
+        }
+        case GAME:
         {
             SDL_RenderCopy(renderer, rightPanelTexture, NULL, &rightPanelInfos);
             SDL_RenderCopy(renderer, bottomPanelTexture, NULL, &bottomPanelInfos);
@@ -260,7 +407,6 @@ int main(int argc, char *args[])
 
             // Update screen
             SDL_RenderPresent(renderer);
-
 
             if (!renderOnce)
             {
@@ -347,6 +493,8 @@ int main(int argc, char *args[])
                     // board.present();
                 }
             } while (SDL_PollEvent(&event) != 0);
+            break;
+        }
         }
     }
 

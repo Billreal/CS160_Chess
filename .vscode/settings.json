@@ -68,6 +68,7 @@
         "numbers": "cpp",
         "span": "cpp",
         "text_encoding": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "fstream": "cpp"
     }
 }

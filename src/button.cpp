@@ -24,7 +24,8 @@ void Button::renderSVG(const char *svgFilePath, double scale)
     const int width = rect.w;
     const int height = rect.h;
     // std::cerr<< "Width: " << width << " Height: "<< height << "\n";
-    if(!width || !height) {
+    if (!width || !height)
+    {
         printf("Width or height is 0.\n");
         return;
     }
@@ -95,6 +96,9 @@ void Button::render()
 {
     // Render button rect
     renderRect(renderer, rect, color);
+
+    // // Render rectBefore
+    // renderRect(renderer, {rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
 
     // // Render text
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, textColor);

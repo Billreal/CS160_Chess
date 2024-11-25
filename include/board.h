@@ -14,7 +14,9 @@ class Board
 private:
     SDL_Renderer *renderer = NULL;
     // Background background;
-    const int MARGIN = 80;
+    const int TOP_MARGIN = 200;
+    const int BOTOTM_MARGIN = 80;
+    const int SIDE_MARGIN = 80;
     const int SIDE_LENGTH = 80;
     static const int BOARD_SIZE = 8;
     char board[BOARD_SIZE][BOARD_SIZE];
@@ -37,6 +39,7 @@ private:
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    std::string CURRENT_FEN = "";
     // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
@@ -75,6 +78,8 @@ public:
     }
 
     // Game Update, with data taken in as boardSequence[1 -> 5], which are strings
+    void updateFen(std::string fen);
+
     void updatePlayerStatus(std::string player);
 
     void updateCastlingStatus(std::string seq);
@@ -145,6 +150,8 @@ public:
     int getPieceName(char piece);
 
     int getPieceColor(char piece);
+
+    std::string getFen();
 
     char getPiece(int x, int y);
 

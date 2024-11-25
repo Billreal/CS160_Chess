@@ -301,12 +301,23 @@ int main(int argc, char *args[])
                         }
                         else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                         {
+                            board.render();
+                            board.present();
+                            if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
+                            {
+                                if (!board.pawnPromotion(droppedPlace.getX(), droppedPlace.getY()))
+                                {
+                                    running = false;
+                                    break;
+                                }
+                            }
                             board.setRenderCheck(COLOR_NONE);
                             // currentThemeButton -> render();
                             board.updateCastlingStatus();
                             prevCoordinate = Coordinate(-1, -1);
                             pickedPiece = ' ';
                             if (!board.isKingSafe(1 - currentMoveColor)) board.setRenderCheck(chessColor(1 - currentMoveColor));
+
                             board.render();
                             if (currentMoveColor == WHITE)
                                 currentMoveColor = BLACK;

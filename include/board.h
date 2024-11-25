@@ -215,4 +215,6 @@ public:
     void setRenderCheck(chessColor color);
 
     void renderCheck();
+
+    bool pawnPromotion(int x, int y);
 };

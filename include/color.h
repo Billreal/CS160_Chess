@@ -2,17 +2,17 @@
 class colorRGBA
 {
 private:
-    int r;
-    int g;
-    int b;
-    int a;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
 
 public:
-    colorRGBA(int r, int g, int b, int a);
-    int getR();
-    int getG();
-    int getB();
-    int getA();
-     
+    colorRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+    unsigned char getR();
+    unsigned char getG();
+    unsigned char getB();
+    unsigned char getA();
+
     colorRGBA();
 };

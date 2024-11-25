@@ -2,6 +2,7 @@
 #include <iostream>
 #include "./../include/board.h"
 #include "./../include/colorScheme.h"
+#include "./../include/button.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -376,13 +377,13 @@ void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
     int leftEdge = x - SIDE_LENGTH / 2;
     int rightEdge = x + SIDE_LENGTH / 2;
     int upperEdge = y - SIDE_LENGTH / 2;
-    int lowerEdge  = y + SIDE_LENGTH / 2;
+    int lowerEdge = y + SIDE_LENGTH / 2;
     SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
     if (upperEdge < MARGIN)
     {
         SDL_Rect fillRect = {leftEdge, upperEdge, SIDE_LENGTH, MARGIN - upperEdge};
         SDL_RenderFillRect(renderer, &fillRect);
-    } 
+    }
     if (lowerEdge > MARGIN + SIDE_LENGTH * 8)
     {
         SDL_Rect fillRect = {leftEdge, MARGIN + SIDE_LENGTH * 8, SIDE_LENGTH, lowerEdge - (MARGIN + SIDE_LENGTH * 8)};
@@ -806,20 +807,27 @@ bool Board::isKingSafe(int color)
         {
             int currentRow = kingRow + distance * cardinalRow[direction];
             int currentCol = kingCol + distance * cardinalCol[direction];
-            if (currentCol < 0 || currentCol >= 8 || currentRow < 0 || currentRow >= 8) break;
+            if (currentCol < 0 || currentCol >= 8 || currentRow < 0 || currentRow >= 8)
+                break;
             char piece = board[currentRow][currentCol];
             if (piece != '0')
             {
-                if (getPieceColor(piece) == color) break;
+                if (getPieceColor(piece) == color)
+                    break;
                 // opposite color
                 if (distance == 1)
                 {
-                    if (pawnDirection[direction] && getPieceName(piece) == PAWN) return false;
-                    if (kingDirection[direction] && getPieceName(piece) == KING) return false;
+                    if (pawnDirection[direction] && getPieceName(piece) == PAWN)
+                        return false;
+                    if (kingDirection[direction] && getPieceName(piece) == KING)
+                        return false;
                 }
-                if (bishopDirection[direction] && getPieceName(piece) == BISHOP) return false;
-                if (rookDirection[direction] && getPieceName(piece) == ROOK) return false;
-                if (queenDirection[direction] && getPieceName(piece) == QUEEN) return false;
+                if (bishopDirection[direction] && getPieceName(piece) == BISHOP)
+                    return false;
+                if (rookDirection[direction] && getPieceName(piece) == ROOK)
+                    return false;
+                if (queenDirection[direction] && getPieceName(piece) == QUEEN)
+                    return false;
                 break;
             }
         }
@@ -829,10 +837,13 @@ bool Board::isKingSafe(int color)
     {
         int currentRow = kingRow + horseRow[direction];
         int currentCol = kingCol + horseCol[direction];
-        if (currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7) continue;
+        if (currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7)
+            continue;
         char piece = board[currentRow][currentCol];
-        if (getPieceColor(piece) == color) continue;
-        if (getPieceName(piece) == KNIGHT) return false;
+        if (getPieceColor(piece) == color)
+            continue;
+        if (getPieceName(piece) == KNIGHT)
+            return false;
     }
     return true;
 }
@@ -1169,7 +1180,8 @@ void Board::renderLastMove()
 
 void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
 {
-    if (coordinate == Coordinate(-1, -1)) return;
+    if (coordinate == Coordinate(-1, -1))
+        return;
     coordinate = coordinate * SIDE_LENGTH + Coordinate(MARGIN, MARGIN);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -1182,7 +1194,6 @@ void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
     SDL_RenderFillRect(renderer, &renderRect);
     // SDL_Log(SDL_GetError());
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-
 }
 
 void Board::setRenderCheck(chessColor color)
@@ -1190,19 +1201,141 @@ void Board::setRenderCheck(chessColor color)
     std::cerr << "Entering set render check\n";
     Coordinate kingPlace = Coordinate(-1, -1);
     if (color != COLOR_NONE)
-    for (int row = 0; row < BOARD_SIZE; row++)
-        for (int col = 0; col < BOARD_SIZE; col++)
-            if (board[row][col] == getPieceFromInfo(KING, color))
-            {
-                kingPlace = Coordinate(col, row); // col as x, row as y
-                std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
-            }
+        for (int row = 0; row < BOARD_SIZE; row++)
+            for (int col = 0; col < BOARD_SIZE; col++)
+                if (board[row][col] == getPieceFromInfo(KING, color))
+                {
+                    kingPlace = Coordinate(col, row); // col as x, row as y
+                    std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
+                }
     dangerCoordinate = kingPlace;
 }
 
 void Board::renderCheck()
 {
-    if (dangerCoordinate == Coordinate(-1, -1)) return;
+    if (dangerCoordinate == Coordinate(-1, -1))
+        return;
     // std::cerr << "Rendering check indicator at" << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n";
     renderBlendCell(dangerCoordinate, checkIndicator);
+}
+
+bool Board::pawnPromotion(int x, int y) // In cell coordinate
+{
+    if (!isInBound(Coordinate(x, y)))
+        return true;
+    int row = y;
+    int col = x;
+    int menuOriginY;
+    chessColor color = chessColor(getPieceColor(board[y][x]));
+    if (y == 0)
+        menuOriginY = y - 1;
+    else if (y == 7)
+        menuOriginY = y + 1;
+    else
+        return true;
+    Coordinate queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate;
+    TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
+    if (x < 4)
+    {
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        knightButtonCoordinate = Coordinate((x + 1) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        rookButtonCoordinate = Coordinate((x + 2) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        bishopButtonCoordinate = Coordinate((x + 3) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+    }
+    else
+    {
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        knightButtonCoordinate = Coordinate((x - 1) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        bishopButtonCoordinate = Coordinate((x - 3) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+    }
+    SDL_Color queenColor, knightColor, rookColor, bishopColor;
+    if ((queenButtonCoordinate.getX() + queenButtonCoordinate.getY()) % 2 == 1)
+    {
+        queenColor = rookColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
+        knightColor = bishopColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
+    }
+    else
+    {
+        knightColor = bishopColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
+        queenColor = rookColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
+    }
+    std::cerr << queenButtonCoordinate.getX() << " " << queenButtonCoordinate.getY() << "\n"
+              << knightButtonCoordinate.getX() << " " << knightButtonCoordinate.getY() << "\n"
+              << rookButtonCoordinate.getX() << " " << rookButtonCoordinate.getY() << "\n"
+              << bishopButtonCoordinate.getX() << " " << bishopButtonCoordinate.getY() << "\n";
+    SDL_Color blackColor = {black.getR(), black.getG(), black.getA(), black.getB()};
+    Button queenButton(renderer, queenButtonCoordinate.getX(), queenButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, queenColor, blackColor, ".", font);
+    Button knightButton(renderer, knightButtonCoordinate.getX(), knightButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, knightColor, blackColor, ".", font);
+    Button rookButton(renderer, rookButtonCoordinate.getX(), rookButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, rookColor, blackColor, ".", font);
+    Button bishopButton(renderer, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, bishopColor, blackColor, ".", font);
+    std::cerr << "Done initializing\n";
+    queenButton.render();
+    knightButton.render();
+    rookButton.render();
+    bishopButton.render();
+    std::cerr << "Done calling rendering button\n";
+    renderPiece(QUEEN, color, queenButtonCoordinate.getX(), queenButtonCoordinate.getY());
+    renderPiece(KNIGHT, color, knightButtonCoordinate.getX(), knightButtonCoordinate.getY());
+    renderPiece(ROOK, color, rookButtonCoordinate.getX(), rookButtonCoordinate.getY());
+    renderPiece(BISHOP, color, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY());
+    std::cerr << "Done rendering pieces\n";
+    SDL_RenderPresent(renderer);
+    bool isPromoted = false;
+    SDL_Event ev;
+    while (!isPromoted)
+    {
+        while (SDL_PollEvent(&ev))
+        {
+            switch (ev.type)
+            {
+            case SDL_QUIT:
+                return false;
+            case SDL_MOUSEBUTTONDOWN:
+            {
+                if (ev.button.button != SDL_BUTTON_LEFT)
+                    continue;
+                queenButton.handleEvent(&ev);
+                rookButton.handleEvent(&ev);
+                bishopButton.handleEvent(&ev);
+                knightButton.handleEvent(&ev);
+                if (queenButton.clicked() || rookButton.clicked() || bishopButton.clicked() || knightButton.clicked())
+                {
+                    isPromoted = true;
+                    if (queenButton.clicked())
+                    {
+                        board[row][col] = getPieceFromInfo(QUEEN, color);
+                        continue;
+                    }
+                    if (rookButton.clicked())
+                    {
+                        board[row][col] = getPieceFromInfo(ROOK, color);
+                        continue;
+                    }
+                    if (bishopButton.clicked())
+                    {
+                        board[row][col] = getPieceFromInfo(BISHOP, color);
+                        continue;
+                    }
+                    if (knightButton.clicked())
+                    {
+                        board[row][col] = getPieceFromInfo(KNIGHT, color);
+                        continue;
+                    }
+                }
+                break;
+            }
+            }
+        }
+    }
+    queenButton.reset();
+    rookButton.reset();
+    bishopButton.reset();
+    knightButton.reset();
+    queenButton.clear();
+    knightButton.clear();
+    rookButton.clear();
+    bishopButton.clear();
+    TTF_CloseFont(font);
+    return true;
 }

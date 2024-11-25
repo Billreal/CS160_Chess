@@ -31,6 +31,11 @@ Board::Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondary
     // background = Background(renderer);
 }
 
+Board::~Board()
+{
+    TTF_CloseFont(font);
+}
+
 SDL_Texture *Board::loadTexture(const char *filePath, int width, int height, double scale)
 {
     struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
@@ -561,6 +566,8 @@ void Board::render()
     renderLastMove();
     renderCheck();
     renderFromBoard();
+    if (isUnderPromotion)
+        renderPawnPromotion();
 }
 
 void Board::setBackground(colorRGBA bg)
@@ -1219,22 +1226,21 @@ void Board::renderCheck()
     renderBlendCell(dangerCoordinate, checkIndicator);
 }
 
-bool Board::pawnPromotion(int x, int y) // In cell coordinate
+void Board::enablePawnPromotion(int x, int y) // In cell coordinate
 {
+    isUnderPromotion = true;
     if (!isInBound(Coordinate(x, y)))
-        return true;
+        return;
     int row = y;
     int col = x;
     int menuOriginY;
-    chessColor color = chessColor(getPieceColor(board[y][x]));
+    promotionColor = chessColor(getPieceColor(board[row][col]));
     if (y == 0)
         menuOriginY = y - 1;
     else if (y == 7)
         menuOriginY = y + 1;
     else
-        return true;
-    Coordinate queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate;
-    TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
+        return;
     if (x < 4)
     {
         queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
@@ -1249,93 +1255,86 @@ bool Board::pawnPromotion(int x, int y) // In cell coordinate
         rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
         bishopButtonCoordinate = Coordinate((x - 3) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
     }
-    SDL_Color queenColor, knightColor, rookColor, bishopColor;
     if ((queenButtonCoordinate.getX() + queenButtonCoordinate.getY()) % 2 == 1)
     {
-        queenColor = rookColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
-        knightColor = bishopColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
+        queenPromotionCellColor = rookPromotionCellColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
+        knightPromotionCellColor = bishopPromotionCellColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
     }
     else
     {
-        knightColor = bishopColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
-        queenColor = rookColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
+        knightPromotionCellColor = bishopPromotionCellColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
+        queenPromotionCellColor = rookPromotionCellColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
     }
     std::cerr << queenButtonCoordinate.getX() << " " << queenButtonCoordinate.getY() << "\n"
               << knightButtonCoordinate.getX() << " " << knightButtonCoordinate.getY() << "\n"
               << rookButtonCoordinate.getX() << " " << rookButtonCoordinate.getY() << "\n"
               << bishopButtonCoordinate.getX() << " " << bishopButtonCoordinate.getY() << "\n";
     SDL_Color blackColor = {black.getR(), black.getG(), black.getA(), black.getB()};
-    Button queenButton(renderer, queenButtonCoordinate.getX(), queenButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, queenColor, blackColor, ".", font);
-    Button knightButton(renderer, knightButtonCoordinate.getX(), knightButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, knightColor, blackColor, ".", font);
-    Button rookButton(renderer, rookButtonCoordinate.getX(), rookButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, rookColor, blackColor, ".", font);
-    Button bishopButton(renderer, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, bishopColor, blackColor, ".", font);
+    queenPromotion = Button(renderer, queenButtonCoordinate.getX(), queenButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, queenPromotionCellColor, blackColor, ".", font);
+    knightPromotion = Button(renderer, knightButtonCoordinate.getX(), knightButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, knightPromotionCellColor, blackColor, ".", font);
+    rookPromotion = Button(renderer, rookButtonCoordinate.getX(), rookButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, rookPromotionCellColor, blackColor, ".", font);
+    bishopPromotion = Button(renderer, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, bishopPromotionCellColor, blackColor, ".", font);
+    promotionCoord = Coordinate(x, y);
     std::cerr << "Done initializing\n";
-    queenButton.render();
-    knightButton.render();
-    rookButton.render();
-    bishopButton.render();
-    std::cerr << "Done calling rendering button\n";
-    renderPiece(QUEEN, color, queenButtonCoordinate.getX(), queenButtonCoordinate.getY());
-    renderPiece(KNIGHT, color, knightButtonCoordinate.getX(), knightButtonCoordinate.getY());
-    renderPiece(ROOK, color, rookButtonCoordinate.getX(), rookButtonCoordinate.getY());
-    renderPiece(BISHOP, color, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY());
-    std::cerr << "Done rendering pieces\n";
-    SDL_RenderPresent(renderer);
-    bool isPromoted = false;
-    SDL_Event ev;
-    while (!isPromoted)
+}
+void Board::renderPawnPromotion()
+{
+    std::cerr << "Entering rendering of pawn promotion\n";
+    Button *arr[4] = {&queenPromotion, &knightPromotion, &rookPromotion, &bishopPromotion};
+    Coordinate coord[4] = {queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate};
+    for (int i = 0; i < 4; i++)
     {
-        while (SDL_PollEvent(&ev))
-        {
-            switch (ev.type)
-            {
-            case SDL_QUIT:
-                return false;
-            case SDL_MOUSEBUTTONDOWN:
-            {
-                if (ev.button.button != SDL_BUTTON_LEFT)
-                    continue;
-                queenButton.handleEvent(&ev);
-                rookButton.handleEvent(&ev);
-                bishopButton.handleEvent(&ev);
-                knightButton.handleEvent(&ev);
-                if (queenButton.clicked() || rookButton.clicked() || bishopButton.clicked() || knightButton.clicked())
-                {
-                    isPromoted = true;
-                    if (queenButton.clicked())
-                    {
-                        board[row][col] = getPieceFromInfo(QUEEN, color);
-                        continue;
-                    }
-                    if (rookButton.clicked())
-                    {
-                        board[row][col] = getPieceFromInfo(ROOK, color);
-                        continue;
-                    }
-                    if (bishopButton.clicked())
-                    {
-                        board[row][col] = getPieceFromInfo(BISHOP, color);
-                        continue;
-                    }
-                    if (knightButton.clicked())
-                    {
-                        board[row][col] = getPieceFromInfo(KNIGHT, color);
-                        continue;
-                    }
-                }
-                break;
-            }
-            }
-        }
+        int colorX = (coord[i].getX() - MARGIN) / SIDE_LENGTH; 
+        int colorY = (coord[i].getY() - MARGIN) / SIDE_LENGTH; 
+        // std::cerr << coord[i].getX() << " " << coord[i].getY() << "\n";
+        if ((colorX + colorY) % 2 == 1)
+            arr[i]->setColor(secondaryColor);
+        else
+            arr[i]->setColor(primaryColor);
+        arr[i]->render();
     }
-    queenButton.reset();
-    rookButton.reset();
-    bishopButton.reset();
-    knightButton.reset();
-    queenButton.clear();
-    knightButton.clear();
-    rookButton.clear();
-    bishopButton.clear();
-    TTF_CloseFont(font);
-    return true;
+    std::cerr << "Done calling rendering button\n";
+    renderPiece(QUEEN, promotionColor, queenButtonCoordinate.getX(), queenButtonCoordinate.getY());
+    renderPiece(KNIGHT, promotionColor, knightButtonCoordinate.getX(), knightButtonCoordinate.getY());
+    renderPiece(ROOK, promotionColor, rookButtonCoordinate.getX(), rookButtonCoordinate.getY());
+    renderPiece(BISHOP, promotionColor, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY());
+    std::cerr << "Done rendering pieces\n";
+}
+
+bool Board::handlePawnPromotion(SDL_Event *ev)
+{
+    int row = promotionCoord.getY();
+    int col = promotionCoord.getX();
+    std::cerr << row << " " << col << "\n";
+    vector<Button *> button = {&queenPromotion, &rookPromotion, &bishopPromotion, &knightPromotion};
+    for (Button *currentButton : button)
+        currentButton->handleEvent(ev);
+    if (queenPromotion.clicked() || rookPromotion.clicked() || bishopPromotion.clicked() || knightPromotion.clicked())
+    {
+        if (queenPromotion.clicked())
+        {
+            board[row][col] = getPieceFromInfo(QUEEN, promotionColor);
+        }
+        else if (rookPromotion.clicked())
+        {
+            board[row][col] = getPieceFromInfo(ROOK, promotionColor);
+        }
+        else if (bishopPromotion.clicked())
+        {
+            board[row][col] = getPieceFromInfo(BISHOP, promotionColor);
+        }
+        else if (knightPromotion.clicked())
+        {
+            board[row][col] = getPieceFromInfo(KNIGHT, promotionColor);
+        }
+
+        for (Button *currentButton : button)
+        {
+            currentButton->reset();
+            currentButton->clear();
+        }
+        isUnderPromotion = false;
+        return true;
+    }
+    return false;
 }

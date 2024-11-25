@@ -22,6 +22,7 @@ private:
 
 public:
     Button(SDL_Renderer *renderer);
+    Button();
     Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, const std::string &text, TTF_Font *font);
 
     void render();
@@ -33,4 +34,7 @@ public:
     void handleEvent(SDL_Event *e);
     bool clicked() const;
     void reset();
+
+    void setColor(colorRGBA color);
+    void setColor(SDL_Color color);
 };

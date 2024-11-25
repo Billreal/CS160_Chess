@@ -139,12 +139,13 @@ int main(int argc, char *args[])
     Button quitBtn(renderer, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 + 50, 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Quit", font);
     Button ingameColorSwitchModern(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Modern", font);
     Button ingameColorSwitchFuturistic(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Futuristic", font);
-    Button ingameColorSwitchClassic(renderer, X_COLUMN_BUTTON[0]   , Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Classic", font);
+    Button ingameColorSwitchClassic(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Classic", font);
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
                                    {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
     int currentThemeIndex = 0;
     Button *currentThemeButton = &ingameColorSwitchModern;
+    bool isUnderPromotion = false;
     while (running)
     {
         // Check if the window is running or not
@@ -244,8 +245,20 @@ int main(int argc, char *args[])
                                 board.render();
                                 // board.present();
                             }
+                            if (isUnderPromotion)
+                                if (board.handlePawnPromotion(&event))
+                                {
+                                    isUnderPromotion = false;
+                                    currentMoveColor = 1 - currentMoveColor;
+                                    if (!board.isKingSafe(currentMoveColor))
+                                        board.setRenderCheck(chessColor(currentMoveColor));
+                                    // the current move color is switched, opposite of promoted piece
+                                    board.render();
+                                }
                             break;
                         }
+                        if (isUnderPromotion)
+                            break;
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
                         pickedPiece = board.getPiece(pickedPlace);
                         int pickedColor = board.getPieceColor(pickedPiece);
@@ -305,24 +318,35 @@ int main(int argc, char *args[])
                             board.present();
                             if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
                             {
-                                if (!board.pawnPromotion(droppedPlace.getX(), droppedPlace.getY()))
-                                {
-                                    running = false;
-                                    break;
-                                }
+                                isUnderPromotion = true;
+                                board.enablePawnPromotion(droppedPlace.getX(), droppedPlace.getY());
                             }
                             board.setRenderCheck(COLOR_NONE);
                             // currentThemeButton -> render();
                             board.updateCastlingStatus();
                             prevCoordinate = Coordinate(-1, -1);
                             pickedPiece = ' ';
-                            if (!board.isKingSafe(1 - currentMoveColor)) board.setRenderCheck(chessColor(1 - currentMoveColor));
+                            if (!board.isKingSafe(1 - currentMoveColor))
+                                board.setRenderCheck(chessColor(1 - currentMoveColor));
 
                             board.render();
-                            if (currentMoveColor == WHITE)
-                                currentMoveColor = BLACK;
-                            else if (currentMoveColor == BLACK)
-                                currentMoveColor = WHITE;
+                            if (!isUnderPromotion)
+                            {
+
+                                if (currentMoveColor == WHITE)
+                                    currentMoveColor = BLACK;
+                                else if (currentMoveColor == BLACK)
+                                    currentMoveColor = WHITE;
+                            }
+                        }
+                        else // invalid move
+                        {
+                            board.writeCell(prevCoordinate, pickedPiece);
+                            board.render();
+                            currentThemeButton->render();
+                        }
+                        if (!isUnderPromotion)
+                        {
                             if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
                             {
                                 isEnded = true;
@@ -336,12 +360,6 @@ int main(int argc, char *args[])
                             }
 
                             std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
-                        }
-                        else // invalid move
-                        {
-                            board.writeCell(prevCoordinate, pickedPiece);
-                            board.render();
-                            currentThemeButton->render();
                         }
                         board.log(event.button, "released");
                         break;

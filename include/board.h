@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <vector>
+#include "button.h"
 // #include "background.h"
 #include "colorScheme.h"
 #include "coordinate.h"
@@ -57,12 +58,19 @@ private:
     Coordinate currentCoordinate = Coordinate(-1, -1);
     Coordinate previousCoordinate = Coordinate(-1, -1);
     Coordinate dangerCoordinate = Coordinate(-1, -1);
+    Button queenPromotion, bishopPromotion, knightPromotion, rookPromotion;
+    Coordinate queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate;
+    SDL_Color queenPromotionCellColor, knightPromotionCellColor, rookPromotionCellColor, bishopPromotionCellColor;
+    chessColor promotionColor;
+    bool isUnderPromotion = false;
+    Coordinate promotionCoord;
+    TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
 
 public:
     Board(SDL_Renderer *renderer);
 
     Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor);
-
+    ~Board();
     // Clear renderer
     void clear() const { SDL_RenderClear(renderer); }
 
@@ -216,5 +224,11 @@ public:
 
     void renderCheck();
 
-    bool pawnPromotion(int x, int y);
+    void enablePawnPromotion(int x, int y);
+    void disablePawnPromotion();
+
+    void renderPawnPromotion();
+    bool handlePawnPromotion(SDL_Event *ev);
+
+
 };

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  21 NOV 2024 22:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  25 NOV 2024 21:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -890,7 +890,9 @@ l.114     \item I
 
 [2]
 
-[3] (ChessGameReport.aux)
+[3]
+
+[4] (ChessGameReport.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-07-20>
@@ -902,17 +904,17 @@ Package logreq Info: Writing requests to 'ChessGameReport.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 20067 strings out of 473899
- 357147 string characters out of 5726500
- 1936960 words of memory out of 5000000
- 42698 multiletter control sequences out of 15000+600000
+ 20069 strings out of 473899
+ 357171 string characters out of 5726500
+ 1937960 words of memory out of 5000000
+ 42699 multiletter control sequences out of 15000+600000
  591888 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,5n,81p,767b,1986s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb>
-Output written on ChessGameReport.pdf (5 pages, 115062 bytes).
+Output written on ChessGameReport.pdf (6 pages, 116264 bytes).
 PDF statistics:
- 125 PDF objects out of 1000 (max. 8388607)
- 20 named destinations out of 1000 (max. 500000)
+ 129 PDF objects out of 1000 (max. 8388607)
+ 21 named destinations out of 1000 (max. 500000)
  113 words of extra memory for PDF output out of 10000 (max. 10000000)
 

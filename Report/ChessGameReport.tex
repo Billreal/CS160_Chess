@@ -73,9 +73,9 @@ sorting=none]{biblatex}
           \end{itemize}
     \item Versus AI mode: Player as white pieces plays against black pieces controlled by Stockfish chess engine, with three level of difficulty
           \begin{itemize}
-              \item Easy mode:
-              \item Medium mode:
-              \item Hard mode:
+              \item Easy mode: Stockfish is ran with depth
+              \item Medium mode: Stockfish is ran with depth
+              \item Hard mode: Stockfish is ran with depth
           \end{itemize}
 \end{itemize}
 %%%%%% Equations %%%%%%
@@ -92,13 +92,13 @@ User interface and its elements is created with SDL2 graphic libraries and \href
               \item Load button to load saved board and gameplay from storage
               \item Quit button to exit the game.
           \end{itemize}
-    \item Menu during gameplay is render to the ? of the board.
+    \item Menu during gameplay is render to the right of the board.
           \begin{itemize}
-              \item Promotion of player's pawn is shown in a pop-up menu, which displays four pieces of rook, knight, bishop and queen.
-              \item Buttons to reset for the new game, undo last moves, redo last undo operations, save the current game and load a game from storage.
-              \item Button to open menu for customization
+              \item Promotion of player's pawn is shown above or under that pawn, which displays four possible promotion to queen, knight, rook and bishop.
+              \item Buttons to reset the board initial state, undo last moves, redo last undo operations, save the current game and load a game from external storage.
+              \item Customization
                     \begin{itemize}
-                        \item asa
+                        \item Button to cycle forward between modern, futuristic and classic board theme
                         \item as
                         \item as
                     \end{itemize}
@@ -114,6 +114,10 @@ User interface and its elements is created with SDL2 graphic libraries and \href
     \item Illegal moves (including movement to cells that are not highlighted, movement out of board's bound, etc) will return the piece to its original cell and does not count as a move.
     \item King's position is highlighted with different colors for its check, checkmate and stalemate statuses.
     \item Moves are managed automatically, alternating between two colors after each move.
+    \item To highlight chess piece's movement, color of initial and ending cells of that piece is mixed with a yellowish color.
+    \item To highlight check status of king piece, color of its cell is mixed with a redish color.
+    \item To highlight checkmate status of king piece, color of its cell is mixed with a \_\_\_ color.
+    \item To highlight stalemate status of king piece, color of its cell is mixed with a \_\_\_ color.
 \end{itemize}
 \subsection{Game Logic}
 \begin{itemize}
@@ -121,10 +125,10 @@ User interface and its elements is created with SDL2 graphic libraries and \href
           \begin{itemize}
               \item Chess pieces' moves are generated on selection based on their position, then get processed to create list of moves and capture in each direction.
               \item Special moves' condition are reviewed after each move, based on their condition they will get added to suitable pieces in the next move.
-              \item Status of king is examined during moves generating and after each move.
+              \item Status of king is examined during moves generating and after all special moves.
           \end{itemize}
-    \item Selected cell's ending cell is compared in its legal move and capture list. Each move is simulated before returning the list to ensure this move does not put the king in danger position(check, checkmate).
-    \item In case of stalemate or checkmate, the function of moving chess pieces refused to work. In such case, (need addition for this)
+    \item Selected cell's ending cell is compared in its legal moves and captures list. Each move is simulated while creating the list to ensure that move does not put the king in danger position(check, checkmate).
+    \item In case of stalemate or checkmate, any chess piece cannot be moved . In such case, (need addition for this)
 \end{itemize}
 \subsection{AI Opponent}
 \begin{itemize}
@@ -141,17 +145,20 @@ to be added
 \subsection{Optional features}
 While being dragged, selected chess piece follows the mouse's cursor smoothly.
 \subsection{Technology stack}
-The game's logic, game state management and GUI(graphic user interface) is written in C and C++, with SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, which can be decoded to get the complete information of board state stored. 
+The game's logic, game state management and GUI(graphic user interface) is written in C and C++, using SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, which can be decoded to get the complete information of board state stored. 
 
 More to be written
 \section{Design document}
 To be written after finished
 \section{Implementation Details}
-The code in organized in separate header and implementation files. nanoSVG libraries is used for converting vector images into bitmap images. SDL2 is used to render bitmap images and 
+The code in organized in separate header and implementation files.
+Each major component of the game is determined in a class.
+nanoSVG libraries is used for converting vector images into bitmap images. SDL2 is used to render the game and handle user's inputs.
 \section{Testing}
+The project is tested by playtesting, in which simple games are played and all interaction that player might do is performed in order to detect bugs and ensure good experience.
 \section{Future Improvements}
 \begin{enumerate}
     \item Implementation of board rotation for better user experience.
-    \item Fix the inconsistency between x-axis, y-axis of screen and row, column of 2D array representation. The inconsistency made methods seemed confusing to use. 
+    \item Fix the inconsistency between x-axis, y-axis of screen and row, column of 2D array representation. The inconsistency made board's methods seems confusing to use. 
 \end{enumerate}
 \end{document}

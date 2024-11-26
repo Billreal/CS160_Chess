@@ -11,3 +11,5 @@ extern colorRGBA classicPrimary;
 extern colorRGBA classicSecondary;
 extern colorRGBA moveIndicator;
 extern colorRGBA checkIndicator;
+extern colorRGBA checkmateIndicator;
+extern colorRGBA stalemateIndicator;

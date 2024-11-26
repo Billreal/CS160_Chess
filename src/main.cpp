@@ -216,7 +216,7 @@ int main(int argc, char *args[])
             // Check if the window is running or not do
             do
             {
-                if (!isEnded)
+                if (1)
                 {
                     switch (event.type)
                     {
@@ -250,8 +250,6 @@ int main(int argc, char *args[])
                                 {
                                     isUnderPromotion = false;
                                     currentMoveColor = 1 - currentMoveColor;
-                                    if (!board.isKingSafe(currentMoveColor))
-                                        board.setRenderCheck(chessColor(currentMoveColor));
                                     // the current move color is switched, opposite of promoted piece
                                     board.render();
                                 }
@@ -259,11 +257,13 @@ int main(int argc, char *args[])
                         }
                         if (isUnderPromotion)
                             break;
+                        if (isEnded)
+                            break;
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
                         pickedPiece = board.getPiece(pickedPlace);
                         int pickedColor = board.getPieceColor(pickedPiece);
-                        if (pickedColor != currentMoveColor)
-                            break;
+                        // if (pickedColor != currentMoveColor)
+                        //     break;
                         prevCoordinate = pickedPlace;
                         if (pickedPlace == Coordinate(-1, -1))
                             break;
@@ -300,63 +300,81 @@ int main(int argc, char *args[])
                     {
                         if (event.button.button != SDL_BUTTON_LEFT)
                             break;
-                        if (!isLeftMouseHolding)
-                            break;
-                        isLeftMouseHolding = false;
-                        Coordinate droppedPlace = board.getPieceCoord(event.button);
+                        if (isLeftMouseHolding)
+                        {
+                            isLeftMouseHolding = false;
+                            Coordinate droppedPlace = board.getPieceCoord(event.button);
 
-                        if (droppedPlace == prevCoordinate)
-                        {
-                            // Dropping at same place
-                            board.writeCell(droppedPlace, pickedPiece);
-                            board.render();
-                            board.renderMove(possibleMoves, possibleCaptures);
-                        }
-                        else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
-                        {
-                            board.render();
-                            board.present();
-                            if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
+                            if (droppedPlace == prevCoordinate)
                             {
-                                isUnderPromotion = true;
-                                board.enablePawnPromotion(droppedPlace.getX(), droppedPlace.getY());
+                                // Dropping at same place
+                                board.writeCell(droppedPlace, pickedPiece);
+                                board.render();
+                                board.renderMove(possibleMoves, possibleCaptures);
                             }
-                            board.setRenderCheck(COLOR_NONE);
-                            // currentThemeButton -> render();
-                            board.updateCastlingStatus();
-                            prevCoordinate = Coordinate(-1, -1);
-                            pickedPiece = ' ';
-                            if (!board.isKingSafe(1 - currentMoveColor))
-                                board.setRenderCheck(chessColor(1 - currentMoveColor));
-
-                            board.render();
-                            if (!isUnderPromotion)
+                            else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                             {
+                                board.render();
+                                board.present();
+                                if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
+                                {
+                                    isUnderPromotion = true;
+                                    board.enablePawnPromotion(droppedPlace.getX(), droppedPlace.getY());
+                                }
+                                board.setRenderCheck(COLOR_NONE);
+                                // currentThemeButton -> render();
+                                board.updateCastlingStatus();
+                                prevCoordinate = Coordinate(-1, -1);
+                                pickedPiece = ' ';
 
-                                if (currentMoveColor == WHITE)
-                                    currentMoveColor = BLACK;
-                                else if (currentMoveColor == BLACK)
-                                    currentMoveColor = WHITE;
+                                board.render();
+                                if (!isUnderPromotion)
+                                {
+                                    if (currentMoveColor == WHITE)
+                                        currentMoveColor = BLACK;
+                                    else if (currentMoveColor == BLACK)
+                                        currentMoveColor = WHITE;
+                                }
                             }
-                        }
-                        else // invalid move
-                        {
-                            board.writeCell(prevCoordinate, pickedPiece);
-                            board.render();
-                            currentThemeButton->render();
+                            else // invalid move
+                            {
+                                board.writeCell(prevCoordinate, pickedPiece);
+                                board.render();
+                                currentThemeButton->render();
+                            }
                         }
                         if (!isUnderPromotion)
                         {
+                            if (board.isCheckmate(WHITE) || board.isCheckmate(BLACK))
+                            {
+                                isEnded = true;
+                                if (board.isCheckmate(WHITE))
+                                    board.setRenderCheckmate(WHITE);
+                                else
+                                    board.setRenderCheckmate(BLACK);
+                                SDL_Log("End game: Checkmate");
+                                board.render();
+                                break;
+                            }
+                            if (!board.isKingSafe(WHITE) || !board.isKingSafe(BLACK))
+                            {
+                                if (!board.isKingSafe(WHITE))
+                                    board.setRenderCheck(WHITE);
+                                else
+                                    board.setRenderCheck(BLACK);
+                                board.render();
+                                break;
+                            }
                             if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
                             {
                                 isEnded = true;
+                                if (board.isStatemate(WHITE))
+                                    board.setRenderCheckmate(WHITE);
+                                else
+                                    board.setRenderCheckmate(BLACK);
                                 SDL_Log("End game: Statemate");
-                            }
-                            int opponentColor = 1 - currentMoveColor;
-                            if (board.isCheckmate(opponentColor))
-                            {
-                                isEnded = true;
-                                SDL_Log("End game: Checkmate");
+                                board.render();
+                                break;
                             }
 
                             std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
@@ -370,8 +388,7 @@ int main(int argc, char *args[])
                 }
                 else
                 {
-                    board.setBackground(black);
-                    board.clear();
+                    board.render();
                     switch (event.type)
                     {
                     case SDL_QUIT:
@@ -380,8 +397,9 @@ int main(int argc, char *args[])
                     }
                 }
                 board.present();
-                // board.log("Done checking stalemate");
-            } while (SDL_PollEvent(&event) != 0);
+            }
+            // board.log("Done checking stalemate");
+            while (SDL_PollEvent(&event) != 0);
         }
     }
 

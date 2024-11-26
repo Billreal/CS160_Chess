@@ -58,6 +58,8 @@ private:
     Coordinate currentCoordinate = Coordinate(-1, -1);
     Coordinate previousCoordinate = Coordinate(-1, -1);
     Coordinate dangerCoordinate = Coordinate(-1, -1);
+    Coordinate checkmateCoordinate = Coordinate(-1, -1);
+    Coordinate stalemateCoordinate = Coordinate(-1, -1);
     Button queenPromotion, bishopPromotion, knightPromotion, rookPromotion;
     Coordinate queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate;
     SDL_Color queenPromotionCellColor, knightPromotionCellColor, rookPromotionCellColor, bishopPromotionCellColor;
@@ -221,9 +223,12 @@ public:
     void renderBlendCell(Coordinate coordinate, colorRGBA color);
 
     void setRenderCheck(chessColor color);
+    void setRenderCheckmate(chessColor color);
+    void setRenderStalemate(chessColor color);
 
     void renderCheck();
-
+    void renderCheckmate();
+    void renderStalemate();
     void enablePawnPromotion(int x, int y);
     void disablePawnPromotion();
 

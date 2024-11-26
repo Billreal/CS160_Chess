@@ -565,7 +565,12 @@ void Board::render()
     renderChessboard();
     renderLastMove();
     renderCheck();
+    renderCheckmate();
+    renderStalemate();
     renderFromBoard();
+    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
+             << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
+             << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
 }
@@ -1190,6 +1195,8 @@ void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
     if (coordinate == Coordinate(-1, -1))
         return;
     coordinate = coordinate * SIDE_LENGTH + Coordinate(MARGIN, MARGIN);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     bool cellType = (coordinate.getX() + coordinate.getY()) % 2;
@@ -1284,8 +1291,8 @@ void Board::renderPawnPromotion()
     Coordinate coord[4] = {queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate};
     for (int i = 0; i < 4; i++)
     {
-        int colorX = (coord[i].getX() - MARGIN) / SIDE_LENGTH; 
-        int colorY = (coord[i].getY() - MARGIN) / SIDE_LENGTH; 
+        int colorX = (coord[i].getX() - MARGIN) / SIDE_LENGTH;
+        int colorY = (coord[i].getY() - MARGIN) / SIDE_LENGTH;
         // std::cerr << coord[i].getX() << " " << coord[i].getY() << "\n";
         if ((colorX + colorY) % 2 == 1)
             arr[i]->setColor(secondaryColor);
@@ -1337,4 +1344,37 @@ bool Board::handlePawnPromotion(SDL_Event *ev)
         return true;
     }
     return false;
+}
+
+void Board::setRenderCheckmate(chessColor color)
+{
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+            if (board[row][col] == getPieceFromInfo(KING, color))
+            {
+                checkmateCoordinate = Coordinate(col, row);
+                dangerCoordinate = stalemateCoordinate = Coordinate(-1, -1);
+            }
+}
+void Board::setRenderStalemate(chessColor color)
+{
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+            if (board[row][col] == getPieceFromInfo(KING, color))
+            {
+                stalemateCoordinate = Coordinate(col, row);
+                dangerCoordinate = checkmateCoordinate = Coordinate(-1, -1);
+            }
+}
+void Board::renderCheckmate()
+{
+    if (checkmateCoordinate == Coordinate(-1, -1))
+        return;
+    renderBlendCell(checkmateCoordinate, checkmateIndicator);
+}
+void Board::renderStalemate()
+{
+    if (stalemateCoordinate == Coordinate(-1, -1))
+        return;
+    renderBlendCell(stalemateCoordinate, stalemateIndicator);
 }

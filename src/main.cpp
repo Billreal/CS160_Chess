@@ -262,8 +262,8 @@ int main(int argc, char *args[])
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
                         pickedPiece = board.getPiece(pickedPlace);
                         int pickedColor = board.getPieceColor(pickedPiece);
-                        // if (pickedColor != currentMoveColor)
-                        //     break;
+                        if (pickedColor != currentMoveColor)
+                            break;
                         prevCoordinate = pickedPlace;
                         if (pickedPlace == Coordinate(-1, -1))
                             break;

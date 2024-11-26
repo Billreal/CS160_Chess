@@ -3,6 +3,7 @@
 #include "./../include/board.h"
 #include "./../include/colorScheme.h"
 #include "./../include/button.h"
+#include <sstream>
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -104,7 +105,7 @@ void Board::loadTextures()
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
-void Board::renderPieces()
+void Board::initialize()
 {
     // std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
@@ -112,6 +113,30 @@ void Board::renderPieces()
     // drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
 
     splitSequence(STARTING_FEN);
+
+    if (checkBoardSeq())
+    {
+        parseFENToBoard(boardSequence[0]);
+        // renderFromBoard();
+        // renderStartingPosition(boardSequence[0]);
+        updatePlayerStatus(boardSequence[1]);
+        updateCastlingStatus(boardSequence[2]);
+        updateEnPassantStatus(boardSequence[3]);
+        countHalfmove(boardSequence[4]);
+        countTotalMove(boardSequence[5]);
+    }
+
+    // std::cerr << "Rendering Done\n";
+    // flush();
+}
+void Board::initialize(string fenInitialize)
+{
+    // std::cerr << "Begin rendering\n";
+    // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    // drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
+
+    splitSequence(fenInitialize);
 
     if (checkBoardSeq())
     {
@@ -568,9 +593,9 @@ void Board::render()
     renderCheckmate();
     renderStalemate();
     renderFromBoard();
-    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
-             << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
-             << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
+    // std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
+    //   << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
+    //   << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
 }
@@ -1110,6 +1135,11 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
             deleteCell(Coordinate(startRookX, startRookY));
         }
     }
+    totalmoves++;
+    if (getPiece(dest) != '0' || getPieceName(piece) == PAWN)
+        halfmoves = 0;
+    else
+        halfmoves++;
     writeCell(dest, piece);
     deleteCell(src);
     recordMove(src, dest);
@@ -1121,7 +1151,7 @@ void Board::log(std::string message)
     std::cerr << message << std::endl;
 }
 
-bool Board::isStatemate(int color)
+bool Board::isStalemate(int color)
 {
     if (!isKingSafe(color))
         return false;
@@ -1377,4 +1407,63 @@ void Board::renderStalemate()
     if (stalemateCoordinate == Coordinate(-1, -1))
         return;
     renderBlendCell(stalemateCoordinate, stalemateIndicator);
+}
+
+int Board::getCurrentTurn()
+{
+    return !isPlayerTurn;
+}
+
+string Board::boardstateToFEN()
+{
+    std::stringstream returnStr;
+    for (int row = 0; row < BOARD_SIZE; row++)
+    {
+        int countBlank = 0;
+        for (int col = 0; col < BOARD_SIZE; col++)
+        {
+            if (board[row][col] == '0')
+                countBlank++;
+            else
+            {
+                if (countBlank != 0)
+                    returnStr << countBlank;
+                returnStr << board[row][col];
+                countBlank = 0;
+            }
+        }
+            if (countBlank != 0)
+                returnStr << countBlank;
+            if (row != BOARD_SIZE - 1)
+                returnStr << '/';
+    }
+    returnStr << " ";
+    returnStr << (isPlayerTurn ? 'w' : 'b');
+    returnStr << ' ';
+    if (!blackKingSide && !blackQueenSide && !whiteQueenSide && !whiteKingSide)
+        returnStr << "-";
+    else
+    {
+        if (whiteKingSide)
+            returnStr << 'K';
+        if (whiteQueenSide)
+            returnStr << 'Q';
+        if (blackKingSide)
+            returnStr << 'k';
+        if (blackQueenSide)
+            returnStr << 'q';
+    }
+    returnStr<< " ";
+    if (enPassant)
+    {
+        char x = enPassantCoord.getX() + 'a';
+        char y = enPassantCoord.getY() + '1';
+        returnStr << x << y;
+    }
+    else
+        returnStr << '-';
+    returnStr << " ";
+    returnStr << halfmoves << " ";
+    returnStr << totalmoves << " ";
+    return returnStr.str();
 }

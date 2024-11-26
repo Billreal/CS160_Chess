@@ -111,7 +111,8 @@ public:
 
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
 
-    void renderPieces();
+    void initialize();
+    void initialize(string fenInitialize);
 
     // Infos
     bool checkBoardSeq();
@@ -211,7 +212,7 @@ public:
 
     void genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList);
 
-    bool isStatemate(int color);
+    bool isStalemate(int color);
 
     bool isSafeMove(int color, char piece, Coordinate src, Coordinate dest);
 
@@ -235,5 +236,7 @@ public:
     void renderPawnPromotion();
     bool handlePawnPromotion(SDL_Event *ev);
 
+    int getCurrentTurn();
 
+    string boardstateToFEN();
 };

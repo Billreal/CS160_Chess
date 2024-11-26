@@ -17,7 +17,7 @@ using std::cerr, std::cout;
 SDL_Renderer *renderer;
 SDL_Window *window;
 SDL_Surface *winSurface;
-
+const int IS_DEBUG_MODE = false;
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 750;
 
@@ -118,18 +118,18 @@ int main(int argc, char *args[])
     SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
     SDL_RenderClear(renderer);
     board.setColor(modernPrimary, modernSecondary);
-    // board.renderPieces();
+    // board.initialize();
     // board.render();
     // board.present();
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
-    int currentMoveColor = WHITE;
+    int currentMoveColor = board.getCurrentTurn();
     Coordinate enPassantCoord;
     bool isEnded = false;
 
     bool isOnStartMenu = true;
     bool renderOnce = false;
-    // board.renderPieces();
+    // board.initialize();
     // board.render();
     // board.present();
     const int X_COLUMN_BUTTON[2] = {700, 1000};
@@ -206,7 +206,7 @@ int main(int argc, char *args[])
             if (!renderOnce)
             {
 
-                board.renderPieces();
+                board.initialize();
                 board.render();
                 currentThemeButton->render();
                 // board.present();
@@ -262,7 +262,7 @@ int main(int argc, char *args[])
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
                         pickedPiece = board.getPiece(pickedPlace);
                         int pickedColor = board.getPieceColor(pickedPiece);
-                        if (pickedColor != currentMoveColor)
+                        if (!IS_DEBUG_MODE && pickedColor != currentMoveColor)
                             break;
                         prevCoordinate = pickedPlace;
                         if (pickedPlace == Coordinate(-1, -1))
@@ -270,7 +270,7 @@ int main(int argc, char *args[])
                         if (pickedPiece == '0')
                             break;
                         isLeftMouseHolding = true;
-                        cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
+                        // cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
                         possibleMoves.clear();
                         possibleCaptures.clear();
                         possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
@@ -365,21 +365,22 @@ int main(int argc, char *args[])
                                 board.render();
                                 break;
                             }
-                            if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
+                            if (board.isStalemate(WHITE) || board.isStalemate(BLACK))
                             {
                                 isEnded = true;
-                                if (board.isStatemate(WHITE))
-                                    board.setRenderCheckmate(WHITE);
+                                if (board.isStalemate(WHITE))
+                                    board.setRenderStalemate(WHITE);
                                 else
-                                    board.setRenderCheckmate(BLACK);
+                                    board.setRenderStalemate(BLACK);
                                 SDL_Log("End game: Statemate");
                                 board.render();
                                 break;
                             }
 
-                            std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
+                            // std::cerr << "Statemate status: " << board.isStalemate(WHITE) << " and " << board.isStalemate(BLACK) << "\n";
                         }
-                        board.log(event.button, "released");
+                        // board.log(event.button, "released");
+                        std::cerr << board.boardstateToFEN() << "\n\n";
                         break;
                     }
                         // default:

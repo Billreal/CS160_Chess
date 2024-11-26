@@ -281,7 +281,7 @@ int main(int argc, char *args[])
             {
                 name = files[i].substr(j - 7, 7);
                 break;
-            }
+            };
 
             loadFileBtns.push_back(Button(renderer, SIDE_MARGIN, 240 + i * 90, 250, 60, startMenuBtnColor, white, name.c_str(), loadMenuFont));
         }
@@ -352,8 +352,6 @@ int main(int argc, char *args[])
             SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
             SDL_RenderClear(renderer);
 
-            SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
-
             while (SDL_PollEvent(&event) != 0)
             {
                 if (event.type == SDL_QUIT)
@@ -368,14 +366,17 @@ int main(int argc, char *args[])
                 }
             }
 
-            // Update screen
-            SDL_RenderPresent(renderer);
+            // Render logo
+            SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
 
             //Render Buttons
             for (int i = 0; i < files.size(); i++)
             {
                 loadFileBtns[i].render();
             }
+
+            // Update screen
+            SDL_RenderPresent(renderer);
     
             // Handle button click
             for (int i = 0; i < files.size(); i++)
@@ -383,17 +384,17 @@ int main(int argc, char *args[])
                 if (loadFileBtns[i].clicked())
                 {
                     SDL_Log("Button clicked!");
-                    loadGame(board, files[i]);
+                    // loadGame(board, files[i]);
                     isOn = GAME;
                     loadFileBtns[i].reset(); // Reset button state
                 }
             }
 
+            // Clear buttons
             for (int i = 0; i < files.size(); i++)
             {
                 loadFileBtns[i].clear();
             }
-
             break;
         }
         case GAME:

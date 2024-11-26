@@ -65,6 +65,15 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height, dou
 //     return texture;
 // }
 
+void Board::setMargin(int sideMargin, int topMargin){
+    SIDE_MARGIN = sideMargin;
+    TOP_MARGIN = topMargin;
+}
+
+void Board::setBoardSize(int boardSize){
+    SIDE_LENGTH = boardSize;
+}
+
 void Board::loadTextures()
 {
     /*
@@ -167,14 +176,14 @@ bool Board::checkBoardSeq()
     return true;
 }
 
-void Board::renderStartingPosition(std::string seq)
+void Board::renderPiecesFromFen(std::string fen)
 {
     // Translate FEN notation's chess placements into an 8x8 array
     // Direction: Left to Right, Top down
-    std::cerr << seq << "\n";
-    for (int i = 0, row = 0, column = 0; i <= seq.length(); i++)
+    std::cerr << fen << "\n";
+    for (int i = 0, row = 0, column = 0; i <= fen.length(); i++)
     {
-        char currentChar = seq[i];
+        char currentChar = fen[i];
 
         // If there's a chess piece, place it on the board
         int pieceIndicator;
@@ -538,6 +547,15 @@ void Board::render()
     // background.render(backgroundColor);
     renderChessboard();
     renderFromBoard();
+}
+
+void Board::renderFromFen()
+{
+    setRendererColor(backgroundColor);
+    clear();
+    // background.render(backgroundColor);
+    renderChessboard();
+    renderPiecesFromFen(CURRENT_FEN);
 }
 
 void Board::setBackground(colorRGBA bg)

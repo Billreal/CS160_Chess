@@ -47,9 +47,9 @@ SDL_Texture *loadTexture(const std::string &path)
     return texture;
 }
 
-SDL_Texture *loadSVGTexture(const char *filePath, int width, int height, double scale)
+SDL_Texture *loadSVGTexture(std::string filePath, int width, int height, double scale)
 {
-    struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
+    struct NSVGimage *image = nsvgParseFromFile(filePath.c_str(), "px", 96);
     if (!image)
     {
         printf("Failed to load SVG file.\n");
@@ -236,6 +236,7 @@ int main(int argc, char *args[])
     const int startMenuBtnWidth = 500;
     const int startMenuBtnHeight = 100;
     SDL_Color startMenuBtnColor = {118, 150, 85, 255};
+    SDL_Color loadMenuBtnColor = {38, 37, 33, 1};
     SDL_Color white = {255, 255, 255, 255};
     Button startBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 350, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Start", font);
     Button loadBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 500, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Load", font);
@@ -255,9 +256,15 @@ int main(int argc, char *args[])
     SDL_Texture *bottomPanelTexture = loadTexture("./assets/bottom_panel.svg");
 
     // Initialize load menu
-    SDL_Rect loadInfos = {SIDE_MARGIN, SIDE_MARGIN, 933, 988};
+    SDL_Rect loadInfos = {60, 80, 900, 850};
     SDL_Texture *loadMenuTexture = loadTexture("./assets/load.png");
     TTF_Font *loadMenuFont = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
+    SDL_Rect loadMenuSeperateLine = {360, 240, 5, 600};
+
+    Board demoBoard(renderer, board1Primary, board2Primary, bgColor);
+    demoBoard.setBoardSize(50);
+    demoBoard.setMargin(480, 240);
+
     if (!font)
     {
         SDL_Log("Failed to load Load_menu font: %s", TTF_GetError());
@@ -280,12 +287,20 @@ int main(int argc, char *args[])
             if (files[i].substr(j, 4) == ".txt")
             {
                 name = files[i].substr(j - 7, 7);
+                // std::cerr << name << "\n";
                 break;
-            };
-
-            loadFileBtns.push_back(Button(renderer, SIDE_MARGIN, 240 + i * 90, 250, 60, startMenuBtnColor, white, name.c_str(), loadMenuFont));
+            }
         }
+
+        loadFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
+        // std::cerr << "name: " << loadFileBtns[i].getText() << "\n";
     }
+
+    // for (Button btn : loadFileBtns)
+    // {
+    //     std::cerr << "Adress: " << btn << "\n";
+    //     std::cerr << btn.getX() << " " << btn.getY() << " " << btn.getText() << " " << btn.getPrevText() << "\n";
+    // }
 
     while (running)
     {
@@ -360,41 +375,62 @@ int main(int argc, char *args[])
                 }
 
                 //     // Handle button events
-                for (int i = 0; i < files.size(); i++)
+                for (Button btn : loadFileBtns)
                 {
-                    loadFileBtns[i].handleEvent(&event);
+                    btn.handleEvent(&event);
                 }
             }
 
             // Render logo
             SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
+            SDL_SetRenderDrawColor(renderer, 238, 238, 210, 255);
+            SDL_RenderFillRect(renderer, &loadMenuSeperateLine);
+            demoBoard.renderChessboard();
 
-            //Render Buttons
-            for (int i = 0; i < files.size(); i++)
+            // Render Buttons
+            for (Button btn : loadFileBtns)
             {
-                loadFileBtns[i].render();
+                btn.render();
+                // std::cerr << loadFileBtns[i].getX() << " " << loadFileBtns[i].getY() << "\n";
             }
 
             // Update screen
             SDL_RenderPresent(renderer);
-    
+
+            // Handle button hover
+
+            // for (int i = 0; i < loadFileBtns.size(); i++)
+            // {
+            //     if (loadFileBtns[i].hover())
+            //     {
+            //         loadGame(demoBoard, files[i]);
+            //         SDL_Log("Button hovering!");
+            //         demoBoard.renderFromFen();
+            //         demoBoard.present();
+            //         loadFileBtns[i].reset(); // Reset button state
+            //     }
+            // }
+
             // Handle button click
-            for (int i = 0; i < files.size(); i++)
+            for (int i = 0; i < loadFileBtns.size(); i++)
             {
                 if (loadFileBtns[i].clicked())
                 {
-                    SDL_Log("Button clicked!");
-                    // loadGame(board, files[i]);
+                    std::cerr<< "Button clicked!\n";
+                    loadGame(demoBoard, files[i]);
                     isOn = GAME;
                     loadFileBtns[i].reset(); // Reset button state
                 }
             }
 
             // Clear buttons
-            for (int i = 0; i < files.size(); i++)
+            for (Button btn : loadFileBtns)
             {
-                loadFileBtns[i].clear();
+                btn.clear();
             }
+
+            demoBoard.clear();
+            // SDL_Delay(2000);
             break;
         }
         case GAME:

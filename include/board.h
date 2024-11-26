@@ -14,10 +14,10 @@ class Board
 private:
     SDL_Renderer *renderer = NULL;
     // Background background;
-    const int TOP_MARGIN = 200;
-    const int BOTOTM_MARGIN = 80;
-    const int SIDE_MARGIN = 80;
-    const int SIDE_LENGTH = 80;
+    int TOP_MARGIN = 200;
+    int BOTTOM_MARGIN = 80;
+    int SIDE_MARGIN = 80;
+    int SIDE_LENGTH = 80;
     static const int BOARD_SIZE = 8;
     char board[BOARD_SIZE][BOARD_SIZE];
     bool isMoved[BOARD_SIZE][BOARD_SIZE];
@@ -77,6 +77,10 @@ public:
         // std::cerr << "Rendering at " << x << " " << y << "\n";
     }
 
+    void setBoardSize(int boardSize);
+
+    void setMargin(int sideMargin, int topMargin);
+
     // Game Update, with data taken in as boardSequence[1 -> 5], which are strings
     void updateFen(std::string fen);
 
@@ -95,7 +99,7 @@ public:
 
     void renderChessboard();
 
-    void renderStartingPosition(std::string seq);
+    void renderPiecesFromFen(std::string fen);
 
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
 
@@ -170,6 +174,8 @@ public:
     void setColor(colorRGBA primary, colorRGBA secondary);
 
     void render();
+
+    void renderFromFen();
 
     void setBackground(colorRGBA bg);
 

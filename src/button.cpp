@@ -5,7 +5,7 @@
 
 Button::Button(SDL_Renderer *renderer) : renderer(renderer) {}
 
-Button::Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, const char *text, TTF_Font *font)
+Button::Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, std::string text, TTF_Font *font)
     : renderer(renderer), color(color), textColor(textColor), text(text), font(font), isClicked(false)
 {
     rect = {x, y, w, h};
@@ -19,7 +19,7 @@ void Button::renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color)
 }
 
 // Function to render SVG with text in the middle
-void Button::renderSVG(const char *svgFilePath, double scale)
+void Button::renderSVG(std::string svgFilePath, double scale)
 {
     const int width = rect.w;
     const int height = rect.h;
@@ -31,7 +31,7 @@ void Button::renderSVG(const char *svgFilePath, double scale)
     }
 
     // Load SVG image
-    NSVGimage *image = nsvgParseFromFile(svgFilePath, "px", 96);
+    NSVGimage *image = nsvgParseFromFile(svgFilePath.c_str(), "px", 96);
     if (!image)
     {
         printf("Could not open SVG image.\n");
@@ -82,7 +82,12 @@ void Button::renderSVG(const char *svgFilePath, double scale)
     SDL_DestroyTexture(svgTexture);
 
     // Render text
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, textColor);
+    if (text.empty())
+    {
+        std::cerr << "Text is empty\n";
+        return;
+    }
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
@@ -97,11 +102,11 @@ void Button::render()
     // Render button rect
     renderRect(renderer, rect, color);
 
-    // // Render rectBefore
-    // renderRect(renderer, {rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
+    // Render rectBefore
+    renderRect(renderer, {rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
 
     // // Render text
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, textColor);
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
@@ -113,7 +118,9 @@ void Button::render()
 
 void Button::handleEvent(SDL_Event *e)
 {
-    if (e->type == SDL_MOUSEBUTTONDOWN)
+    switch (e->type)
+    {
+    case SDL_MOUSEBUTTONDOWN:
     {
         int x, y;
         SDL_GetMouseState(&x, &y);
@@ -139,7 +146,39 @@ void Button::handleEvent(SDL_Event *e)
         if (inside)
         {
             isClicked = true;
+            std::cerr << "clicked\n";
         }
+        break;
+    }
+    case SDL_MOUSEMOTION:
+    {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        isInside = true;
+
+        if (x < rect.x)
+        {
+            isInside = false;
+        }
+        else if (x > rect.x + rect.w)
+        {
+            isInside = false;
+        }
+        else if (y < rect.y)
+        {
+            isInside = false;
+        }
+        else if (y > rect.y + rect.h)
+        {
+            isInside = false;
+        }
+
+        if (isInside)
+        {
+            std::cerr << "hovering\n";
+        }
+        break;
+    }
     }
 }
 
@@ -148,7 +187,13 @@ bool Button::clicked() const
     return isClicked;
 }
 
+bool Button::hover() const
+{
+    return isInside;
+}
+
 void Button::reset()
 {
+    isInside = false;
     isClicked = false;
 }

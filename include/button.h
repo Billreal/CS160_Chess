@@ -10,21 +10,22 @@ private:
     SDL_Rect rect;
     SDL_Color color;
     SDL_Color textColor;
-    const char *text;
+    std::string text;
     TTF_Font *font;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
     bool isClicked;
+    bool isInside;
 
     void renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
-    // SDL_Texture *loadTexture(const char *filePath, int width, int height, double scale);
+    // SDL_Texture *loadTexture(std::string filePath, int width, int height, double scale);
 
 public:
     Button(SDL_Renderer *renderer);
-    Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, const char *text, TTF_Font *font);
+    Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, std::string text, TTF_Font *font);
 
     void render();
-    void renderSVG(const char *svgFilePath, double scale);
+    void renderSVG(std::string svgFilePath, double scale);
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }
     // Clear renderer
@@ -32,5 +33,17 @@ public:
 
     void handleEvent(SDL_Event *e);
     bool clicked() const;
+    bool hover() const;
     void reset();
+
+    // Get infos
+    int getY() {
+        return rect.y;
+    }
+    int getX() {
+        return rect.x;
+    }
+    std::string getText() {
+        return text;
+    }
 };

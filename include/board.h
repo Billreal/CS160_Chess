@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <vector>
+#include <algorithm>
 // #include "background.h"
 #include "colorScheme.h"
 #include "coordinate.h"
@@ -27,7 +28,7 @@ private:
     colorRGBA backgroundColor;
     chessPieces chessPiece;
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
-    int isPlayerTurn; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
+    int isPlayerTurn = -1; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
     bool whiteKingSide;
     bool whiteQueenSide;
     bool blackKingSide;
@@ -39,7 +40,7 @@ private:
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    std::string CURRENT_FEN = "";
+    std::string CURRENT_FEN = "8/8/8/8/8/8/8/8 w - - 0 0";
     // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
@@ -106,6 +107,27 @@ public:
     void renderPieces();
 
     // Infos
+    std::string getTurn()
+    {
+        if (isPlayerTurn == -1)
+        {
+            return "";
+        }
+        return isPlayerTurn == 1 ? "White" : "Black";
+    }
+
+    std::string getMoves()
+    {
+        std::string moveCount = "";
+
+        while (totalmoves > 0)
+        {
+            moveCount += std::to_string(totalmoves % 10);
+            totalmoves /= 10;
+        }
+        std::reverse(moveCount.begin(), moveCount.end());
+        return moveCount;
+    }
     bool checkBoardSeq();
 
     int getMargin();

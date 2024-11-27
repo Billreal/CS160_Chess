@@ -11,6 +11,11 @@ Button::Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color col
     rect = {x, y, w, h};
 }
 
+void Button::updateColor(SDL_Color newColor)
+{
+    color = newColor;
+}
+
 void Button::renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color)
 {
     SDL_Rect fillRect = {rect.x, rect.y, rect.w, rect.h};
@@ -105,7 +110,7 @@ void Button::render()
     // Render rectBefore
     renderRect(renderer, {rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
 
-    // // Render text
+    // Render text
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
@@ -118,67 +123,48 @@ void Button::render()
 
 void Button::handleEvent(SDL_Event *e)
 {
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    bool inside = true;
+
+    if (x < rect.x)
+    {
+        inside = false;
+    }
+    else if (x > rect.x + rect.w)
+    {
+        inside = false;
+    }
+    else if (y < rect.y)
+    {
+        inside = false;
+    }
+    else if (y > rect.y + rect.h)
+    {
+        inside = false;
+    }
+
     switch (e->type)
     {
-    case SDL_MOUSEBUTTONDOWN:
-    {
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-        bool inside = true;
-
-        if (x < rect.x)
+        case SDL_MOUSEMOTION:
         {
-            inside = false;
+            if (inside)
+            {
+                isHovered = true;
+            }
+            else
+            {
+                isHovered = false;
+            }
+            break;
         }
-        else if (x > rect.x + rect.w)
+        case SDL_MOUSEBUTTONDOWN:
         {
-            inside = false;
+            if (inside)
+            {
+                isClicked = true;
+            }
         }
-        else if (y < rect.y)
-        {
-            inside = false;
-        }
-        else if (y > rect.y + rect.h)
-        {
-            inside = false;
-        }
-
-        if (inside)
-        {
-            isClicked = true;
-            std::cerr << "clicked\n";
-        }
-        break;
-    }
-    case SDL_MOUSEMOTION:
-    {
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-        isInside = true;
-
-        if (x < rect.x)
-        {
-            isInside = false;
-        }
-        else if (x > rect.x + rect.w)
-        {
-            isInside = false;
-        }
-        else if (y < rect.y)
-        {
-            isInside = false;
-        }
-        else if (y > rect.y + rect.h)
-        {
-            isInside = false;
-        }
-
-        if (isInside)
-        {
-            std::cerr << "hovering\n";
-        }
-        break;
-    }
     }
 }
 
@@ -186,14 +172,16 @@ bool Button::clicked() const
 {
     return isClicked;
 }
-
 bool Button::hover() const
 {
-    return isInside;
+    return isHovered;
 }
 
-void Button::reset()
+void Button::resetClicked()
 {
-    isInside = false;
     isClicked = false;
+}
+void Button::resetHovered()
+{
+    isHovered = false;
 }

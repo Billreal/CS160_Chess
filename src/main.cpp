@@ -33,6 +33,17 @@ const int BOTOTM_MARGIN = 80;
 const int SIDE_MARGIN = 80;
 const int SIDE_LENGTH = 80;
 
+void renderText(SDL_Renderer *renderer, TTF_Font *font, const std::string &text, SDL_Color textColor, SDL_Rect rect){
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    int textWidth = textSurface->w;
+    int textHeight = textSurface->h;
+    SDL_FreeSurface(textSurface);
+    SDL_Rect textRect = {rect.x + (rect.w - textWidth) / 2, rect.y + (rect.h - textHeight) / 2, textWidth, textHeight};
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_DestroyTexture(textTexture);
+}
+
 SDL_Texture *loadTexture(const std::string &path)
 {
     SDL_Surface *surface = IMG_Load(path.c_str());
@@ -92,8 +103,7 @@ void saveGame(Board &board, const std::string &filename)
 
 void loadGame(Board &board, const std::string &filename)
 {
-    std::ifstream saveFile;
-    saveFile.open(filename);
+    std::ifstream saveFile(filename);
     std::string FEN;
     if (!saveFile)
     {
@@ -101,7 +111,13 @@ void loadGame(Board &board, const std::string &filename)
         return;
     }
 
-    std::getline(std::cin, FEN);
+    if (!std::getline(saveFile, FEN))
+    {
+        cerr << "Failed to read from file: " << filename << "\n";
+        saveFile.close();
+        return;
+    }
+    //std::cerr << FEN << "\n";
     board.updateFen(FEN);
 
     saveFile.close();
@@ -265,6 +281,8 @@ int main(int argc, char *args[])
     demoBoard.setBoardSize(50);
     demoBoard.setMargin(480, 240);
 
+    bool hoverLoading = false;
+
     if (!font)
     {
         SDL_Log("Failed to load Load_menu font: %s", TTF_GetError());
@@ -342,19 +360,19 @@ int main(int argc, char *args[])
             {
                 SDL_Log("Button clicked!");
                 isOn = GAME;
-                startBtn.reset(); // Reset button state
+                startBtn.resetClicked(); // Reset button state
             }
             if (loadBtn.clicked())
             {
                 SDL_Log("Button clicked!");
                 isOn = LOAD;
-                loadBtn.reset(); // Reset button state
+                loadBtn.resetClicked(); // Reset button state
             }
             if (quitBtn.clicked())
             {
                 SDL_Log("Button clicked!");
                 running = false;
-                quitBtn.reset(); // Reset button state
+                quitBtn.resetClicked(); // Reset button state
             }
 
             startBtn.clear();
@@ -372,20 +390,22 @@ int main(int argc, char *args[])
                 if (event.type == SDL_QUIT)
                 {
                     running = false;
+                    break;
                 }
-
-                //     // Handle button events
-                for (Button btn : loadFileBtns)
+                for (int i = 0; i < loadFileBtns.size(); i++)
                 {
-                    btn.handleEvent(&event);
+                    loadFileBtns[i].handleEvent(&event);
                 }
             }
 
+            // Render demo board and infos
+            demoBoard.renderFromFen();
+            renderText(renderer, font, "Turn: " + demoBoard.getTurn(), white, {480, 700, 135, 30});
+            renderText(renderer, font, "Move: " + demoBoard.getMoves(), white, {780, 700, 100, 30});
             // Render logo
             SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
             SDL_SetRenderDrawColor(renderer, 238, 238, 210, 255);
             SDL_RenderFillRect(renderer, &loadMenuSeperateLine);
-            demoBoard.renderChessboard();
 
             // Render Buttons
             for (Button btn : loadFileBtns)
@@ -393,33 +413,42 @@ int main(int argc, char *args[])
                 btn.render();
                 // std::cerr << loadFileBtns[i].getX() << " " << loadFileBtns[i].getY() << "\n";
             }
-
-            // Update screen
             SDL_RenderPresent(renderer);
 
-            // Handle button hover
+            // Update screen
 
-            // for (int i = 0; i < loadFileBtns.size(); i++)
-            // {
-            //     if (loadFileBtns[i].hover())
-            //     {
-            //         loadGame(demoBoard, files[i]);
-            //         SDL_Log("Button hovering!");
-            //         demoBoard.renderFromFen();
-            //         demoBoard.present();
-            //         loadFileBtns[i].reset(); // Reset button state
-            //     }
-            // }
+            // Handle button hovering
+            for (int i = 0; i < loadFileBtns.size(); i++)
+            {
+                if (loadFileBtns[i].hover())
+                {
+                    if (hoverLoading == false)
+                    {
+                        hoverLoading = true;
+                        loadGame(demoBoard, files[i]);
+                    }
+                    //std::cerr << "Button hovering!\n";
+                    loadFileBtns[i].updateColor({118, 150, 85, 255});
+                    break;
+                }
+                else
+                {
+                    //std::cerr << "Button no more hovering!\n";
+                    loadFileBtns[i].updateColor(loadMenuBtnColor);
+                    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+                    hoverLoading = false;
+                }
+            }
 
             // Handle button click
             for (int i = 0; i < loadFileBtns.size(); i++)
             {
                 if (loadFileBtns[i].clicked())
                 {
-                    std::cerr<< "Button clicked!\n";
-                    loadGame(demoBoard, files[i]);
+                    //std::cerr << "Button clicked!\n";
+                    // loadGame(board, files[i]);
                     isOn = GAME;
-                    loadFileBtns[i].reset(); // Reset button state
+                    loadFileBtns[i].resetHovered(); // Reset button state
                 }
             }
 
@@ -429,8 +458,8 @@ int main(int argc, char *args[])
                 btn.clear();
             }
 
-            demoBoard.clear();
-            // SDL_Delay(2000);
+            // demoBoard.clear();
+            // SDL_Delay(1000);
             break;
         }
         case GAME:

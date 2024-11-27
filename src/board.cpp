@@ -65,12 +65,14 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height, dou
 //     return texture;
 // }
 
-void Board::setMargin(int sideMargin, int topMargin){
+void Board::setMargin(int sideMargin, int topMargin)
+{
     SIDE_MARGIN = sideMargin;
     TOP_MARGIN = topMargin;
 }
 
-void Board::setBoardSize(int boardSize){
+void Board::setBoardSize(int boardSize)
+{
     SIDE_LENGTH = boardSize;
 }
 
@@ -555,7 +557,19 @@ void Board::renderFromFen()
     clear();
     // background.render(backgroundColor);
     renderChessboard();
-    renderPiecesFromFen(CURRENT_FEN);
+    splitSequence(CURRENT_FEN);
+
+    if (checkBoardSeq())
+    {
+        parseFENToBoard(boardSequence[0]);
+        renderFromBoard();
+        // renderStartingPosition(boardSequence[0]);
+        updatePlayerStatus(boardSequence[1]);
+        updateCastlingStatus(boardSequence[2]);
+        updateEnPassantStatus(boardSequence[3]);
+        countHalfmove(boardSequence[4]);
+        countTotalMove(boardSequence[5]);
+    }
 }
 
 void Board::setBackground(colorRGBA bg)

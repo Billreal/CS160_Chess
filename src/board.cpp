@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <algorithm>
+#include <sstream>
 // #include "./../include/colorScheme.h"
 #define NANOSVG_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION
@@ -379,7 +380,7 @@ Coordinate Board::getPieceCoord(int x, int y)
         return invalidMoves;
     if (verticalCell < 0 || mouseY - TOP_MARGIN < 0)
         return invalidMoves;
-    if (verticalCell > 7 || mouseY - (SIDE_MARGIN + 8 * SIDE_LENGTH) > 0)
+    if (verticalCell > 7 || mouseY - (TOP_MARGIN + 8 * SIDE_LENGTH) > 0)
         return invalidMoves;
     return Coordinate(horizontalCell, verticalCell);
 }
@@ -410,24 +411,24 @@ void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
     int upperEdge = y - SIDE_LENGTH / 2;
     int lowerEdge = y + SIDE_LENGTH / 2;
     SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
-    if (upperEdge < MARGIN)
+    if (upperEdge < TOP_MARGIN)
     {
-        SDL_Rect fillRect = {leftEdge, upperEdge, SIDE_LENGTH, MARGIN - upperEdge};
+        SDL_Rect fillRect = {leftEdge, upperEdge, SIDE_LENGTH, TOP_MARGIN - upperEdge};
         SDL_RenderFillRect(renderer, &fillRect);
     }
-    if (lowerEdge > MARGIN + SIDE_LENGTH * 8)
+    if (lowerEdge > TOP_MARGIN + SIDE_LENGTH * 8)
     {
-        SDL_Rect fillRect = {leftEdge, MARGIN + SIDE_LENGTH * 8, SIDE_LENGTH, lowerEdge - (MARGIN + SIDE_LENGTH * 8)};
+        SDL_Rect fillRect = {leftEdge, TOP_MARGIN + SIDE_LENGTH * 8, SIDE_LENGTH, lowerEdge - (TOP_MARGIN + SIDE_LENGTH * 8)};
         SDL_RenderFillRect(renderer, &fillRect);
     }
-    if (leftEdge < MARGIN)
+    if (leftEdge < SIDE_MARGIN)
     {
-        SDL_Rect fillRect = {leftEdge, upperEdge, MARGIN - leftEdge, SIDE_LENGTH};
+        SDL_Rect fillRect = {leftEdge, upperEdge, SIDE_MARGIN - leftEdge, SIDE_LENGTH};
         SDL_RenderFillRect(renderer, &fillRect);
     }
-    if (rightEdge > MARGIN + SIDE_LENGTH * 8)
+    if (rightEdge > SIDE_MARGIN + SIDE_LENGTH * 8)
     {
-        SDL_Rect fillRect = {MARGIN + SIDE_LENGTH * 8, upperEdge, rightEdge - (MARGIN + SIDE_LENGTH * 8), SIDE_LENGTH};
+        SDL_Rect fillRect = {SIDE_MARGIN + SIDE_LENGTH * 8, upperEdge, rightEdge - (SIDE_MARGIN + SIDE_LENGTH * 8), SIDE_LENGTH};
         SDL_RenderFillRect(renderer, &fillRect);
     }
 
@@ -601,19 +602,19 @@ void Board::render()
         renderPawnPromotion();
 }
 
-void Board::renderFromFen()
-{
-    // setRendererColor(backgroundColor);
-    // clear();
-    // background.render(backgroundColor);
-    renderChessboard();
-    renderFromBoard();
-    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
-             << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
-             << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
-    if (isUnderPromotion)
-        renderPawnPromotion();
-}
+// void Board::renderFromFen()
+// {
+//     // setRendererColor(backgroundColor);
+//     // clear();
+//     // background.render(backgroundColor);
+//     renderChessboard();
+//     renderFromBoard();
+//     std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
+//              << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
+//              << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
+//     if (isUnderPromotion)
+//         renderPawnPromotion();
+// }
 
 void Board::renderFromFen()
 {
@@ -1255,7 +1256,7 @@ void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
 {
     if (coordinate == Coordinate(-1, -1))
         return;
-    coordinate = coordinate * SIDE_LENGTH + Coordinate(MARGIN, MARGIN);
+    coordinate = coordinate * SIDE_LENGTH + Coordinate(SIDE_MARGIN, TOP_MARGIN);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -1311,17 +1312,17 @@ void Board::enablePawnPromotion(int x, int y) // In cell coordinate
         return;
     if (x < 4)
     {
-        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
-        knightButtonCoordinate = Coordinate((x + 1) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
-        rookButtonCoordinate = Coordinate((x + 2) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
-        bishopButtonCoordinate = Coordinate((x + 3) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH +        SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        knightButtonCoordinate = Coordinate((x + 1) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        rookButtonCoordinate = Coordinate((x + 2) * SIDE_LENGTH +   SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        bishopButtonCoordinate = Coordinate((x + 3) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
     }
     else
     {
-        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
-        knightButtonCoordinate = Coordinate((x - 1) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
-        rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
-        bishopButtonCoordinate = Coordinate((x - 3) * SIDE_LENGTH + MARGIN, menuOriginY * SIDE_LENGTH + MARGIN);
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH +        SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        knightButtonCoordinate = Coordinate((x - 1) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH +   SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        bishopButtonCoordinate = Coordinate((x - 3) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
     }
     if ((queenButtonCoordinate.getX() + queenButtonCoordinate.getY()) % 2 == 1)
     {
@@ -1352,8 +1353,8 @@ void Board::renderPawnPromotion()
     Coordinate coord[4] = {queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate};
     for (int i = 0; i < 4; i++)
     {
-        int colorX = (coord[i].getX() - MARGIN) / SIDE_LENGTH;
-        int colorY = (coord[i].getY() - MARGIN) / SIDE_LENGTH;
+        int colorX = (coord[i].getX() - SIDE_MARGIN) / SIDE_LENGTH;
+        int colorY = (coord[i].getY() - TOP_MARGIN) / SIDE_LENGTH;
         // std::cerr << coord[i].getX() << " " << coord[i].getY() << "\n";
         if ((colorX + colorY) % 2 == 1)
             arr[i]->setColor(secondaryColor);
@@ -1398,7 +1399,7 @@ bool Board::handlePawnPromotion(SDL_Event *ev)
 
         for (Button *currentButton : button)
         {
-            currentButton->reset();
+            currentButton->resetClicked();
             currentButton->clear();
         }
         isUnderPromotion = false;

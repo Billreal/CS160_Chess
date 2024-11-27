@@ -18,7 +18,7 @@ private:
     bool isClicked;
     bool isHovered;
 
-    void renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
+    void renderRect(SDL_Rect rect, SDL_Color color);
     // SDL_Texture *loadTexture(std::string filePath, int width, int height, double scale);
 
 public:

@@ -124,6 +124,7 @@ public:
     void renderPieces();
 
     // Infos
+    int getCurrentTurn();
     std::string getTurn()
     {
         if (isPlayerTurn == -1)

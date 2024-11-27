@@ -16,10 +16,10 @@ void Button::updateColor(SDL_Color newColor)
     color = newColor;
 }
 
-void Button::updateColor(SDL_Color newColor)
-{
-    color = newColor;
-}
+// void Button::updateColor(SDL_Color newColor)
+// {
+//     color = newColor;
+// }
 
 Button::Button() {};
 void Button::renderRect(SDL_Rect rect, SDL_Color color)
@@ -87,7 +87,7 @@ void Button::renderSVG(std::string svgFilePath, double scale)
 
     // Render button rect
     // std::cerr << rect.x << rect.y <<  width << height << "\n";
-    // renderRect(renderer, rect, color);
+    // renderRect(rect, color);
 
     // Render SVG texture
     SDL_RenderCopy(renderer, svgTexture, NULL, &rect);
@@ -112,10 +112,10 @@ void Button::renderSVG(std::string svgFilePath, double scale)
 void Button::render()
 {
     // Render button rect
-    renderRect(renderer, rect, color);
+    renderRect(rect, color);
 
     // Render rectBefore
-    renderRect(renderer, {rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
+    renderRect({rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
 
     // Render text
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
@@ -192,4 +192,10 @@ void Button::resetClicked()
 void Button::resetHovered()
 {
     isHovered = false;
+}
+
+void Button::setColor(colorRGBA color)
+{
+    SDL_Color newColor = {color.getR(), color.getG(), color.getB(), color.getA()};
+    updateColor(newColor);
 }

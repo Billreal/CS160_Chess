@@ -3,7 +3,7 @@
 
 colorRGBA modernPrimary = colorRGBA(118, 150, 85, 255);
 colorRGBA modernSecondary = colorRGBA(238, 238, 210, 255);
-colorRGBA bgColor = colorRGBA(222, 226, 230, 0);
+colorRGBA bgColor = colorRGBA(49, 46, 43, 1);
 colorRGBA black = colorRGBA(0, 0, 0, 255);
 colorRGBA futuristicPrimary = colorRGBA(94, 129, 172, 255);
 colorRGBA futuristicSecondary = colorRGBA(238, 238, 210, 255);

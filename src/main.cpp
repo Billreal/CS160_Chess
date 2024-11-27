@@ -293,7 +293,7 @@ int main(int argc, char *args[])
     TTF_Font *loadMenuFont = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
     SDL_Rect loadMenuSeperateLine = {360, 240, 5, 600};
 
-    Board demoBoard(renderer, board1Primary, board2Primary, bgColor);
+    Board demoBoard(renderer, modernPrimary, modernSecondary, bgColor);
     demoBoard.setBoardSize(50);
     demoBoard.setMargin(480, 240);
 
@@ -528,12 +528,13 @@ int main(int argc, char *args[])
                             break;
                         if (!board.testInbound(event.button))
                         {
+                            std::cerr << "Clicked outside of board\n";
                             // * Not pressed inside of chessboard
                             currentThemeButton->handleEvent(&event);
                             if (currentThemeButton->clicked())
                             {
                                 SDL_Log("Pressed theme changing button");
-                                currentThemeButton->reset();
+                                currentThemeButton->resetClicked();
                                 // * To next color in circle
                                 currentThemeIndex = (currentThemeIndex + 1) % 3;
                                 currentThemeButton = &themeList[currentThemeIndex].button;
@@ -552,20 +553,25 @@ int main(int argc, char *args[])
                                 }
                             break;
                         }
+                        std::cerr << "Clicked inside of board\n";
                         if (isUnderPromotion)
                             break;
                         if (isEnded)
                             break;
+                        std::cerr << "Passing game state conditions\n";
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
                         pickedPiece = board.getPiece(pickedPlace);
                         int pickedColor = board.getPieceColor(pickedPiece);
                         if (pickedColor != currentMoveColor)
                             break;
+                        std::cerr << "Correct color\n";
                         prevCoordinate = pickedPlace;
                         if (pickedPlace == Coordinate(-1, -1))
                             break;
+                        std::cerr << "Picked place inside of board\n";
                         if (pickedPiece == '0')
                             break;
+                        std::cerr << "Legal movement\n";
                         isLeftMouseHolding = true;
                         cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
                         possibleMoves.clear();
@@ -589,7 +595,7 @@ int main(int argc, char *args[])
                         board.render();
                         board.renderMove(possibleMoves, possibleCaptures);
                         board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                        // currentThemeButton->render();
+                        currentThemeButton->render();
                         // board.log("Done render animation");
                         break;
                     }
@@ -677,7 +683,7 @@ int main(int argc, char *args[])
                             std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
                         }
                         // board.log(event.button, "released");
-                        std::cerr << board.boardstateToFEN(currentMoveColor) << "\n\n";
+                        std::cerr << board.boardstateToFEN(currentMoveColor) << "\n" << currentMoveColor << "\n\n";
                         break;
                     }
                         // default:

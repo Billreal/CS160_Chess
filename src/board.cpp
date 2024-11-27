@@ -1402,6 +1402,7 @@ bool Board::handlePawnPromotion(SDL_Event *ev)
             currentButton->resetClicked();
             currentButton->clear();
         }
+        // board.render();
         isUnderPromotion = false;
         return true;
     }

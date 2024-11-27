@@ -503,6 +503,7 @@ int main(int argc, char *args[])
             if (!renderOnce)
             {
 
+                SDL_RenderClear(renderer);
                 board.renderPieces();
                 board.render();
                 currentThemeButton->render();
@@ -548,6 +549,7 @@ int main(int argc, char *args[])
                                 {
                                     isUnderPromotion = false;
                                     currentMoveColor = 1 - currentMoveColor;
+                                    currentThemeButton->render();
                                     // the current move color is switched, opposite of promoted piece
                                     board.render();
                                 }

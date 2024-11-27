@@ -8,7 +8,7 @@
 class Button
 {
 private:
-    SDL_Rect rect;
+    SDL_Rect rect = {-1, -1, -1, -1};
     SDL_Color color;
     SDL_Color textColor;
     std::string text;
@@ -19,6 +19,7 @@ private:
     bool isHovered;
 
     void renderRect(SDL_Rect rect, SDL_Color color);
+    void renderRect(SDL_Rect rect, colorRGBA color);
     // SDL_Texture *loadTexture(std::string filePath, int width, int height, double scale);
 
 public:
@@ -32,7 +33,9 @@ public:
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }
     // Clear renderer
-    void clear() const { SDL_RenderClear(renderer); }
+    void clear();
+    // void clear() const { SDL_RenderClear(renderer); };
+    // void erase();
 
     void handleEvent(SDL_Event *e);
     bool clicked() const;
@@ -53,4 +56,5 @@ public:
     std::string getText() {
         return text;
     }
+
 };

@@ -29,6 +29,12 @@ void Button::renderRect(SDL_Rect rect, SDL_Color color)
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(renderer, &fillRect);
 }
+void Button::renderRect(SDL_Rect rect, colorRGBA color)
+{
+    std::cerr << "Rendeing rect at: " << rect.x << " " << rect.y << "\n";
+    SDL_Color newColor = {color.getR(), color.getG(), color.getB(), color.getA()};
+    renderRect(rect, newColor);
+}
 
 // Function to render SVG with text in the middle
 void Button::renderSVG(std::string svgFilePath, double scale)
@@ -115,7 +121,7 @@ void Button::render()
     renderRect(rect, color);
 
     // Render rectBefore
-    renderRect({rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
+    renderRect({rect.x, rect.y, 20, rect.h}, SDL_Color({238, 238, 210, 255}));
 
     // Render text
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
@@ -198,4 +204,15 @@ void Button::setColor(colorRGBA color)
 {
     SDL_Color newColor = {color.getR(), color.getG(), color.getB(), color.getA()};
     updateColor(newColor);
+}
+
+// void Button::clear()
+// {
+//     if (rect.x == -1 || rect.y == -1 || rect.w == -1 || rect.h == -1) return;
+//     renderRect(rect, bgColor);
+// }
+
+void Button::clear()
+{
+    renderRect(rect, bgColor);
 }

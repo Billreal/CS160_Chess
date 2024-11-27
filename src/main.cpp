@@ -380,7 +380,7 @@ int main(int argc, char *args[])
                             // std::cerr << "Statemate status: " << board.isStalemate(WHITE) << " and " << board.isStalemate(BLACK) << "\n";
                         }
                         // board.log(event.button, "released");
-                        std::cerr << board.boardstateToFEN() << "\n\n";
+                        std::cerr << board.boardstateToFEN(currentMoveColor) << "\n\n";
                         break;
                     }
                         // default:

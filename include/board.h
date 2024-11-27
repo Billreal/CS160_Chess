@@ -239,4 +239,5 @@ public:
     int getCurrentTurn();
 
     string boardstateToFEN();
+    string boardstateToFEN(int color);
 };

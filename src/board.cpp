@@ -1467,3 +1467,8 @@ string Board::boardstateToFEN()
     returnStr << totalmoves << " ";
     return returnStr.str();
 }
+string Board::boardstateToFEN(int color)
+{
+    isPlayerTurn = !color;
+    return boardstateToFEN();
+}

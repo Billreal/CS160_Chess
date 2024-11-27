@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include "./../include/board.h"
 #include "./../include/colorScheme.h"
@@ -80,6 +79,17 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height, dou
 //     return texture;
 // }
 
+void Board::setMargin(int sideMargin, int topMargin)
+{
+    SIDE_MARGIN = sideMargin;
+    TOP_MARGIN = topMargin;
+}
+
+void Board::setBoardSize(int boardSize)
+{
+    SIDE_LENGTH = boardSize;
+}
+
 void Board::loadTextures()
 {
     /*
@@ -137,8 +147,8 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
         for (int j = 1; j <= BOARD_SIZE; j++)
         {
             bool cellType = (i + j) % 2;
-            int currentX = MARGIN + SIDE_LENGTH * (i - 1);
-            int currentY = MARGIN + SIDE_LENGTH * (j - 1);
+            int currentX = SIDE_MARGIN + SIDE_LENGTH * (i - 1);
+            int currentY = TOP_MARGIN + SIDE_LENGTH * (j - 1);
 
             // A rectangle, with the origin at the upper left (integer).
             SDL_Rect currentCell{currentX, currentY, SIDE_LENGTH, SIDE_LENGTH};
@@ -166,8 +176,8 @@ void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFla
             if (j != 1 || i != BOARD_SIZE)
                 continue;
             bool cellType = (i + j) % 2 ^ 1; // As to contrast the cell's color
-            int currentX = MARGIN + SIDE_LENGTH * (i - 1);
-            int currentY = MARGIN + SIDE_LENGTH * (j - 1);
+            int currentX = SIDE_MARGIN + SIDE_LENGTH * (i - 1);
+            int currentY = TOP_MARGIN + SIDE_LENGTH * (j - 1);
         }
 }
 
@@ -182,14 +192,14 @@ bool Board::checkBoardSeq()
     return true;
 }
 
-void Board::renderStartingPosition(std::string seq)
+void Board::renderPiecesFromFen(std::string fen)
 {
     // Translate FEN notation's chess placements into an 8x8 array
     // Direction: Left to Right, Top down
-    // std::cerr << seq << "\n";
-    for (int i = 0, row = 0, column = 0; i <= seq.length(); i++)
+    std::cerr << fen << "\n";
+    for (int i = 0, row = 0, column = 0; i <= fen.length(); i++)
     {
-        char currentChar = seq[i];
+        char currentChar = fen[i];
 
         // If there's a chess piece, place it on the board
         int pieceIndicator;
@@ -200,8 +210,8 @@ void Board::renderStartingPosition(std::string seq)
             {
                 // Draw chess piece
                 drawTexture(pieces[pieceIndicator],
-                            MARGIN + SIDE_LENGTH * column,
-                            MARGIN + SIDE_LENGTH * row,
+                            SIDE_MARGIN + SIDE_LENGTH * column,
+                            TOP_MARGIN + SIDE_LENGTH * row,
                             SIDE_LENGTH,
                             SIDE_LENGTH);
                 column++;
@@ -234,6 +244,17 @@ void Board::renderStartingPosition(std::string seq)
 }
 
 // Game update fuction
+
+void Board::updateFen(std::string fen)
+{
+    if (fen.empty())
+    {
+        std::cerr << "Empty FEN Notation\n";
+        return;
+    }
+    CURRENT_FEN = fen;
+}
+
 void Board::updatePlayerStatus(std::string player)
 {
     isPlayerTurn = player == "w" ? 1 : 0; // 1 stands for white turn, 0 for black turn
@@ -267,9 +288,14 @@ void Board::countTotalMove(std::string num)
     totalmoves = stringToNum(boardSequence[5]);
 }
 
+std::string Board::getFen()
+{
+    return CURRENT_FEN;
+}
+
 int Board::getMargin()
 {
-    return MARGIN;
+    return SIDE_MARGIN;
 }
 
 int Board::getSideLength()
@@ -327,9 +353,9 @@ int Board::stringToNum(std::string str)
 bool Board::testInbound(SDL_MouseButtonEvent ev)
 {
     // placeholder
-    int maxX = MARGIN + 8 * SIDE_LENGTH;
-    int maxY = MARGIN + 8 * SIDE_LENGTH;
-    return MARGIN <= ev.x && ev.x <= maxX && MARGIN <= ev.y && ev.y <= maxY;
+    int maxX = SIDE_MARGIN + 8 * SIDE_LENGTH;
+    int maxY = TOP_MARGIN + 8 * SIDE_LENGTH;
+    return SIDE_MARGIN <= ev.x && ev.x <= maxX && TOP_MARGIN <= ev.y && ev.y <= maxY;
 }
 
 void Board::log(SDL_MouseButtonEvent ev, std::string status)
@@ -344,16 +370,16 @@ Coordinate Board::getPieceCoord(int x, int y)
     Coordinate invalidMoves(-1, -1);
     int mouseX = x;
     int mouseY = y;
-    int horizontalCell = (mouseX - MARGIN) / SIDE_LENGTH;
-    int verticalCell = (mouseY - MARGIN) / SIDE_LENGTH;
+    int horizontalCell = (mouseX - SIDE_MARGIN) / SIDE_LENGTH;
+    int verticalCell = (mouseY - TOP_MARGIN) / SIDE_LENGTH;
     // Fix out of bound cell
-    if (horizontalCell < 0 || mouseX - MARGIN < 0)
+    if (horizontalCell < 0 || mouseX - SIDE_MARGIN < 0)
         return invalidMoves;
-    if (horizontalCell > 7 || mouseX - (MARGIN + 8 * SIDE_LENGTH) > 0)
+    if (horizontalCell > 7 || mouseX - (SIDE_MARGIN + 8 * SIDE_LENGTH) > 0)
         return invalidMoves;
-    if (verticalCell < 0 || mouseY - MARGIN < 0)
+    if (verticalCell < 0 || mouseY - TOP_MARGIN < 0)
         return invalidMoves;
-    if (verticalCell > 7 || mouseY - (MARGIN + 8 * SIDE_LENGTH) > 0)
+    if (verticalCell > 7 || mouseY - (SIDE_MARGIN + 8 * SIDE_LENGTH) > 0)
         return invalidMoves;
     return Coordinate(horizontalCell, verticalCell);
 }
@@ -415,7 +441,7 @@ void Board::renderPieceByCursor(char piece, int x, int y)
 
 void Board::renderPieceByCoordinate(int pieceName, int color, int x, int y)
 {
-    renderPiece(pieceName, color, MARGIN + x * SIDE_LENGTH, MARGIN + y * SIDE_LENGTH);
+    renderPiece(pieceName, color, SIDE_MARGIN + x * SIDE_LENGTH, TOP_MARGIN + y * SIDE_LENGTH);
 }
 
 void Board::parseFENToBoard(std::string fenConfig)
@@ -575,6 +601,41 @@ void Board::render()
         renderPawnPromotion();
 }
 
+void Board::renderFromFen()
+{
+    // setRendererColor(backgroundColor);
+    // clear();
+    // background.render(backgroundColor);
+    renderChessboard();
+    renderFromBoard();
+    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
+             << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
+             << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
+    if (isUnderPromotion)
+        renderPawnPromotion();
+}
+
+void Board::renderFromFen()
+{
+    setRendererColor(backgroundColor);
+    clear();
+    // background.render(backgroundColor);
+    renderChessboard();
+    splitSequence(CURRENT_FEN);
+
+    if (checkBoardSeq())
+    {
+        parseFENToBoard(boardSequence[0]);
+        renderFromBoard();
+        // renderStartingPosition(boardSequence[0]);
+        updatePlayerStatus(boardSequence[1]);
+        updateCastlingStatus(boardSequence[2]);
+        updateEnPassantStatus(boardSequence[3]);
+        countHalfmove(boardSequence[4]);
+        countTotalMove(boardSequence[5]);
+    }
+}
+
 void Board::setBackground(colorRGBA bg)
 {
     backgroundColor = bg;
@@ -590,11 +651,11 @@ bool Board::isNum(char c)
 void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
 {
     for (Coordinate cell : moveList)
-        drawTexture(possibleMoveIndicator, (cell.getX() + 1 - MOVE_INDICATOR_SCALE) * SIDE_LENGTH + MARGIN, (cell.getY() + 1 - MOVE_INDICATOR_SCALE) * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+        drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + SIDE_MARGIN + (SIDE_LENGTH * (1 - MOVE_INDICATOR_SCALE)) / 2, cell.getY() * SIDE_LENGTH + TOP_MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     for (Coordinate cell : captureList)
     {
         // std::cerr << "Rendering capture move at " << cell.getX() << " " << cell.getY() << "\n";
-        drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + MARGIN, cell.getY() * SIDE_LENGTH + MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+        drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + SIDE_MARGIN, cell.getY() * SIDE_LENGTH + TOP_MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     }
 }
 

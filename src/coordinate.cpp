@@ -1,4 +1,3 @@
-#pragma once
 #include "./../include/coordinate.h"
 #include <SDL.h>
 Coordinate::Coordinate()

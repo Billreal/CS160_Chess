@@ -6,6 +6,7 @@
 #include <string.h>
 #include <vector>
 #include "button.h"
+#include <algorithm>
 // #include "background.h"
 #include "colorScheme.h"
 #include "coordinate.h"
@@ -15,8 +16,10 @@ class Board
 private:
     SDL_Renderer *renderer = NULL;
     // Background background;
-    const int MARGIN = 80;
-    const int SIDE_LENGTH = 70;
+    int TOP_MARGIN = 200;
+    int BOTTOM_MARGIN = 80;
+    int SIDE_MARGIN = 80;
+    int SIDE_LENGTH = 80;
     static const int BOARD_SIZE = 8;
     char board[BOARD_SIZE][BOARD_SIZE];
     bool isMoved[BOARD_SIZE][BOARD_SIZE];
@@ -26,7 +29,7 @@ private:
     colorRGBA backgroundColor;
     chessPieces chessPiece;
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
-    int isPlayerTurn; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
+    int isPlayerTurn = -1; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
     bool whiteKingSide;
     bool whiteQueenSide;
     bool blackKingSide;
@@ -40,12 +43,13 @@ private:
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    std::string CURRENT_FEN = "8/8/8/8/8/8/8/8 w - - 0 0";
     // std::string STARTING_FEN = "rnb1kbnr/ppppqppp/8/4N3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 1";
     std::vector<std::string> MOVES;
 
-    const double IMG_SCALE = 1.5;
-    const double MOVE_INDICATOR_SCALE = 0.75;
-    const double CAPTURE_INDICATOR_SCALE = 1.5;
+    const double IMG_SCALE = 1.8;
+    const double MOVE_INDICATOR_SCALE = 0.9;
+    const double CAPTURE_INDICATOR_SCALE = 1.8;
 
     std::vector<SDL_Texture *> TextureList;
     SDL_Texture *boardTexture;
@@ -90,7 +94,13 @@ public:
         // std::cerr << "Rendering at " << x << " " << y << "\n";
     }
 
+    void setBoardSize(int boardSize);
+
+    void setMargin(int sideMargin, int topMargin);
+
     // Game Update, with data taken in as boardSequence[1 -> 5], which are strings
+    void updateFen(std::string fen);
+
     void updatePlayerStatus(std::string player);
 
     void updateCastlingStatus(std::string seq);
@@ -107,13 +117,34 @@ public:
 
     void renderChessboard();
 
-    void renderStartingPosition(std::string seq);
+    void renderPiecesFromFen(std::string fen);
 
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
 
     void renderPieces();
 
     // Infos
+    std::string getTurn()
+    {
+        if (isPlayerTurn == -1)
+        {
+            return "";
+        }
+        return isPlayerTurn == 1 ? "White" : "Black";
+    }
+
+    std::string getMoves()
+    {
+        std::string moveCount = "";
+
+        while (totalmoves > 0)
+        {
+            moveCount += std::to_string(totalmoves % 10);
+            totalmoves /= 10;
+        }
+        std::reverse(moveCount.begin(), moveCount.end());
+        return moveCount;
+    }
     bool checkBoardSeq();
 
     int getMargin();
@@ -163,6 +194,8 @@ public:
 
     int getPieceColor(char piece);
 
+    std::string getFen();
+
     char getPiece(int x, int y);
 
     char getPiece(Coordinate coord);
@@ -180,6 +213,8 @@ public:
     void setColor(colorRGBA primary, colorRGBA secondary);
 
     void render();
+
+    void renderFromFen();
 
     void setBackground(colorRGBA bg);
 

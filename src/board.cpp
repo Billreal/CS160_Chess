@@ -14,6 +14,10 @@
 #include "./../include/nanosvgrast.h"
 
 // #include "colorScheme.cpp"
+Board::Board()
+{
+    
+}
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
     loadTextures();
@@ -115,7 +119,7 @@ void Board::loadTextures()
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
-void Board::renderPieces()
+void Board::loadStartingPosition()
 {
     // std::cerr << "Begin rendering\n";
     // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
@@ -127,7 +131,7 @@ void Board::renderPieces()
     if (checkBoardSeq())
     {
         parseFENToBoard(boardSequence[0]);
-        renderFromBoard();
+        // renderFromBoard();
         // renderStartingPosition(boardSequence[0]);
         updatePlayerStatus(boardSequence[1]);
         updateCastlingStatus(boardSequence[2]);
@@ -1183,7 +1187,7 @@ void Board::log(std::string message)
     std::cerr << message << std::endl;
 }
 
-bool Board::isStatemate(int color)
+bool Board::isStalemate(int color)
 {
     if (!isKingSafe(color))
         return false;

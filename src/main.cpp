@@ -504,7 +504,7 @@ int main(int argc, char *args[])
             {
 
                 SDL_RenderClear(renderer);
-                board.renderPieces();
+                board.loadStartingPosition();
                 board.render();
                 currentThemeButton->render();
                 // board.present();
@@ -564,8 +564,9 @@ int main(int argc, char *args[])
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
                         pickedPiece = board.getPiece(pickedPlace);
                         int pickedColor = board.getPieceColor(pickedPiece);
-                        if (pickedColor != currentMoveColor)
-                            break;
+                        // if (pickedColor != currentMoveColor)
+                        //     break;
+                        // ! Remove this in production
                         std::cerr << "Correct color\n";
                         prevCoordinate = pickedPlace;
                         if (pickedPlace == Coordinate(-1, -1))
@@ -670,19 +671,19 @@ int main(int argc, char *args[])
                                 board.render();
                                 break;
                             }
-                            if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
+                            if (board.isStalemate(WHITE) || board.isStalemate(BLACK))
                             {
                                 isEnded = true;
-                                if (board.isStatemate(WHITE))
-                                    board.setRenderCheckmate(WHITE);
+                                if (board.isStalemate(WHITE))
+                                    board.setRenderStalemate(WHITE);
                                 else
-                                    board.setRenderCheckmate(BLACK);
+                                    board.setRenderStalemate(BLACK);
                                 SDL_Log("End game: Statemate");
                                 board.render();
                                 break;
                             }
 
-                            std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
+                            std::cerr << "Statemate status: " << board.isStalemate(WHITE) << " and " << board.isStalemate(BLACK) << "\n";
                         }
                         // board.log(event.button, "released");
                         std::cerr << board.boardstateToFEN(currentMoveColor) << "\n" << currentMoveColor << "\n\n";

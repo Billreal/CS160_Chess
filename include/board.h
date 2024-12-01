@@ -73,6 +73,7 @@ private:
     TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
 
 public:
+    Board(); // Barebone board used for testing
     Board(SDL_Renderer *renderer);
 
     Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor);
@@ -121,7 +122,7 @@ public:
 
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
 
-    void renderPieces();
+    void loadStartingPosition();
 
     // Infos
     int getCurrentTurn();
@@ -247,7 +248,7 @@ public:
 
     void genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList);
 
-    bool isStatemate(int color);
+    bool isStalemate(int color);
 
     bool isSafeMove(int color, char piece, Coordinate src, Coordinate dest);
 

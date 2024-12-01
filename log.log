@@ -1,0 +1,11 @@
+Looking for Stockfish at: "D:\\University\\Programming\\Cplusplus\\Project\\CS160_Chess\\stockfish.exe"
+Successfully started Stockfish at: "D:\\University\\Programming\\Cplusplus\\Project\\CS160_Chess\\stockfish.exe"
+5 uci
+12 ucinewgame
+Done communication
+1
+Stopping engine...
+0x1d27ee5f0c0
+6 quit
+Done killingEngine stopped
+Engine stopped

@@ -3,11 +3,12 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
-
+#include "color.h"
+#include "colorScheme.h"
 class Button
 {
 private:
-    SDL_Rect rect;
+    SDL_Rect rect = {-1, -1, -1, -1};
     SDL_Color color;
     SDL_Color textColor;
     std::string text;
@@ -17,11 +18,13 @@ private:
     bool isClicked;
     bool isHovered;
 
-    void renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
+    void renderRect(SDL_Rect rect, SDL_Color color);
+    void renderRect(SDL_Rect rect, colorRGBA color);
     // SDL_Texture *loadTexture(std::string filePath, int width, int height, double scale);
 
 public:
     Button(SDL_Renderer *renderer);
+    Button();
     Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, std::string text, TTF_Font *font);
     void updateColor(SDL_Color);
 
@@ -30,13 +33,18 @@ public:
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }
     // Clear renderer
-    void clear() const { SDL_RenderClear(renderer); }
+    void clear();
+    // void clear() const { SDL_RenderClear(renderer); };
+    // void erase();
 
     void handleEvent(SDL_Event *e);
     bool clicked() const;
     bool hover() const;
     void resetClicked();
     void resetHovered();
+
+    void setColor(colorRGBA color);
+    void setColor(SDL_Color color);
 
     // Get infos
     int getY() {
@@ -48,4 +56,5 @@ public:
     std::string getText() {
         return text;
     }
+
 };

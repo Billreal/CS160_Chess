@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <vector>
+#include "button.h"
 #include <algorithm>
 // #include "background.h"
 #include "colorScheme.h"
@@ -37,6 +38,8 @@ private:
     int halfmoves = 0;
     int totalmoves = 0;
 
+    // Castling status
+
     // FEN Notation
     std::string boardSequence[6] = {""};
     std::string STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -55,12 +58,25 @@ private:
     SDL_Texture *possibleCaptureIndicator;
     void loadTextures();
     void renderPiece(int pieceName, int color, int x, int y);
+    // For rendering of last move
+    Coordinate currentCoordinate = Coordinate(-1, -1);
+    Coordinate previousCoordinate = Coordinate(-1, -1);
+    Coordinate dangerCoordinate = Coordinate(-1, -1);
+    Coordinate checkmateCoordinate = Coordinate(-1, -1);
+    Coordinate stalemateCoordinate = Coordinate(-1, -1);
+    Button queenPromotion, bishopPromotion, knightPromotion, rookPromotion;
+    Coordinate queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate;
+    SDL_Color queenPromotionCellColor, knightPromotionCellColor, rookPromotionCellColor, bishopPromotionCellColor;
+    chessColor promotionColor;
+    bool isUnderPromotion = false;
+    Coordinate promotionCoord;
+    TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
 
 public:
     Board(SDL_Renderer *renderer);
 
     Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor);
-
+    ~Board();
     // Clear renderer
     void clear() const { SDL_RenderClear(renderer); }
 
@@ -88,6 +104,7 @@ public:
     void updatePlayerStatus(std::string player);
 
     void updateCastlingStatus(std::string seq);
+    void updateCastlingStatus();
 
     void updateEnPassantStatus(std::string seq);
 
@@ -107,6 +124,7 @@ public:
     void renderFen();
 
     // Infos
+    int getCurrentTurn();
     std::string getTurn()
     {
         if (isPlayerTurn == -1)
@@ -210,5 +228,50 @@ public:
     void renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList);
 
     bool isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate dest);
-    bool isKingSafe(Coordinate src, Coordinate dest, char movingPiece);
+    bool isKingSafe(int color);
+    bool testMovesKingSafety(Coordinate dest, char movingPiece);
+
+    bool isInBound(Coordinate coord);
+    void markMoved(Coordinate dest);
+
+    bool canWhiteCastlingKing();
+    bool canWhiteCastlingQueen();
+    bool canBlackCastlingKing();
+    bool canBlackCastlingQueen();
+
+    char getPieceFromInfo(int pieceName, int color);
+
+    bool makeMove(Coordinate src, Coordinate dest, char piece, const vector<Coordinate> &moveList, const vector<Coordinate> &captureList); // Perform move, then return 1 if success, 0 otherwise
+
+    void log(std::string message);
+
+    void genEnPassantMove(Coordinate curr, vector<Coordinate> &captureList);
+
+    bool isStatemate(int color);
+
+    bool isSafeMove(int color, char piece, Coordinate src, Coordinate dest);
+
+    bool isCheckmate(int color);
+
+    void recordMove(Coordinate src, Coordinate coord);
+
+    void renderLastMove();
+    void renderBlendCell(Coordinate coordinate, colorRGBA color);
+
+    void setRenderCheck(chessColor color);
+    void setRenderCheckmate(chessColor color);
+    void setRenderStalemate(chessColor color);
+
+    void renderCheck();
+    void renderCheckmate();
+    void renderStalemate();
+    void enablePawnPromotion(int x, int y);
+    void disablePawnPromotion();
+
+    void renderPawnPromotion();
+    bool handlePawnPromotion(SDL_Event *ev);
+
+
+    string boardstateToFEN();
+    string boardstateToFEN(int color);
 };

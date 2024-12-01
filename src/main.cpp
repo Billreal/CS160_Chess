@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 // #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -145,6 +146,12 @@ enum GUI_State
     SETTINGS,
 };
 
+struct ThemeList
+{
+    Button button;
+    colorRGBA primaryColor;
+    colorRGBA secondaryColor;
+};
 int main(int argc, char *args[])
 {
     // ! Temporary variable, will change in later version
@@ -199,7 +206,7 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    TTF_Font *font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", FONT_SIZE);
+    TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
     if (!font)
     {
         SDL_Log("Failed to load font: %s", TTF_GetError());
@@ -218,7 +225,7 @@ int main(int argc, char *args[])
     //     cerr << SDL_GetError() << "\n";
     // }
 
-    Board board(renderer, board1Primary, board2Primary, bgColor);
+    Board board(renderer, modernPrimary, modernSecondary, bgColor);
 
     // Handling SDL_events
     SDL_Event event;
@@ -234,7 +241,12 @@ int main(int argc, char *args[])
     bool boardIsRendered = false;
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
-    board.setColor(board1Primary, board2Primary);
+    SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
+    SDL_RenderClear(renderer);
+    board.setColor(modernPrimary, modernSecondary);
+    // board.renderPieces();
+    // board.render();
+    // board.present();
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
     Coordinate pickedPlace(-1, -1);
@@ -244,13 +256,17 @@ int main(int argc, char *args[])
     const int logoHeight = 177;
     SDL_Rect logoInfos = {(SCREEN_WIDTH - logoWidth) / 2, 120, logoWidth, logoHeight};
     SDL_Texture *logoTexture = loadTexture("./assets/logo.png");
+    int currentMoveColor = WHITE;
+    Coordinate enPassantCoord;
+    bool isEnded = false;
 
-    bool isOnStartMenu = false;
+    bool isOnStartMenu = true;
     bool renderOnce = false;
     // board.renderPieces();
     // board.render();
     // board.present();
-
+    const int X_COLUMN_BUTTON[2] = {700, 1000};
+    const int Y_ROW_BUTTON[7] = {80, 180, 280, 380, 480, 580, 680};
     // Initialize buttons
     const int startMenuBtnWidth = 500;
     const int startMenuBtnHeight = 100;
@@ -280,7 +296,7 @@ int main(int argc, char *args[])
     TTF_Font *loadMenuFont = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
     SDL_Rect loadMenuSeperateLine = {360, 240, 5, 600};
 
-    Board demoBoard(renderer, board1Primary, board2Primary, bgColor);
+    Board demoBoard(renderer, modernPrimary, modernSecondary, bgColor);
     demoBoard.setBoardSize(50);
     demoBoard.setMargin(480, 240);
 
@@ -320,9 +336,19 @@ int main(int argc, char *args[])
     Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
     Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
     Button settingsBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Settings", loadMenuFont);
-
+    Button ingameColorSwitchModern(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Modern", font);
+    Button ingameColorSwitchFuturistic(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Futuristic", font);
+    Button ingameColorSwitchClassic(renderer, X_COLUMN_BUTTON[0], Y_ROW_BUTTON[0], 200, 50, {118, 150, 85, 255}, {255, 255, 255, 255}, "Theme: Classic", font);
+    vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
+                                   {ingameColorSwitchClassic, classicPrimary, classicSecondary},
+                                   {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
+    int currentThemeIndex = 0;
+    Button *currentThemeButton = &ingameColorSwitchModern;
+    bool isUnderPromotion = false;
     while (running)
     {
+        // Check if the window is running or not
+
         // Start menu
         // Clear screen
         switch (isOn)
@@ -479,157 +505,206 @@ int main(int argc, char *args[])
             if (!renderOnce)
             {
                 board.renderFen();
+                currentThemeButton->render();
+                // board.present();
                 renderOnce = true;
+                continue;
             }
             // Check if the window is running or not
             while (SDL_PollEvent(&event) != 0)
             {
-                switch (event.type)
+                if (1)
                 {
-                case SDL_QUIT:
-                {
-                    running = false;
-                    break;
-                }
-                case SDL_MOUSEBUTTONDOWN:
-                {
-                    if (event.button.button != SDL_BUTTON_LEFT || board.testInbound(event.button) == false)
+                    switch (event.type)
                     {
-                        if (!boardIsRendered)
+                    case SDL_QUIT:
+                    {
+                        running = false;
+                        break;
+                    }
+                    case SDL_MOUSEBUTTONDOWN:
+                    {
+                        if (event.button.button != SDL_BUTTON_LEFT)
+                            break;
+                        if (!board.testInbound(event.button))
                         {
-                            board.render();
-                            boardIsRendered = true;
+                            std::cerr << "Clicked outside of board\n";
+                            // * Not pressed inside of chessboard
+                            currentThemeButton->handleEvent(&event);
+                            if (currentThemeButton->clicked())
+                            {
+                                SDL_Log("Pressed theme changing button");
+                                currentThemeButton->resetClicked();
+                                // * To next color in circle
+                                currentThemeIndex = (currentThemeIndex + 1) % 3;
+                                currentThemeButton = &themeList[currentThemeIndex].button;
+                                board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+                                currentThemeButton->render();
+                                board.render();
+                                // board.present();
+                            }
+                            if (isUnderPromotion)
+                                if (board.handlePawnPromotion(&event))
+                                {
+                                    isUnderPromotion = false;
+                                    currentMoveColor = 1 - currentMoveColor;
+                                    currentThemeButton->render();
+                                    // the current move color is switched, opposite of promoted piece
+                                    board.render();
+                                }
+                            break;
                         }
-                        break;
-                    }
-                    pickedPlace = board.getPieceCoord(event.button);
-                    pickedPiece = board.getPiece(pickedPlace);
-                    if (pickedPlace == Coordinate(-1, -1) || pickedPiece == '0')
-                    {
-                        if (!boardIsRendered)
-                        {
-                            board.render();
-                            boardIsRendered = true;
-                        }
-                        break;
-                    }
+                        std::cerr << "Clicked inside of board\n";
+                        if (isUnderPromotion)
+                            break;
+                        if (isEnded)
+                            break;
+                        std::cerr << "Passing game state conditions\n";
+                        Coordinate pickedPlace = board.getPieceCoord(event.button);
+                        pickedPiece = board.getPiece(pickedPlace);
+                        int pickedColor = board.getPieceColor(pickedPiece);
+                        if (pickedColor != currentMoveColor)
+                            break;
+                        std::cerr << "Correct color\n";
+                        prevCoordinate = pickedPlace;
+                        if (pickedPlace == Coordinate(-1, -1))
+                            break;
+                        std::cerr << "Picked place inside of board\n";
+                        if (pickedPiece == '0')
+                            break;
+                        std::cerr << "Legal movement\n";
+                        isLeftMouseHolding = true;
+                        cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
+                        possibleMoves.clear();
+                        possibleCaptures.clear();
+                        possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
 
-                    prevCoordinate = pickedPlace;
-                    board.deleteCell(pickedPlace);
-
-                    if (!boardIsRendered)
-                    {
+                        possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
                         board.render();
-                        boardIsRendered = true;
-                    }
-
-                    isLeftMouseHolding = true;
-                    // cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
-                    // board.debugBoard();
-                    break;
-                }
-                case SDL_MOUSEMOTION:
-                {
-                    // std::cerr << isLeftMouseHolding << "\n";
-                    if (!boardIsRendered)
-                    {
-                        board.render();
-                        boardIsRendered = true;
-                    }
-                    if (isLeftMouseHolding == false) // Mouse hover
-                        break;
-                    board.renderMove(possibleMoves, possibleCaptures);
-                    board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                    break;
-                }
-                case SDL_MOUSEBUTTONUP:
-                {
-                    if (event.button.button != SDL_BUTTON_LEFT || isLeftMouseHolding == false)
-                    {
-                        if (!boardIsRendered)
-                        {
-                            board.render();
-                            boardIsRendered = true;
-                        }
+                        currentThemeButton->render();
+                        // board.log("Done present");
+                        board.deleteCell(pickedPlace);
+                        // board.log("Done delete");
                         break;
                     }
-                    isLeftMouseHolding = false;
-                    Coordinate droppedPlace = board.getPieceCoord(event.button);
-                    vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    vector<Coordinate> possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    // Coordinate selectedPlace = board.getPieceCoord(event.button);
-
-                    if (droppedPlace != Coordinate(-1, -1) && board.isKingSafe(prevCoordinate, droppedPlace, pickedPiece) && board.isValidMove(possibleMoves, possibleCaptures, droppedPlace))
-                        board.writeCell(droppedPlace, pickedPiece);
-                    else
-                        board.writeCell(prevCoordinate, pickedPiece);
-                    if (!boardIsRendered)
+                    case SDL_MOUSEMOTION:
                     {
+                        if (isLeftMouseHolding == false) // Mouse hover
+                            break;
+                        // SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
+                        // SDL_RenderClear(renderer);
                         board.render();
-                        boardIsRendered = true;
-                    }
-                    if (droppedPlace == prevCoordinate)
-                    {
                         board.renderMove(possibleMoves, possibleCaptures);
+                        board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
+                        currentThemeButton->render();
+                        // board.log("Done render animation");
+                        break;
                     }
-                    prevCoordinate = Coordinate(-1, -1);
-                    pickedPiece = ' ';
-                    // std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
-                    // board.log(event.button, "released");
-                    break;
+                    case SDL_MOUSEBUTTONUP:
+                    {
+                        if (event.button.button != SDL_BUTTON_LEFT)
+                            break;
+                        if (isLeftMouseHolding)
+                        {
+                            isLeftMouseHolding = false;
+                            Coordinate droppedPlace = board.getPieceCoord(event.button);
+
+                            if (droppedPlace == prevCoordinate)
+                            {
+                                // Dropping at same place
+                                board.writeCell(droppedPlace, pickedPiece);
+                                board.render();
+                                board.renderMove(possibleMoves, possibleCaptures);
+                            }
+                            else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
+                            {
+                                board.render();
+                                board.present();
+                                if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
+                                {
+                                    isUnderPromotion = true;
+                                    board.enablePawnPromotion(droppedPlace.getX(), droppedPlace.getY());
+                                }
+                                board.setRenderCheck(COLOR_NONE);
+                                // currentThemeButton -> render();
+                                board.updateCastlingStatus();
+                                prevCoordinate = Coordinate(-1, -1);
+                                pickedPiece = ' ';
+
+                                board.render();
+                                if (!isUnderPromotion)
+                                {
+                                    if (currentMoveColor == WHITE)
+                                        currentMoveColor = BLACK;
+                                    else if (currentMoveColor == BLACK)
+                                        currentMoveColor = WHITE;
+                                }
+                            }
+                            else // invalid move
+                            {
+                                board.writeCell(prevCoordinate, pickedPiece);
+                                board.render();
+                                currentThemeButton->render();
+                            }
+                        }
+                        if (!isUnderPromotion)
+                        {
+                            if (board.isCheckmate(WHITE) || board.isCheckmate(BLACK))
+                            {
+                                isEnded = true;
+                                if (board.isCheckmate(WHITE))
+                                    board.setRenderCheckmate(WHITE);
+                                else
+                                    board.setRenderCheckmate(BLACK);
+                                SDL_Log("End game: Checkmate");
+                                board.render();
+                                break;
+                            }
+                            if (!board.isKingSafe(WHITE) || !board.isKingSafe(BLACK))
+                            {
+                                if (!board.isKingSafe(WHITE))
+                                    board.setRenderCheck(WHITE);
+                                else
+                                    board.setRenderCheck(BLACK);
+                                board.render();
+                                break;
+                            }
+                            if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
+                            {
+                                isEnded = true;
+                                if (board.isStatemate(WHITE))
+                                    board.setRenderCheckmate(WHITE);
+                                else
+                                    board.setRenderCheckmate(BLACK);
+                                SDL_Log("End game: Statemate");
+                                board.render();
+                                break;
+                            }
+
+                            std::cerr << "Statemate status: " << board.isStatemate(WHITE) << " and " << board.isStatemate(BLACK) << "\n";
+                        }
+                        // board.log(event.button, "released");
+                        std::cerr << board.boardstateToFEN(currentMoveColor) << "\n" << currentMoveColor << "\n\n";
+                        break;
+                    }
+                        // default:
+                        // board.present();
+                    }
                 }
+                else
+                {
+                    board.render();
+                    switch (event.type)
+                    {
+                    case SDL_QUIT:
+                        running = false;
+                        break;
+                    }
                 }
-
-                // Handle button events
-                saveBtn.handleEvent(&event);
-                loadBtnInGame.handleEvent(&event);
-                settingsBtn.handleEvent(&event);
+                board.present();
             }
-
-            if (!boardIsRendered)
-            {
-                board.render();
-                boardIsRendered = true;
-            }
-
-            // Update screen
-            SDL_RenderPresent(renderer);
-
-            // Check if button was clicked
-            if (saveBtn.clicked())
-            {
-                SDL_Log("Button clicked!");
-                isOn = SAVE;
-                saveBtn.resetClicked(); // Reset button state
-            }
-            if (loadBtnInGame.clicked())
-            {
-                SDL_Log("Button clicked!");
-                isOn = LOAD;
-                loadBtnInGame.resetClicked(); // Reset button state
-            }
-            if (settingsBtn.clicked())
-            {
-                SDL_Log("Button clicked!");
-                isOn = SETTINGS;
-                settingsBtn.resetClicked(); // Reset button state
-            }
-
-            boardIsRendered = false;
-            board.clear();
-            saveBtn.clear();
-            loadBtnInGame.clear();
-            settingsBtn.clear();
-            break;
-        }
-        case SAVE:
-        {
-            std::cerr << "Currently in Save ";
-            break;
-        }
-        case SETTINGS:
-        {
-            std::cerr << "Currently in Settings ";
+            // board.log("Done checking stalemate");
+            while (SDL_PollEvent(&event) != 0);
             break;
         }
         }

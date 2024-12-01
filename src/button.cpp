@@ -16,11 +16,24 @@ void Button::updateColor(SDL_Color newColor)
     color = newColor;
 }
 
-void Button::renderRect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color)
+// void Button::updateColor(SDL_Color newColor)
+// {
+//     color = newColor;
+// }
+
+Button::Button() {};
+void Button::renderRect(SDL_Rect rect, SDL_Color color)
 {
+    // std::cerr << "Rendeing rect at: " << rect.x << " " << rect.y << "\n";
     SDL_Rect fillRect = {rect.x, rect.y, rect.w, rect.h};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(renderer, &fillRect);
+}
+void Button::renderRect(SDL_Rect rect, colorRGBA color)
+{
+    std::cerr << "Rendeing rect at: " << rect.x << " " << rect.y << "\n";
+    SDL_Color newColor = {color.getR(), color.getG(), color.getB(), color.getA()};
+    renderRect(rect, newColor);
 }
 
 // Function to render SVG with text in the middle
@@ -80,7 +93,7 @@ void Button::renderSVG(std::string svgFilePath, double scale)
 
     // Render button rect
     // std::cerr << rect.x << rect.y <<  width << height << "\n";
-    // renderRect(renderer, rect, color);
+    // renderRect(rect, color);
 
     // Render SVG texture
     SDL_RenderCopy(renderer, svgTexture, NULL, &rect);
@@ -105,10 +118,10 @@ void Button::renderSVG(std::string svgFilePath, double scale)
 void Button::render()
 {
     // Render button rect
-    renderRect(renderer, rect, color);
+    renderRect(rect, color);
 
     // Render rectBefore
-    renderRect(renderer, {rect.x, rect.y, 20, rect.h}, {238, 238, 210, 255});
+    renderRect({rect.x, rect.y, 20, rect.h}, SDL_Color({238, 238, 210, 255}));
 
     // Render text
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
@@ -117,6 +130,7 @@ void Button::render()
     int textHeight = textSurface->h;
     SDL_FreeSurface(textSurface);
     SDL_Rect textRect = {rect.x + (rect.w - textWidth) / 2, rect.y + (rect.h - textHeight) / 2, textWidth, textHeight};
+    std::cerr << textRect.x << " " << textRect.y << " " << textRect.w << " " << textRect.h << "\n";
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_DestroyTexture(textTexture);
 }
@@ -184,4 +198,21 @@ void Button::resetClicked()
 void Button::resetHovered()
 {
     isHovered = false;
+}
+
+void Button::setColor(colorRGBA color)
+{
+    SDL_Color newColor = {color.getR(), color.getG(), color.getB(), color.getA()};
+    updateColor(newColor);
+}
+
+// void Button::clear()
+// {
+//     if (rect.x == -1 || rect.y == -1 || rect.w == -1 || rect.h == -1) return;
+//     renderRect(rect, bgColor);
+// }
+
+void Button::clear()
+{
+    renderRect(rect, bgColor);
 }

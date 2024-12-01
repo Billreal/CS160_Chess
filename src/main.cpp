@@ -4,7 +4,6 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 #include <string>
-#include "./test.cpp"
 #include <fstream>
 #include <filesystem>
 #include <vector>
@@ -28,12 +27,13 @@ const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 1000;
 const int SVG_SCALE = 1;
 const int FONT_SIZE = 32;
-const int TOP_MARGIN = 200;
+const int TOP_MARGIN = 160;
 const int BOTOTM_MARGIN = 80;
 const int SIDE_MARGIN = 80;
 const int SIDE_LENGTH = 80;
 
-void renderText(SDL_Renderer *renderer, TTF_Font *font, const std::string &text, SDL_Color textColor, SDL_Rect rect){
+void renderText(SDL_Renderer *renderer, TTF_Font *font, const std::string &text, SDL_Color textColor, SDL_Rect rect)
+{
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
@@ -117,7 +117,7 @@ void loadGame(Board &board, const std::string &filename)
         saveFile.close();
         return;
     }
-    //std::cerr << FEN << "\n";
+    // std::cerr << FEN << "\n";
     board.updateFen(FEN);
 
     saveFile.close();
@@ -139,8 +139,10 @@ std::vector<std::string> getSaveFiles(const std::string &directory)
 enum GUI_State
 {
     START,
+    SAVE,
     LOAD,
-    GAME
+    GAME,
+    SETTINGS,
 };
 
 int main(int argc, char *args[])
@@ -151,7 +153,6 @@ int main(int argc, char *args[])
     bool isAgainstBot = true;
     bool isToRotate = (isPlayer1White == false) && isAgainstBot;
     // ! End of temporary variable
-    debug();
 
     // Initializing main components
     GUI_State isOn = START;
@@ -230,11 +231,13 @@ int main(int argc, char *args[])
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
     bool isLeftMouseHolding = false;
+    bool boardIsRendered = false;
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
     board.setColor(board1Primary, board2Primary);
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
+    Coordinate pickedPlace(-1, -1);
 
     // Init logo
     const int logoWidth = 500;
@@ -283,7 +286,7 @@ int main(int argc, char *args[])
 
     bool hoverLoading = false;
 
-    if (!font)
+    if (!loadMenuFont)
     {
         SDL_Log("Failed to load Load_menu font: %s", TTF_GetError());
         SDL_DestroyRenderer(renderer);
@@ -311,14 +314,12 @@ int main(int argc, char *args[])
         }
 
         loadFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
-        // std::cerr << "name: " << loadFileBtns[i].getText() << "\n";
     }
 
-    // for (Button btn : loadFileBtns)
-    // {
-    //     std::cerr << "Adress: " << btn << "\n";
-    //     std::cerr << btn.getX() << " " << btn.getY() << " " << btn.getText() << " " << btn.getPrevText() << "\n";
-    // }
+    // Inintialize game buttons
+    Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
+    Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
+    Button settingsBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Settings", loadMenuFont);
 
     while (running)
     {
@@ -347,7 +348,6 @@ int main(int argc, char *args[])
             SDL_RenderCopy(renderer, logoTexture, NULL, &logoInfos);
 
             // Render button
-            startBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
             startBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
             loadBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
             quitBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
@@ -427,13 +427,13 @@ int main(int argc, char *args[])
                         hoverLoading = true;
                         loadGame(demoBoard, files[i]);
                     }
-                    //std::cerr << "Button hovering!\n";
+                    // std::cerr << "Button hovering!\n";
                     loadFileBtns[i].updateColor({118, 150, 85, 255});
                     break;
                 }
                 else
                 {
-                    //std::cerr << "Button no more hovering!\n";
+                    // std::cerr << "Button no more hovering!\n";
                     loadFileBtns[i].updateColor(loadMenuBtnColor);
                     demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
                     hoverLoading = false;
@@ -445,8 +445,8 @@ int main(int argc, char *args[])
             {
                 if (loadFileBtns[i].clicked())
                 {
-                    //std::cerr << "Button clicked!\n";
-                    // loadGame(board, files[i]);
+                    // std::cerr << "Button clicked!\n";
+                    loadGame(board, files[i]);
                     isOn = GAME;
                     loadFileBtns[i].resetHovered(); // Reset button state
                 }
@@ -464,25 +464,25 @@ int main(int argc, char *args[])
         }
         case GAME:
         {
+            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
+            SDL_RenderClear(renderer);
+
+            // Render Panels
             SDL_RenderCopy(renderer, rightPanelTexture, NULL, &rightPanelInfos);
             SDL_RenderCopy(renderer, bottomPanelTexture, NULL, &bottomPanelInfos);
-            // std::cerr << isOnStartMenu << "\n";
 
-            // // Clear screen
-            // SDL_RenderClear(renderer);
-
-            // Update screen
-            SDL_RenderPresent(renderer);
+            // Render Buttons
+            saveBtn.renderSVG("./assets/button_small.svg", SVG_SCALE);
+            loadBtnInGame.renderSVG("./assets/button_small.svg", SVG_SCALE);
+            settingsBtn.renderSVG("./assets/button_small.svg", SVG_SCALE);
 
             if (!renderOnce)
             {
-                board.renderPieces();
-                board.render();
-                board.present();
+                board.renderFen();
                 renderOnce = true;
             }
-            // Check if the window is running or not do
-            do
+            // Check if the window is running or not
+            while (SDL_PollEvent(&event) != 0)
             {
                 switch (event.type)
                 {
@@ -493,44 +493,66 @@ int main(int argc, char *args[])
                 }
                 case SDL_MOUSEBUTTONDOWN:
                 {
-                    if (event.button.button != SDL_BUTTON_LEFT)
+                    if (event.button.button != SDL_BUTTON_LEFT || board.testInbound(event.button) == false)
+                    {
+                        if (!boardIsRendered)
+                        {
+                            board.render();
+                            boardIsRendered = true;
+                        }
                         break;
-                    if (!board.testInbound(event.button))
-                        break;
-                    Coordinate pickedPlace = board.getPieceCoord(event.button);
+                    }
+                    pickedPlace = board.getPieceCoord(event.button);
                     pickedPiece = board.getPiece(pickedPlace);
+                    if (pickedPlace == Coordinate(-1, -1) || pickedPiece == '0')
+                    {
+                        if (!boardIsRendered)
+                        {
+                            board.render();
+                            boardIsRendered = true;
+                        }
+                        break;
+                    }
+
                     prevCoordinate = pickedPlace;
-                    if (pickedPlace == Coordinate(-1, -1))
-                        break;
-                    if (pickedPiece == '0')
-                        break;
-                    isLeftMouseHolding = true;
-                    cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
-                    // board.clear();
-                    board.render();
-                    board.present();
-                    // board.debugBoard();
                     board.deleteCell(pickedPlace);
+
+                    if (!boardIsRendered)
+                    {
+                        board.render();
+                        boardIsRendered = true;
+                    }
+
+                    isLeftMouseHolding = true;
+                    // cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
+                    // board.debugBoard();
                     break;
                 }
                 case SDL_MOUSEMOTION:
                 {
+                    // std::cerr << isLeftMouseHolding << "\n";
+                    if (!boardIsRendered)
+                    {
+                        board.render();
+                        boardIsRendered = true;
+                    }
                     if (isLeftMouseHolding == false) // Mouse hover
                         break;
-                    // board.clear();
-                    // board.clear();
-                    board.render();
                     board.renderMove(possibleMoves, possibleCaptures);
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                    board.present();
                     break;
                 }
                 case SDL_MOUSEBUTTONUP:
                 {
-                    if (event.button.button != SDL_BUTTON_LEFT)
+                    if (event.button.button != SDL_BUTTON_LEFT || isLeftMouseHolding == false)
+                    {
+                        if (!boardIsRendered)
+                        {
+                            board.render();
+                            boardIsRendered = true;
+                        }
                         break;
-                    if (!isLeftMouseHolding)
-                        break;
+                    }
                     isLeftMouseHolding = false;
                     Coordinate droppedPlace = board.getPieceCoord(event.button);
                     vector<Coordinate> possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
@@ -541,24 +563,73 @@ int main(int argc, char *args[])
                         board.writeCell(droppedPlace, pickedPiece);
                     else
                         board.writeCell(prevCoordinate, pickedPiece);
-                    // board.clear();
-                    board.render();
+                    if (!boardIsRendered)
+                    {
+                        board.render();
+                        boardIsRendered = true;
+                    }
                     if (droppedPlace == prevCoordinate)
                     {
-                        // board.clear();
                         board.renderMove(possibleMoves, possibleCaptures);
                     }
                     prevCoordinate = Coordinate(-1, -1);
                     pickedPiece = ' ';
-                    std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
-                    board.log(event.button, "released");
-                    board.present();
+                    // std::cerr << "Dropped at " << droppedPlace.getX() << " " << droppedPlace.getY() << "\n";
+                    // board.log(event.button, "released");
                     break;
                 }
-                    // default:
-                    // board.present();
                 }
-            } while (SDL_PollEvent(&event) != 0);
+
+                // Handle button events
+                saveBtn.handleEvent(&event);
+                loadBtnInGame.handleEvent(&event);
+                settingsBtn.handleEvent(&event);
+            }
+
+            if (!boardIsRendered)
+            {
+                board.render();
+                boardIsRendered = true;
+            }
+
+            // Update screen
+            SDL_RenderPresent(renderer);
+
+            // Check if button was clicked
+            if (saveBtn.clicked())
+            {
+                SDL_Log("Button clicked!");
+                isOn = SAVE;
+                saveBtn.resetClicked(); // Reset button state
+            }
+            if (loadBtnInGame.clicked())
+            {
+                SDL_Log("Button clicked!");
+                isOn = LOAD;
+                loadBtnInGame.resetClicked(); // Reset button state
+            }
+            if (settingsBtn.clicked())
+            {
+                SDL_Log("Button clicked!");
+                isOn = SETTINGS;
+                settingsBtn.resetClicked(); // Reset button state
+            }
+
+            boardIsRendered = false;
+            board.clear();
+            saveBtn.clear();
+            loadBtnInGame.clear();
+            settingsBtn.clear();
+            break;
+        }
+        case SAVE:
+        {
+            std::cerr << "Currently in Save ";
+            break;
+        }
+        case SETTINGS:
+        {
+            std::cerr << "Currently in Settings ";
             break;
         }
         }

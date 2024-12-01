@@ -15,7 +15,7 @@ class Board
 private:
     SDL_Renderer *renderer = NULL;
     // Background background;
-    int TOP_MARGIN = 200;
+    int TOP_MARGIN = 160;
     int BOTTOM_MARGIN = 80;
     int SIDE_MARGIN = 80;
     int SIDE_LENGTH = 80;
@@ -104,7 +104,7 @@ public:
 
     void renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag);
 
-    void renderPieces();
+    void renderFen();
 
     // Infos
     std::string getTurn()

@@ -16,7 +16,6 @@
 // #include "colorScheme.cpp"
 Board::Board()
 {
-    
 }
 Board::Board(SDL_Renderer *renderer) : renderer(renderer)
 {
@@ -126,7 +125,20 @@ void Board::loadStartingPosition()
     // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     // drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
 
-    splitSequence(STARTING_FEN);
+    CURRENT_FEN = STARTING_FEN;
+    reloadFen();
+
+    // std::cerr << "Rendering Done\n";
+    // flush();
+}
+void Board::reloadFen()
+{
+    // std::cerr << "Begin rendering\n";
+    // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+    // drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
+
+    splitSequence(CURRENT_FEN);
 
     if (checkBoardSeq())
     {
@@ -258,6 +270,7 @@ void Board::updateFen(std::string fen)
         return;
     }
     CURRENT_FEN = fen;
+    reloadFen();
 }
 
 void Board::updatePlayerStatus(std::string player)
@@ -600,8 +613,8 @@ void Board::render()
     renderStalemate();
     renderFromBoard();
     std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
-             << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
-             << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
+              << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
+              << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
 }
@@ -1134,6 +1147,12 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
     // * Record change in position
     log("Done updating current piece");
     Coordinate displacement = dest - src;
+    int prevTotalPiece = 0;
+    // * Counting total piece before
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            if (board[i][j] != '0')
+                prevTotalPiece++;
     // * Consider special moves: En passant
     // std::cerr << enPassant << " "
     //          << getPieceName(piece) << " "
@@ -1144,7 +1163,9 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
     if (enPassant && getPieceName(piece) == PAWN && getPieceColor(piece) != getPieceColor(getPiece(enPassantCoord)) && getPiece(dest) == '0')
     {
         if (abs(displacement.getX()) == 1 && abs(displacement.getY()) == 1)
+        {
             deleteCell(enPassantCoord);
+        }
     }
     if (getPieceName(piece) == PAWN && abs(displacement.getX() == 0) && abs(displacement.getY()) == 2)
     {
@@ -1179,6 +1200,14 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
     writeCell(dest, piece);
     deleteCell(src);
     recordMove(src, dest);
+    if (getPieceColor(piece) == BLACK)
+        totalmoves++;
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            if (board[i][j] != '0')
+                prevTotalPiece--;
+    if (prevTotalPiece != 0 || getPieceName(piece) == PAWN) halfmoves = 0;
+    else halfmoves++;
     return true;
 }
 
@@ -1316,16 +1345,16 @@ void Board::enablePawnPromotion(int x, int y) // In cell coordinate
         return;
     if (x < 4)
     {
-        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH +        SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         knightButtonCoordinate = Coordinate((x + 1) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
-        rookButtonCoordinate = Coordinate((x + 2) * SIDE_LENGTH +   SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        rookButtonCoordinate = Coordinate((x + 2) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         bishopButtonCoordinate = Coordinate((x + 3) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
     }
     else
     {
-        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH +        SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         knightButtonCoordinate = Coordinate((x - 1) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
-        rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH +   SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         bishopButtonCoordinate = Coordinate((x - 3) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
     }
     if ((queenButtonCoordinate.getX() + queenButtonCoordinate.getY()) % 2 == 1)
@@ -1469,10 +1498,10 @@ string Board::boardstateToFEN()
                 countBlank = 0;
             }
         }
-            if (countBlank != 0)
-                returnStr << countBlank;
-            if (row != BOARD_SIZE - 1)
-                returnStr << '/';
+        if (countBlank != 0)
+            returnStr << countBlank;
+        if (row != BOARD_SIZE - 1)
+            returnStr << '/';
     }
     returnStr << " ";
     returnStr << (isPlayerTurn ? 'w' : 'b');
@@ -1490,7 +1519,7 @@ string Board::boardstateToFEN()
         if (blackQueenSide)
             returnStr << 'q';
     }
-    returnStr<< " ";
+    returnStr << " ";
     if (enPassant)
     {
         char x = enPassantCoord.getX() + 'a';

@@ -47,3 +47,15 @@ coordinate:
 
 button:
 	g++ -c src/button.cpp -o src/button.o $(COMPILER_FLAG) $(LINKER)
+
+communicator:
+	g++ -c src/communicator.cpp -o src/communicator.o $(COMPILER_FLAG) $(LINKER)
+# testing: clean communicator board button coordinate pieces colorScheme color 
+# 	g++ -c testing/communicatorTest.cpp -o testing/communicatorTest.o $(COMPILER_FLAG) $(LINKER)
+# 	g++ -o communicatorTest testing/communicatorTest.o src/button.o src/coordinate.o src/pieces.o src/colorScheme.o src/color.o src/board.o src/communicator.o $(COMPILER_FLAG) $(LINKER)
+# 	./communicatorTest.exe
+
+testing: color board colorScheme coordinate pieces button communicator
+	g++ -c testing/communicatorTest.cpp -o testing/communicatorTest.o $(COMPILER_FLAG) $(LINKER)
+	g++ -o communicatorTest testing/communicatorTest.o src/communicator.o src/board.o src/color.o src/colorScheme.o src/coordinate.o src/pieces.o src/button.o $(COMPILER_FLAG) $(LINKER) 
+	./communicatorTest.exe

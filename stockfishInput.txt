@@ -1,0 +1,3 @@
+uci
+ucinewgame
+go

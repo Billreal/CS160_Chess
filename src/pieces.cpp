@@ -145,16 +145,16 @@ vector<vector<Coordinate>> chessPieces::listAllMove(int name, int color, int coo
     Coordinate prevCoord = coordinate;
     chessName prevName = this->name;
     chessColor prevColor = this->color;
-    
+
     coordinate = Coordinate(coordX, coordY);
     this->name = chessName(name);
     this->color = chessColor(color);
-    
+
     vector<vector<Coordinate>> result = listAllMove();
-    
+
     coordinate = prevCoord;
     this->name = prevName;
     this->color = prevColor;
-    
+
     return result;
 }

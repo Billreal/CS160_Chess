@@ -220,6 +220,7 @@ public:
 
     void setBackground(colorRGBA bg);
 
+    void reloadFen();
     vector<Coordinate> getPossibleMoves(int pieceName, int color, int coordX, int coordY);
     vector<Coordinate> getPossibleMoves(char piece, int coordX, int coordY);
 

@@ -1,159 +1,94 @@
 #include "./../include/communicator.h"
-#include <filesystem>
-#include <direct.h>
-#include <chrono>
-#include <thread>
+
 Communicator::Communicator()
 {
-    // Get current working directory
-    char cwd[1024];
-    if (_getcwd(cwd, sizeof(cwd)) == nullptr)
-    {
-        std::cerr << "Failed to get current working directory" << std::endl;
-        isRunning = false;
-        return;
-    }
-
-    // Build path relative to executable
-    std::filesystem::path exePath = std::filesystem::absolute(
-        std::filesystem::path(cwd) /
-        "stockfish.exe");
-
-    // Debug output
-    std::cerr << "Looking for Stockfish at: " << exePath << std::endl;
-
-    // Verify executable exists
-    if (!std::filesystem::exists(exePath))
-    {
-        std::cerr << "Cannot find Stockfish at: " << exePath << std::endl;
-        isRunning = false;
-        return;
-    }
-
-    // Open process with verified path
-    process = _popen(exePath.string().c_str(), "w+");
-    if (!process)
-    {
-        std::cerr << "Engine initialization failure: " << strerror(errno) << std::endl;
-        isRunning = false;
-        return;
-    }
-
+    inputFile.open("tmp/stockfish_output.txt");
+    process = _popen("stockfish.exe > tmp/stockfish_output.txt", "w");
     isRunning = true;
-    std::cerr << "Successfully started Stockfish at: " << exePath << std::endl;
-}
-
-void Communicator::init()
-{
-    writeCommand("uci");
-}
-void Communicator::writeCommand(const std::string &command)
-{
-    if (!process) return;
-    std::cerr << int(fprintf(process, "%s\n", (command + "\n").c_str())) << " ";
-    fflush(process);
-    // fclose(process);
-    std::cerr << command << "\n";
-}
-
-void Communicator::waitForReady()
-{
-    writeCommand("isready");
-    std::string line;
-    do
-        line = readLine();
-    while (line.find("readyok") == std::string::npos);
-}
-
-std::string Communicator::readLine()
-{
-    char buffer[8192];
-    if (fgets(buffer, sizeof buffer, process) != nullptr)
-        return std::string(buffer);
-    return "";
-}
-
-void Communicator::stop()
-{
-    if (!isRunning)
-        return;
-
-    std::cerr << "Stopping engine..." << std::endl;
-
-    // Send quit command
-
-    // Flush all buffers
-    fflush(process);
-
-    // Read any remaining output
-    std::cerr << process << "\n";
-    char buffer[8192];
-    writeCommand("quit");
-    while (fgets(buffer, sizeof(buffer), process) != nullptr)
-    {
-        std::cerr << buffer << "\n";
-        // Discard remaining output
-    }
-
-    // Force immediate termination
-    // system("taskkill /F /IM stockfish_windows-x86-64.exe > nul 2>&1");
-    std::cerr << "Done killing";
-    // Close pipe without waiting
-    _pclose(process);
-
-    isRunning = false;
-    process = nullptr;
-    std::cerr << "Engine stopped" << std::endl;
-
-    isRunning = false;
-    process = nullptr;
-    std::cerr << "Engine stopped" << std::endl;
 }
 
 Communicator::~Communicator()
 {
     stop();
 }
-
-std::string Communicator::getBestMove(const std::string &fen, int depth)
+void Communicator::stop()
 {
-    std::stringstream str;
-    str << "position " << fen;
-    writeCommand(str.str());
-    str.clear();
-    str << "go depth " << depth;
-    writeCommand(str.str());
-    std::string line;
-    std::string bestMove;
-    while (true)
-    {
-        line = readLine();
-        if (line.find("bestmove") != std::string::npos)
-        {
-            bestMove = line.substr(9, 5);
-            if (bestMove.back() == ' ')
-                bestMove = bestMove.substr(0, 4);
-            return bestMove;
-        }
-    }
+    pclose(process);
+    isRunning = false;
+}
+
+void Communicator::writeCommand(const std::string &command)
+{
+    std::cerr << "written to stockfish: \n" << command << "\n";
+    fprintf(process, (command + "\n").c_str());
+    fflush(process);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+}
+
+void Communicator::init()
+{
+    writeCommand("uci");
+    writeCommand("setoption name Hash value 128");
+    writeCommand("setoption name Threads value 1");
+    writeCommand("isready");
+}
+
+void Communicator::startNewGame()
+{
+    writeCommand("ucinewgame");
+    writeCommand("isready");
+}
+
+std::string Communicator::getLineStockfishOutput()
+{
+    std::string res;
+    std::getline(inputFile, res);
+    return res;
 }
 
 std::string Communicator::getMove(const std::string &fen, Difficulty difficulty)
 {
     if (difficulty == Difficulty::EASY)
-        return getBestMove(fen, 2);
-
+        return getBestMove(fen, 2, 100);
     if (difficulty == Difficulty::MEDIUM)
-        return getBestMove(fen, 5);
-
+        return getBestMove(fen, 5, 500);
     if (difficulty == Difficulty::HARD)
-        return getBestMove(fen, 10);
-
-    return getBestMove(fen, 20);
+        return getBestMove(fen, 10, 2000);
+    return getBestMove(fen, 20, 5000);
 }
 
-bool Communicator::startNewGame()
+std::string Communicator::getBestMove(const std::string &fen, int depth, int maximumTime)
 {
-    writeCommand("ucinewgame");
-    return true;
+    std::string fenSet = "position fen " + fen;
+    std::string goCommand = "go depth " + std::to_string(depth) + " movetime " + std::to_string(maximumTime);
+    writeCommand(fenSet);
+    writeCommand(goCommand);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(maximumTime + 200));
+    std::string response = readResponse();
+
+    size_t pos = response.find("bestmove");
+    if (pos != std::string::npos)
+    {
+        std::istringstream iss(response.substr(pos));
+        std::string token, bestMove;
+        iss >> token >> bestMove;
+        return bestMove;
+    }
+    return "";
+}
+
+std::string Communicator::readResponse()
+{
+    std::string line;
+    std::string response;
+    while (std::getline(inputFile, line))
+    {
+        response += line + "\n";
+        if (line.find("bestmove") != std::string::npos)
+        {
+            break;
+        }
+    }
+    return response;
 }

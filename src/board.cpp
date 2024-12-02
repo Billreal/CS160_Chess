@@ -115,20 +115,14 @@ void Board::loadTextures()
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
-void Board::renderPieces()
+void Board::renderFen()
 {
-    // std::cerr << "Begin rendering\n";
-    // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    // drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
-
-    splitSequence(STARTING_FEN);
+    splitSequence(CURRENT_FEN);
 
     if (checkBoardSeq())
     {
         parseFENToBoard(boardSequence[0]);
         renderFromBoard();
-        // renderStartingPosition(boardSequence[0]);
         updatePlayerStatus(boardSequence[1]);
         updateCastlingStatus(boardSequence[2]);
         updateEnPassantStatus(boardSequence[3]);
@@ -193,59 +187,7 @@ bool Board::checkBoardSeq()
     return true;
 }
 
-void Board::renderPiecesFromFen(std::string fen)
-{
-    // Translate FEN notation's chess placements into an 8x8 array
-    // Direction: Left to Right, Top down
-    std::cerr << fen << "\n";
-    for (int i = 0, row = 0, column = 0; i <= fen.length(); i++)
-    {
-        char currentChar = fen[i];
-
-        // If there's a chess piece, place it on the board
-        int pieceIndicator;
-        if (isChessPiece(currentChar, pieceIndicator))
-        {
-            // board[row][column++] = currentChar;
-            if (0 <= pieceIndicator && pieceIndicator < 12)
-            {
-                // Draw chess piece
-                drawTexture(pieces[pieceIndicator],
-                            SIDE_MARGIN + SIDE_LENGTH * column,
-                            TOP_MARGIN + SIDE_LENGTH * row,
-                            SIDE_LENGTH,
-                            SIDE_LENGTH);
-                column++;
-                // std::cerr << row << " " << column << "\n";
-            }
-            continue;
-        }
-
-        // If there's no available piece, place a '*' onto the board instead
-        if (isNum(currentChar))
-        {
-            int blankLength = int(currentChar) - '0';
-            column = column + blankLength;
-            // while (length--)
-            // {
-            //     board[row][column++] = '*';
-            // }
-            continue;
-        }
-
-        // Moves to the next row
-        if (currentChar == '/')
-        {
-            row++;
-            // Reset column initial position on a new row
-            column = 0;
-            continue;
-        }
-    }
-}
-
 // Game update fuction
-
 void Board::updateFen(std::string fen)
 {
     if (fen.empty())
@@ -618,23 +560,11 @@ void Board::render()
 
 void Board::renderFromFen()
 {
-    setRendererColor(backgroundColor);
-    clear();
+    // setRendererColor(backgroundColor);
+    // clear();
     // background.render(backgroundColor);
     renderChessboard();
-    splitSequence(CURRENT_FEN);
-
-    if (checkBoardSeq())
-    {
-        parseFENToBoard(boardSequence[0]);
-        renderFromBoard();
-        // renderStartingPosition(boardSequence[0]);
-        updatePlayerStatus(boardSequence[1]);
-        updateCastlingStatus(boardSequence[2]);
-        updateEnPassantStatus(boardSequence[3]);
-        countHalfmove(boardSequence[4]);
-        countTotalMove(boardSequence[5]);
-    }
+    renderFen();
 }
 
 void Board::setBackground(colorRGBA bg)

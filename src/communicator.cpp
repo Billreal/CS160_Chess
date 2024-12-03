@@ -64,9 +64,9 @@ std::string Communicator::getBestMove(const std::string &fen, int depth, int max
     writeCommand(fenSet);
     writeCommand(goCommand);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(maximumTime + 200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(maximumTime + 500));
     std::string response = readResponse();
-
+    if (response == "checkmate") return response;
     size_t pos = response.find("bestmove");
     if (pos != std::string::npos)
     {
@@ -86,9 +86,7 @@ std::string Communicator::readResponse()
     {
         response += line + "\n";
         if (line.find("bestmove") != std::string::npos)
-        {
             break;
-        }
     }
     return response;
 }

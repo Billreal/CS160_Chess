@@ -836,16 +836,19 @@ bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordin
 
     // * Check if the king is in check after moving the piece
 }
-bool Board::testMovesKingSafety(Coordinate dest, char movingPiece)
+bool Board::testMovesKingSafety(Coordinate src, Coordinate dest, char movingPiece)
 {
     char currentBoard[BOARD_SIZE][BOARD_SIZE];
     int destRow = dest.getY();
     int destCol = dest.getX();
+    int srcRow = src.getY();
+    int srcCol = src.getX();
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             currentBoard[i][j] = board[i][j];
 
     board[destRow][destCol] = movingPiece;
+    board[srcRow][srcCol] = '0';
     bool res = isKingSafe(getPieceColor(movingPiece));
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
@@ -1141,7 +1144,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         return false;
     log("Done checking violation of moving rules");
     // * Check king's safety
-    if (!testMovesKingSafety(dest, piece))
+    if (!testMovesKingSafety(src, dest, piece))
         return false;
     log("done checking King's safety");
     // * Record change in position

@@ -231,7 +231,7 @@ public:
 
     bool isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate dest);
     bool isKingSafe(int color);
-    bool testMovesKingSafety(Coordinate dest, char movingPiece);
+    bool testMovesKingSafety(Coordinate src, Coordinate dest, char movingPiece);
 
     bool isInBound(Coordinate coord);
     void markMoved(Coordinate dest);

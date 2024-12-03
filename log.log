@@ -1,11 +1,11 @@
-r n b q k b n r
-p p p p p p p p
+0 Q 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 k 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
-P P P P P P P P
-R N B Q K B N R
 
 written to stockfish: 
 uci
@@ -20,1002 +20,554 @@ ucinewgame
 written to stockfish: 
 isready
 written to stockfish: 
-position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 
+position fen 1Q6/8/R5k1/6p1/2p5/2P1K3/8/8 b - - 3 53 
 written to stockfish: 
 go depth 5 movetime 500
-e2e4
-Moved P from 4 6 to 4 4
+g6g7
+Moved k from 6 2 to 6 1
+7 3
+7 1
+6 1
+5 1
+5 3
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-r n b q k b n r
-p p p p p p p p
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 0 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P 0 P P P
-R N B Q K B N R
-
-written to stockfish: 
-position fen rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e5 0 1 
-written to stockfish: 
-go depth 5 movetime 500
-e7e5
-Moved p from 4 1 to 4 3
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b q k b n r
-p p p p 0 p p p
-0 0 0 0 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 0 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P 0 P P P
-R N B Q K B N R
-
-written to stockfish: 
-position fen rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e4 0 2 
-written to stockfish: 
-go depth 5 movetime 500
-d1h5
-Moved Q from 3 7 to 7 3
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b q k b n r
-p p p p 0 p p p
-0 0 0 0 0 0 0 0
-0 0 0 0 p 0 0 Q
-0 0 0 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P 0 P P P
-R N B 0 K B N R
-
-written to stockfish: 
-position fen rnbqkbnr/pppp1ppp/8/4p2Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2 
-written to stockfish: 
-go depth 5 movetime 500
-d7d6
-Moved p from 3 1 to 3 2
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b q k b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 Q
-0 0 0 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P 0 P P P
-R N B 0 K B N R
-
-written to stockfish: 
-position fen rnbqkbnr/ppp2ppp/3p4/4p2Q/4P3/8/PPPP1PPP/RNB1KBNR w KQkq - 0 3 
-written to stockfish: 
-go depth 5 movetime 500
-f1c4
-Moved B from 5 7 to 2 4
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b q k b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 Q
-0 0 B 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P 0 P P P
-R N B 0 K 0 N R
-
-written to stockfish: 
-position fen rnbqkbnr/ppp2ppp/3p4/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 1 3 
-written to stockfish: 
-go depth 5 movetime 500
-d8d7
-Moved q from 3 0 to 3 1
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b 0 k b n r
-p p p q 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 Q
-0 0 B 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P 0 P P P
-R N B 0 K 0 N R
-
-written to stockfish: 
-position fen rnb1kbnr/pppq1ppp/3p4/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 2 4 
-written to stockfish: 
-go depth 5 movetime 500
-h5e2
-Moved Q from 7 3 to 4 6
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b 0 k b n r
-p p p q 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P Q P P P
-R N B 0 K 0 N R
-
-written to stockfish: 
-position fen rnb1kbnr/pppq1ppp/3p4/4p3/2B1P3/8/PPPPQPPP/RNB1K1NR b KQkq - 3 4 
-written to stockfish: 
-go depth 5 movetime 500
-e8d8
-Moved k from 4 0 to 3 0
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b k 0 b n r
-p p p q 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 0 0
-0 0 0 0 0 0 0 0
-P P P P Q P P P
-R N B 0 K 0 N R
-
-written to stockfish: 
-position fen rnbk1bnr/pppq1ppp/3p4/4p3/2B1P3/8/PPPPQPPP/RNB1K1NR w KQ - 4 5 
-written to stockfish: 
-go depth 5 movetime 500
-b1c3
-Moved N from 1 7 to 2 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b k 0 b n r
-p p p q 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 0 0
-0 0 N 0 0 0 0 0
-P P P P Q P P P
-R 0 B 0 K 0 N R
-
-written to stockfish: 
-position fen rnbk1bnr/pppq1ppp/3p4/4p3/2B1P3/2N5/PPPPQPPP/R1B1K1NR b KQ - 5 5 
-written to stockfish: 
-go depth 5 movetime 500
-d7e8
-Moved q from 3 1 to 4 0
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b k q b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 0 0
-0 0 N 0 0 0 0 0
-P P P P Q P P P
-R 0 B 0 K 0 N R
-
-written to stockfish: 
-position fen rnbkqbnr/ppp2ppp/3p4/4p3/2B1P3/2N5/PPPPQPPP/R1B1K1NR w KQ - 6 6 
-written to stockfish: 
-go depth 5 movetime 500
-d2d3
-Moved P from 3 6 to 3 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r n b k q b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 0 0
-0 0 N P 0 0 0 0
-P P P 0 Q P P P
-R 0 B 0 K 0 N R
-
-written to stockfish: 
-position fen rnbkqbnr/ppp2ppp/3p4/4p3/2B1P3/2NP4/PPP1QPPP/R1B1K1NR b KQ - 0 6 
-written to stockfish: 
-go depth 5 movetime 500
-b8c6
-Moved n from 1 0 to 2 2
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 b k q b n r
-p p p 0 0 p p p
-0 0 n p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 0 0
-0 0 N P 0 0 0 0
-P P P 0 Q P P P
-R 0 B 0 K 0 N R
-
-written to stockfish: 
-position fen r1bkqbnr/ppp2ppp/2np4/4p3/2B1P3/2NP4/PPP1QPPP/R1B1K1NR w KQ - 1 7 
-written to stockfish: 
-go depth 5 movetime 500
-g1f3
-Moved N from 6 7 to 5 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 b k q b n r
-p p p 0 0 p p p
-0 0 n p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 0 0
-0 0 N P 0 N 0 0
-P P P 0 Q P P P
-R 0 B 0 K 0 0 R
-
-written to stockfish: 
-position fen r1bkqbnr/ppp2ppp/2np4/4p3/2B1P3/2NP1N2/PPP1QPPP/R1B1K2R b KQ - 2 7 
-written to stockfish: 
-go depth 5 movetime 500
-c8g4
-Moved b from 2 0 to 6 4
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 p p p
-0 0 n p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 b 0
-0 0 N P 0 N 0 0
-P P P 0 Q P P P
-R 0 B 0 K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp2ppp/2np4/4p3/2B1P1b1/2NP1N2/PPP1QPPP/R1B1K2R w KQ - 3 8 
-written to stockfish: 
-go depth 5 movetime 500
-h2h3
-Moved P from 7 6 to 7 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 p p p
-0 0 n p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B 0 P 0 b 0
-0 0 N P 0 N 0 P
-P P P 0 Q P P 0
-R 0 B 0 K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp2ppp/2np4/4p3/2B1P1b1/2NP1N1P/PPP1QPP1/R1B1K2R b KQ - 0 8 
-written to stockfish: 
-go depth 5 movetime 500
-c6d4
-Moved n from 2 2 to 3 4
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B n P 0 b 0
-0 0 N P 0 N 0 P
-P P P 0 Q P P 0
-R 0 B 0 K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp2ppp/3p4/4p3/2BnP1b1/2NP1N1P/PPP1QPP1/R1B1K2R w KQ - 1 9 
-written to stockfish: 
-go depth 5 movetime 500
-e2d1
-Moved Q from 4 6 to 3 7
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B n P 0 b 0
-0 0 N P 0 N 0 P
-P P P 0 0 P P 0
-R 0 B Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp2ppp/3p4/4p3/2BnP1b1/2NP1N1P/PPP2PP1/R1BQK2R b KQ - 2 9 
-written to stockfish: 
-go depth 5 movetime 500
-g4f3
-Moved b from 6 4 to 5 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B n P 0 0 0
-0 0 N P 0 b 0 P
-P P P 0 0 P P 0
-R 0 B Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp2ppp/3p4/4p3/2BnP3/2NP1b1P/PPP2PP1/R1BQK2R w KQ - 0 10 
-written to stockfish: 
-go depth 5 movetime 500
-g2f3
-Moved P from 6 6 to 5 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 p p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B n P 0 0 0
-0 0 N P 0 P 0 P
-P P P 0 0 P 0 0
-R 0 B Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp2ppp/3p4/4p3/2BnP3/2NP1P1P/PPP2P2/R1BQK2R b KQ - 0 10 
-written to stockfish: 
-go depth 5 movetime 500
-f7f5
-Moved p from 5 1 to 5 3
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p p 0 0
-0 0 B n P 0 0 0
-0 0 N P 0 P 0 P
-P P P 0 0 P 0 0
-R 0 B Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp3pp/3p4/4pp2/2BnP3/2NP1P1P/PPP2P2/R1BQK2R w KQ f4 0 11 
-written to stockfish: 
-go depth 5 movetime 500
-c1e3
-Moved B from 2 7 to 4 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p p 0 0
-0 0 B n P 0 0 0
-0 0 N P B P 0 P
-P P P 0 0 P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp3pp/3p4/4pp2/2BnP3/2NPBP1P/PPP2P2/R2QK2R b KQ - 1 11 
-written to stockfish: 
-go depth 5 movetime 500
-f5f4
-Moved p from 5 3 to 5 4
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B n P p 0 0
-0 0 N P B P 0 P
-P P P 0 0 P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp3pp/3p4/4p3/2BnPp2/2NPBP1P/PPP2P2/R2QK2R w KQ - 0 12 
-written to stockfish: 
-go depth 5 movetime 500
-e3d4
-Moved B from 4 5 to 3 4
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 p 0 0 0
-0 0 B B P p 0 0
-0 0 N P 0 P 0 P
-P P P 0 0 P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp3pp/3p4/4p3/2BBPp2/2NP1P1P/PPP2P2/R2QK2R b KQ - 0 12 
-written to stockfish: 
-go depth 5 movetime 500
-e5d4
-Moved p from 4 3 to 3 4
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 B p P p 0 0
-0 0 N P 0 P 0 P
-P P P 0 0 P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp3pp/3p4/8/2BpPp2/2NP1P1P/PPP2P2/R2QK2R w KQ - 0 13 
-written to stockfish: 
-go depth 5 movetime 500
-c3e2
-Moved N from 2 5 to 4 6
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k q b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 B p P p 0 0
-0 0 0 P 0 P 0 P
-P P P 0 N P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2kqbnr/ppp3pp/3p4/8/2BpPp2/3P1P1P/PPP1NP2/R2QK2R b KQ - 1 13 
-written to stockfish: 
-go depth 5 movetime 500
-e8e5
-Moved q from 4 0 to 4 3
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k 0 b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 q 0 0 0
-0 0 B p P p 0 0
-0 0 0 P 0 P 0 P
-P P P 0 N P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2k1bnr/ppp3pp/3p4/4q3/2BpPp2/3P1P1P/PPP1NP2/R2QK2R w KQ - 2 14 
-written to stockfish: 
-go depth 5 movetime 500
-c2c3
-Moved P from 2 6 to 2 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k 0 b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 q 0 0 0
-0 0 B p P p 0 0
-0 0 P P 0 P 0 P
-P P 0 0 N P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2k1bnr/ppp3pp/3p4/4q3/2BpPp2/2PP1P1P/PP2NP2/R2QK2R b KQ - 0 14 
-written to stockfish: 
-go depth 5 movetime 500
-d4c3
-Moved p from 3 4 to 2 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k 0 b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 q 0 0 0
-0 0 B 0 P p 0 0
-0 0 p P 0 P 0 P
-P P 0 0 N P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2k1bnr/ppp3pp/3p4/4q3/2B1Pp2/2pP1P1P/PP2NP2/R2QK2R w KQ - 0 15 
-written to stockfish: 
-go depth 5 movetime 500
-b2c3
-Moved P from 1 6 to 2 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k 0 b n r
-p p p 0 0 0 p p
-0 0 0 p 0 0 0 0
-0 0 0 0 q 0 0 0
-0 0 B 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2k1bnr/ppp3pp/3p4/4q3/2B1Pp2/2PP1P1P/P3NP2/R2QK2R b KQ - 0 15 
-written to stockfish: 
-go depth 5 movetime 500
-c7c6
-Moved p from 2 1 to 2 2
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k 0 b n r
-p p 0 0 0 0 p p
-0 0 p p 0 0 0 0
-0 0 0 0 q 0 0 0
-0 0 B 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 Q K 0 0 R
-
-written to stockfish: 
-position fen r2k1bnr/pp4pp/2pp4/4q3/2B1Pp2/2PP1P1P/P3NP2/R2QK2R w KQ - 0 16 
-written to stockfish: 
-go depth 5 movetime 500
-d1b3
-Moved Q from 3 7 to 1 5
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k 0 b n r
-p p 0 0 0 0 p p
-0 0 p p 0 0 0 0
-0 0 0 0 q 0 0 0
-0 0 B 0 P p 0 0
-0 Q P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
-
-written to stockfish: 
-position fen r2k1bnr/pp4pp/2pp4/4q3/2B1Pp2/1QPP1P1P/P3NP2/R3K2R b KQ - 1 16 
-written to stockfish: 
-go depth 5 movetime 500
-d6d5
-Moved p from 3 2 to 3 3
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-r 0 0 k 0 b n r
-p p 0 0 0 0 p p
+0 Q 0 0 0 0 0 0
+0 0 0 0 0 0 k 0
+R 0 0 0 0 0 0 0
+0 0 0 0 0 0 p 0
 0 0 p 0 0 0 0 0
-0 0 0 p q 0 0 0
-0 0 B 0 P p 0 0
-0 Q P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen r2k1bnr/pp4pp/2p5/3pq3/2B1Pp2/1QPP1P1P/P3NP2/R3K2R w KQ - 0 17 
+position fen 1Q6/6k1/R7/6p1/2p5/2P1K3/8/8 w - - 4 54 
 written to stockfish: 
 go depth 5 movetime 500
-b3b7
-Moved Q from 1 5 to 1 1
+a6a7
+Moved R from 0 2 to 0 1
+0 3
+0 4
+0 5
+0 6
+0 7
+1 2
+2 2
+3 2
+4 2
+5 2
+6 2
+7 2
+0 1
+0 0
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-r 0 0 k 0 b n r
-p Q 0 0 0 0 p p
+0 Q 0 0 0 0 0 0
+R 0 0 0 0 0 k 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 p 0
 0 0 p 0 0 0 0 0
-0 0 0 p q 0 0 0
-0 0 B 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen r2k1bnr/pQ4pp/2p5/3pq3/2B1Pp2/2PP1P1P/P3NP2/R3K2R b KQ - 0 17 
+position fen 1Q6/R5k1/8/6p1/2p5/2P1K3/8/8 b - - 5 54 
 written to stockfish: 
 go depth 5 movetime 500
-a8b8
-Moved r from 0 0 to 1 0
+g7h6
+Moved k from 6 1 to 7 2
+6 2
+7 2
+5 2
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 r 0 k 0 b n r
-p Q 0 0 0 0 p p
+0 Q 0 0 0 0 0 0
+R 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 k
+0 0 0 0 0 0 p 0
 0 0 p 0 0 0 0 0
-0 0 0 p q 0 0 0
-0 0 B 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1r1k1bnr/pQ4pp/2p5/3pq3/2B1Pp2/2PP1P1P/P3NP2/R3K2R w KQ - 1 18 
+position fen 1Q6/R7/7k/6p1/2p5/2P1K3/8/8 w - - 6 55 
 written to stockfish: 
 go depth 5 movetime 500
-b7f7
-Moved Q from 1 1 to 5 1
+b8h8
+Moved Q from 1 0 to 7 0
+1 1
+1 2
+1 3
+1 4
+1 5
+1 6
+1 7
+2 1
+3 2
+4 3
+5 4
+6 5
+7 6
+2 0
+3 0
+4 0
+5 0
+6 0
+7 0
+0 0
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 r 0 k 0 b n r
-p 0 0 0 0 Q p p
+0 0 0 0 0 0 0 Q
+R 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 k
+0 0 0 0 0 0 p 0
 0 0 p 0 0 0 0 0
-0 0 0 p q 0 0 0
-0 0 B 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1r1k1bnr/p4Qpp/2p5/3pq3/2B1Pp2/2PP1P1P/P3NP2/R3K2R b KQ - 2 18 
+position fen 7Q/R7/7k/6p1/2p5/2P1K3/8/8 b - - 7 55 
 written to stockfish: 
 go depth 5 movetime 500
-g8h6
-Moved n from 6 0 to 7 2
+h6g6
+Moved k from 7 2 to 6 2
+6 2
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 r 0 k 0 b 0 r
-p 0 0 0 0 Q p p
-0 0 p 0 0 0 0 n
-0 0 0 p q 0 0 0
-0 0 B 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 Q
+R 0 0 0 0 0 0 0
+0 0 0 0 0 0 k 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1r1k1b1r/p4Qpp/2p4n/3pq3/2B1Pp2/2PP1P1P/P3NP2/R3K2R w KQ - 3 19 
+position fen 7Q/R7/6k1/6p1/2p5/2P1K3/8/8 w - - 8 56 
 written to stockfish: 
 go depth 5 movetime 500
-f7a7
-Moved Q from 5 1 to 0 1
+a7a6
+Moved R from 0 1 to 0 2
+0 2
+0 3
+0 4
+0 5
+0 6
+0 7
+1 1
+2 1
+3 1
+4 1
+5 1
+6 1
+7 1
+0 0
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 r 0 k 0 b 0 r
-Q 0 0 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 p q 0 0 0
-0 0 B 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 Q
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 k 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1r1k1b1r/Q5pp/2p4n/3pq3/2B1Pp2/2PP1P1P/P3NP2/R3K2R b KQ - 0 19 
+position fen 7Q/8/R5k1/6p1/2p5/2P1K3/8/8 b - - 9 56 
 written to stockfish: 
 go depth 5 movetime 500
-d5c4
-Moved p from 3 3 to 2 4
+g6f7
+Moved k from 6 2 to 5 1
+5 1
+5 3
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 r 0 k 0 b 0 r
-Q 0 0 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p 0 P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 N P 0 0
-R 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 Q
+0 0 0 0 0 k 0 0
+R 0 0 0 0 0 0 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1r1k1b1r/Q5pp/2p4n/4q3/2p1Pp2/2PP1P1P/P3NP2/R3K2R w KQ - 0 20 
+position fen 7Q/5k2/R7/6p1/2p5/2P1K3/8/8 w - - 10 57 
 written to stockfish: 
 go depth 5 movetime 500
-e2d4
-Moved N from 4 6 to 3 4
+a6a7
+Moved R from 0 2 to 0 1
+0 3
+0 4
+0 5
+0 6
+0 7
+1 2
+2 2
+3 2
+4 2
+5 2
+6 2
+7 2
+0 1
+0 0
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 r 0 k 0 b 0 r
-Q 0 0 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-R 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 Q
+R 0 0 0 0 k 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1r1k1b1r/Q5pp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/R3K2R b KQ - 1 20 
+position fen 7Q/R4k2/8/6p1/2p5/2P1K3/8/8 b - - 11 57 
 written to stockfish: 
 go depth 5 movetime 500
-b8c8
-Moved r from 1 0 to 2 0
+f7g6
+Moved k from 5 1 to 6 2
+6 2
+4 2
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 0 r k 0 b 0 r
-Q 0 0 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-R 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 Q
+R 0 0 0 0 0 0 0
+0 0 0 0 0 0 k 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 2rk1b1r/Q5pp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/R3K2R w KQ - 2 21 
+position fen 7Q/R7/6k1/6p1/2p5/2P1K3/8/8 w - - 12 58 
 written to stockfish: 
 go depth 5 movetime 500
-a1b1
-Moved R from 0 7 to 1 7
+h8h7
+Moved Q from 7 0 to 7 1
+7 1
+7 2
+7 3
+7 4
+7 5
+7 6
+7 7
+6 0
+5 0
+4 0
+3 0
+2 0
+1 0
+0 0
+6 1
+5 2
+4 3
+3 4
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 0 r k 0 b 0 r
-Q 0 0 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 R 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 0 Q
+0 0 0 0 0 0 k 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 2rk1b1r/Q5pp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/1R2K2R b K - 3 21 
+position fen 8/R6Q/6k1/6p1/2p5/2P1K3/8/8 b - - 13 58 
 written to stockfish: 
 go depth 5 movetime 500
-d8e8
-Moved k from 3 0 to 4 0
+g6f6
+Moved k from 6 2 to 5 2
+5 2
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 0 r 0 k b 0 r
-Q 0 0 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 R 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 0 Q
+0 0 0 0 0 k 0 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 2r1kb1r/Q5pp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/1R2K2R w K - 4 22 
+position fen 8/R6Q/5k2/6p1/2p5/2P1K3/8/8 w - - 14 59 
 written to stockfish: 
 go depth 5 movetime 500
-a7b7
-Moved Q from 0 1 to 1 1
+h7g7
+Moved Q from 7 1 to 6 1
+7 2
+7 3
+7 4
+7 5
+7 6
+7 7
+7 0
+6 0
+6 1
+5 1
+4 1
+3 1
+2 1
+1 1
+6 2
+5 3
+4 4
+3 5
+2 6
+1 7
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 0 r 0 k b 0 r
-0 Q 0 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 R 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 Q 0
+0 0 0 0 0 k 0 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 2r1kb1r/1Q4pp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/1R2K2R b K - 5 22 
+position fen 8/R5Q1/5k2/6p1/2p5/2P1K3/8/8 b - - 15 59 
 written to stockfish: 
 go depth 5 movetime 500
-c8c7
-Moved r from 2 0 to 2 1
+f6f5
+Moved k from 5 2 to 5 3
+5 3
+4 2
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 0 0 0 k b 0 r
-0 Q r 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 R 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 Q 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 k p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 4kb1r/1Qr3pp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/1R2K2R w K - 6 23 
+position fen 8/R5Q1/8/5kp1/2p5/2P1K3/8/8 w - - 16 60 
 written to stockfish: 
 go depth 5 movetime 500
-b7b8
-Moved Q from 1 1 to 1 0
+g7d7
+Moved Q from 6 1 to 3 1
+6 2
+7 2
+7 1
+7 0
+6 0
+5 0
+5 1
+4 1
+3 1
+2 1
+1 1
+5 2
+4 3
+3 4
+6 3
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 Q 0 0 k b 0 r
-0 0 r 0 0 0 p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 R 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 Q 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 k p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1Q2kb1r/2r3pp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/1R2K2R b K - 7 23 
+position fen 8/R2Q4/8/5kp1/2p5/2P1K3/8/8 b - - 17 60 
 written to stockfish: 
 go depth 5 movetime 500
-e8f7
-Moved k from 4 0 to 5 1
+f5g6
+Moved k from 5 3 to 6 2
+6 2
+5 2
+4 3
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 Q 0 0 0 b 0 r
-0 0 r 0 0 k p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 R 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 Q 0 0 0 0
+0 0 0 0 0 0 k 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1Q3b1r/2r2kpp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/1R2K2R w K - 8 24 
+position fen 8/R2Q4/6k1/6p1/2p5/2P1K3/8/8 w - - 18 61 
 written to stockfish: 
 go depth 5 movetime 500
-b1b7
-Moved R from 1 7 to 1 1
+d7f7
+Moved Q from 3 1 to 5 1
+3 2
+3 3
+3 4
+3 5
+3 6
+3 7
+4 2
+5 3
+6 4
+7 5
+4 1
+5 1
+6 1
+7 1
+4 0
+3 0
+2 0
+2 1
+1 1
+2 2
+1 3
+0 4
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 Q 0 0 0 b 0 r
-0 R r 0 0 k p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 0 0 Q 0 0
+0 0 0 0 0 0 k 0
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1Q3b1r/1Rr2kpp/2p4n/4q3/2pNPp2/2PP1P1P/P4P2/4K2R b K - 9 24 
+position fen 8/R4Q2/6k1/6p1/2p5/2P1K3/8/8 b - - 19 61 
 written to stockfish: 
 go depth 5 movetime 500
-f8d6
-Moved b from 5 0 to 3 2
+g6h6
+Moved k from 6 2 to 7 2
+7 2
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 Q 0 0 0 0 0 r
-0 R r 0 0 k p p
-0 0 p b 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 0 0 Q 0 0
+0 0 0 0 0 0 0 k
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1Q5r/1Rr2kpp/2pb3n/4q3/2pNPp2/2PP1P1P/P4P2/4K2R w K - 10 25 
+position fen 8/R4Q2/7k/6p1/2p5/2P1K3/8/8 w - - 20 62 
 written to stockfish: 
 go depth 5 movetime 500
-b7c7
-Moved R from 1 1 to 2 1
+f7h7
+Moved Q from 5 1 to 7 1
+5 2
+5 3
+5 4
+5 5
+5 6
+5 7
+6 2
+7 3
+6 1
+7 1
+6 0
+5 0
+4 0
+4 1
+3 1
+2 1
+1 1
+4 2
+3 3
+2 4
 Done checking out of bound
 Done checking violation of moving rules
 done checking King's safety
 Done updating current piece
 after: 
-0 Q 0 0 0 0 0 r
-0 0 R 0 0 k p p
-0 0 p b 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 0 0 0 K 0 0 R
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 0 Q
+0 0 0 0 0 0 0 k
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 
 written to stockfish: 
-position fen 1Q5r/2R2kpp/2pb3n/4q3/2pNPp2/2PP1P1P/P4P2/4K2R b K - 0 25 
+position fen 8/R6Q/7k/6p1/2p5/2P1K3/8/8 b - - 21 62 
 written to stockfish: 
 go depth 5 movetime 500
-d6c7
-Moved b from 3 2 to 2 1
-Done checking out of bound
-Done checking violation of moving rules
-done checking King's safety
-Done updating current piece
-after: 
-0 Q 0 0 0 0 0 r
-0 0 b 0 0 k p p
-0 0 p 0 0 0 0 n
-0 0 0 0 q 0 0 0
-0 0 p N P p 0 0
-0 0 P P 0 P 0 P
-P 0 0 0 0 P 0 0
-0 0 0 0 K 0 0 R
+(none)
+End game
+0 0 0 0 0 0 0 0
+R 0 0 0 0 0 0 Q
+0 0 0 0 0 0 0 k
+0 0 0 0 0 0 p 0
+0 0 p 0 0 0 0 0
+0 0 P 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 

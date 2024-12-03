@@ -49,11 +49,11 @@ std::string Communicator::getLineStockfishOutput()
 std::string Communicator::getMove(const std::string &fen, Difficulty difficulty)
 {
     if (difficulty == Difficulty::EASY)
-        return getBestMove(fen, 2, 100);
+        return getBestMove(fen, 1, 100);
     if (difficulty == Difficulty::MEDIUM)
-        return getBestMove(fen, 5, 500);
+        return getBestMove(fen, 3, 500);
     if (difficulty == Difficulty::HARD)
-        return getBestMove(fen, 10, 2000);
+        return getBestMove(fen, 8, 2000);
     return getBestMove(fen, 20, 5000);
 }
 

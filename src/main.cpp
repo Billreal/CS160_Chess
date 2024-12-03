@@ -335,9 +335,9 @@ int main(int argc, char *args[])
     Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
     Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
     Button settingsBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Settings", loadMenuFont);
-    Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Theme: Modern", loadMenuFont);
-    Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Theme: Futuristic", loadMenuFont);
-    Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Theme: Classic", loadMenuFont);
+    Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
+    Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
+    Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
                                    {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
@@ -413,7 +413,7 @@ int main(int argc, char *args[])
     while (running)
     {
         // Check if the window is running or not
-        std::cerr << isOn << "\n";
+        // std::cerr << isOn << "\n";
         // Start menu
         // Clear screen
         switch (isOn)

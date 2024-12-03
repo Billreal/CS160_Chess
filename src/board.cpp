@@ -1397,7 +1397,7 @@ string Board::boardstateToFEN(int color)
 bool Board::nextMove(int color, Communicator &communicator)
 {
     std::string fen = boardstateToFEN(color);
-    std::string bestMove = communicator.getMove(fen, Difficulty::MEDIUM);
+    std::string bestMove = communicator.getMove(fen, Difficulty::EASY);
     // std::cerr << bestMove << std::endl;
     if (bestMove == "(none)")
     {

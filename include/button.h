@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 #include <string>
 #include "color.h"
@@ -9,6 +9,7 @@ class Button
 {
 private:
     SDL_Rect rect = {-1, -1, -1, -1};
+    SDL_Rect buttonArea = {-1 , -1, -1, -1};
     SDL_Color color;
     SDL_Color textColor;
     std::string text;
@@ -30,12 +31,12 @@ public:
 
     void render();
     void renderSVG(std::string svgFilePath, double scale);
+
+    // Clear renderer
+    void clear() const { SDL_RenderClear(renderer); }
+
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }
-    // Clear renderer
-    void clear();
-    // void clear() const { SDL_RenderClear(renderer); };
-    // void erase();
 
     void handleEvent(SDL_Event *e);
     bool clicked() const;

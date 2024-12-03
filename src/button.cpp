@@ -126,7 +126,7 @@ void Button::render()
     int textHeight = textSurface->h;
     SDL_FreeSurface(textSurface);
     SDL_Rect textRect = {rect.x + (rect.w - textWidth) / 2, rect.y + (rect.h - textHeight) / 2, textWidth, textHeight};
-    std::cerr << textRect.x << " " << textRect.y << " " << textRect.w << " " << textRect.h << "\n";
+    // std::cerr << textRect.x << " " << textRect.y << " " << textRect.w << " " << textRect.h << "\n";
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_DestroyTexture(textTexture);
 }
@@ -156,25 +156,25 @@ void Button::handleEvent(SDL_Event *e)
 
     switch (e->type)
     {
-        case SDL_MOUSEMOTION:
+    case SDL_MOUSEMOTION:
+    {
+        if (inside)
         {
-            if (inside)
-            {
-                isHovered = true;
-            }
-            else
-            {
-                isHovered = false;
-            }
-            break;
+            isHovered = true;
         }
-        case SDL_MOUSEBUTTONDOWN:
+        else
         {
-            if (inside)
-            {
-                isClicked = true;
-            }
+            isHovered = false;
         }
+        break;
+    }
+    case SDL_MOUSEBUTTONDOWN:
+    {
+        if (inside)
+        {
+            isClicked = true;
+        }
+    }
     }
 }
 
@@ -207,8 +207,3 @@ void Button::setColor(colorRGBA color)
 //     if (rect.x == -1 || rect.y == -1 || rect.w == -1 || rect.h == -1) return;
 //     renderRect(rect, bgColor);
 // }
-
-void Button::clear()
-{
-    renderRect(rect, bgColor);
-}

@@ -537,9 +537,9 @@ void Board::render()
     renderCheckmate();
     renderStalemate();
     renderFromBoard();
-    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
-             << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
-             << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
+    // std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
+    //           << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
+    //           << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
 }
@@ -1204,7 +1204,7 @@ void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
 
 void Board::setRenderCheck(chessColor color)
 {
-    std::cerr << "Entering set render check\n";
+    // std::cerr << "Entering set render check\n";
     Coordinate kingPlace = Coordinate(-1, -1);
     if (color != COLOR_NONE)
         for (int row = 0; row < BOARD_SIZE; row++)
@@ -1212,9 +1212,12 @@ void Board::setRenderCheck(chessColor color)
                 if (board[row][col] == getPieceFromInfo(KING, color))
                 {
                     kingPlace = Coordinate(col, row); // col as x, row as y
-                    std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
+                    dangerCoordinate = kingPlace;
+
+                    // std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
+                    return;
                 }
-    dangerCoordinate = kingPlace;
+    // dangerCoordinate = kingPlace;
 }
 
 void Board::renderCheck()
@@ -1242,16 +1245,16 @@ void Board::enablePawnPromotion(int x, int y) // In cell coordinate
         return;
     if (x < 4)
     {
-        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH +        SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         knightButtonCoordinate = Coordinate((x + 1) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
-        rookButtonCoordinate = Coordinate((x + 2) * SIDE_LENGTH +   SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        rookButtonCoordinate = Coordinate((x + 2) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         bishopButtonCoordinate = Coordinate((x + 3) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
     }
     else
     {
-        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH +        SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        queenButtonCoordinate = Coordinate(x * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         knightButtonCoordinate = Coordinate((x - 1) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
-        rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH +   SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
+        rookButtonCoordinate = Coordinate((x - 2) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
         bishopButtonCoordinate = Coordinate((x - 3) * SIDE_LENGTH + SIDE_MARGIN, menuOriginY * SIDE_LENGTH + TOP_MARGIN);
     }
     if ((queenButtonCoordinate.getX() + queenButtonCoordinate.getY()) % 2 == 1)
@@ -1264,21 +1267,21 @@ void Board::enablePawnPromotion(int x, int y) // In cell coordinate
         knightPromotionCellColor = bishopPromotionCellColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
         queenPromotionCellColor = rookPromotionCellColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
     }
-    std::cerr << queenButtonCoordinate.getX() << " " << queenButtonCoordinate.getY() << "\n"
-              << knightButtonCoordinate.getX() << " " << knightButtonCoordinate.getY() << "\n"
-              << rookButtonCoordinate.getX() << " " << rookButtonCoordinate.getY() << "\n"
-              << bishopButtonCoordinate.getX() << " " << bishopButtonCoordinate.getY() << "\n";
+    // std::cerr << queenButtonCoordinate.getX() << " " << queenButtonCoordinate.getY() << "\n"
+    //           << knightButtonCoordinate.getX() << " " << knightButtonCoordinate.getY() << "\n"
+    //           << rookButtonCoordinate.getX() << " " << rookButtonCoordinate.getY() << "\n"
+    //           << bishopButtonCoordinate.getX() << " " << bishopButtonCoordinate.getY() << "\n";
     SDL_Color blackColor = {black.getR(), black.getG(), black.getA(), black.getB()};
     queenPromotion = Button(renderer, queenButtonCoordinate.getX(), queenButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, queenPromotionCellColor, blackColor, ".", font);
     knightPromotion = Button(renderer, knightButtonCoordinate.getX(), knightButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, knightPromotionCellColor, blackColor, ".", font);
     rookPromotion = Button(renderer, rookButtonCoordinate.getX(), rookButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, rookPromotionCellColor, blackColor, ".", font);
     bishopPromotion = Button(renderer, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, bishopPromotionCellColor, blackColor, ".", font);
     promotionCoord = Coordinate(x, y);
-    std::cerr << "Done initializing\n";
+    // std::cerr << "Done initializing\n";
 }
 void Board::renderPawnPromotion()
 {
-    std::cerr << "Entering rendering of pawn promotion\n";
+    // std::cerr << "Entering rendering of pawn promotion\n";
     Button *arr[4] = {&queenPromotion, &knightPromotion, &rookPromotion, &bishopPromotion};
     Coordinate coord[4] = {queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate};
     for (int i = 0; i < 4; i++)
@@ -1292,19 +1295,19 @@ void Board::renderPawnPromotion()
             arr[i]->setColor(primaryColor);
         arr[i]->render();
     }
-    std::cerr << "Done calling rendering button\n";
+    // std::cerr << "Done calling rendering button\n";
     renderPiece(QUEEN, promotionColor, queenButtonCoordinate.getX(), queenButtonCoordinate.getY());
     renderPiece(KNIGHT, promotionColor, knightButtonCoordinate.getX(), knightButtonCoordinate.getY());
     renderPiece(ROOK, promotionColor, rookButtonCoordinate.getX(), rookButtonCoordinate.getY());
     renderPiece(BISHOP, promotionColor, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY());
-    std::cerr << "Done rendering pieces\n";
+    // std::cerr << "Done rendering pieces\n";
 }
 
 bool Board::handlePawnPromotion(SDL_Event *ev)
 {
     int row = promotionCoord.getY();
     int col = promotionCoord.getX();
-    std::cerr << row << " " << col << "\n";
+    // std::cerr << row << " " << col << "\n";
     vector<Button *> button = {&queenPromotion, &rookPromotion, &bishopPromotion, &knightPromotion};
     for (Button *currentButton : button)
         currentButton->handleEvent(ev);
@@ -1395,10 +1398,10 @@ string Board::boardstateToFEN()
                 countBlank = 0;
             }
         }
-            if (countBlank != 0)
-                returnStr << countBlank;
-            if (row != BOARD_SIZE - 1)
-                returnStr << '/';
+        if (countBlank != 0)
+            returnStr << countBlank;
+        if (row != BOARD_SIZE - 1)
+            returnStr << '/';
     }
     returnStr << " ";
     returnStr << (isPlayerTurn ? 'w' : 'b');
@@ -1416,7 +1419,7 @@ string Board::boardstateToFEN()
         if (blackQueenSide)
             returnStr << 'q';
     }
-    returnStr<< " ";
+    returnStr << " ";
     if (enPassant)
     {
         char x = enPassantCoord.getX() + 'a';

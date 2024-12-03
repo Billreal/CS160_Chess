@@ -118,10 +118,14 @@ void Board::loadTextures()
     // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
+void Board::startNewGame()
+{
+    CURRENT_FEN = STARTING_FEN;
+    renderFen();
+}
 void Board::renderFen()
 {
     splitSequence(CURRENT_FEN);
-    CURRENT_FEN = STARTING_FEN;
     reloadFen();
 }
 void Board::reloadFen()

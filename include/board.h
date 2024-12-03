@@ -115,6 +115,7 @@ public:
     void countTotalMove(std::string num);
 
     // Main functions
+    void startNewGame();
     void renderChessboard(colorRGBA primary, colorRGBA secondary);
 
     void renderChessboard();

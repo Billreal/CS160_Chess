@@ -16,12 +16,8 @@ void Button::updateColor(SDL_Color newColor)
     color = newColor;
 }
 
-// void Button::updateColor(SDL_Color newColor)
-// {
-//     color = newColor;
-// }
-
 Button::Button() {};
+
 void Button::renderRect(SDL_Rect rect, SDL_Color color)
 {
     // std::cerr << "Rendeing rect at: " << rect.x << " " << rect.y << "\n";
@@ -31,7 +27,7 @@ void Button::renderRect(SDL_Rect rect, SDL_Color color)
 }
 void Button::renderRect(SDL_Rect rect, colorRGBA color)
 {
-    std::cerr << "Rendeing rect at: " << rect.x << " " << rect.y << "\n";
+    // std::cerr << "Rendeing rect at: " << rect.x << " " << rect.y << "\n";
     SDL_Color newColor = {color.getR(), color.getG(), color.getB(), color.getA()};
     renderRect(rect, newColor);
 }

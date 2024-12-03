@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 // #define SDL_MAIN_HANDLED
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 #include <string>
@@ -12,13 +12,13 @@
 #include "./../include/color.h"
 #include "./../include/colorScheme.h"
 #include "./../include/board.h"
-#include "./../include/pieces.h"
 #include "./../include/coordinate.h"
 #include "./../include/button.h"
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 
-using std::cerr, std::cout;
+using std::cerr;
+using std::cout;
 
 SDL_Renderer *renderer;
 SDL_Window *window;
@@ -118,7 +118,7 @@ void loadGame(Board &board, const std::string &filename)
         saveFile.close();
         return;
     }
-    // std::cerr << FEN << "\n";
+    // // std::cerr << FEN << "\n";
     board.updateFen(FEN);
 
     saveFile.close();
@@ -206,8 +206,8 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    // TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
-    TTF_Font *font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 20);
+    TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
+    // TTF_Font *font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 20);
     if (!font)
     {
         SDL_Log("Failed to load font: %s", TTF_GetError());
@@ -297,7 +297,8 @@ int main(int argc, char *args[])
     // Initialize load menu
     SDL_Rect loadInfos = {60, 80, 900, 850};
     SDL_Texture *loadMenuTexture = loadTexture("./assets/load.png");
-    TTF_Font *loadMenuFont = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
+    TTF_Font *loadMenuFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 24);
+    // TTF_Font *loadMenuFont = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
     if (!loadMenuFont)
     {
         SDL_Log("Failed to load Load_menu font: %s", TTF_GetError());
@@ -324,7 +325,7 @@ int main(int argc, char *args[])
             if (files[i].substr(j, 4) == ".txt")
             {
                 name = files[i].substr(j - 7, 7);
-                // std::cerr << name << "\n";
+                // // std::cerr << name << "\n";
                 break;
             }
         }
@@ -396,20 +397,16 @@ int main(int argc, char *args[])
             currentThemeIndex = (currentThemeIndex + 1) % 3;
             currentThemeButton = &themeList[currentThemeIndex].button;
             board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
-            currentThemeButton->resetClicked(); // Reset button state
+            currentThemeButton->resetClicked();              // Reset button state
+            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+            SDL_RenderClear(renderer);
+
+            GameGUILoad();
+            board.render();
+
+            SDL_RenderPresent(renderer);
         }
     };
-
-    // Reset variables at the end of a frame
-    auto GameGUIReset = [&]()
-    {
-        boardIsRendered = false;
-        board.clear();
-        saveBtn.clear();
-        loadBtnInGame.clear();
-        settingsBtn.clear();
-    };
-
     while (running)
     {
         // Check if the window is running or not
@@ -453,7 +450,9 @@ int main(int argc, char *args[])
                 SDL_Log("Button clicked!");
                 board.updateFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
                 isOn = GAME;
+
                 startBtn.resetClicked(); // Reset button state
+                break;
             }
             if (loadBtn.clicked())
             {
@@ -579,19 +578,19 @@ int main(int argc, char *args[])
 
             if (!renderOnce)
             {
-                SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
+                SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
                 SDL_RenderClear(renderer);
-                board.renderFen();
-                // board.present();
+
+                GameGUILoad();
+                board.renderFromFen();
+
+                SDL_RenderPresent(renderer);
                 renderOnce = true;
-                continue;
             }
 
             // Check if the window is running or not
             while (SDL_PollEvent(&event) != 0)
             {
-                // if (1)
-                // {
                 switch (event.type)
                 {
                 case SDL_QUIT:
@@ -605,7 +604,7 @@ int main(int argc, char *args[])
                         break;
                     if (!board.testInbound(event.button))
                     {
-                        std::cerr << "Clicked outside of board\n";
+                        // Clicked outside of board
                         // * Not pressed inside of chessboard
 
                         if (isUnderPromotion)
@@ -614,72 +613,82 @@ int main(int argc, char *args[])
                                 isUnderPromotion = false;
                                 currentMoveColor = 1 - currentMoveColor;
                                 // the current move color is switched, opposite of promoted piece
-                                if (1 || !boardIsRendered)
-                                {
-                                    board.render();
-                                    boardIsRendered = true;
-                                }
+
+                                // Frame handling
+                                SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                                SDL_RenderClear(renderer);
+
+                                GameGUILoad();
+                                board.render();
+
+                                SDL_RenderPresent(renderer);
                             }
                         break;
                     }
-                    std::cerr << "Clicked inside of board\n";
+
+                    // Clicked inside of board
                     if (isUnderPromotion || isEnded)
                         break;
-                    std::cerr << "Passing game state conditions\n";
 
+                    // Passing game state conditions
                     Coordinate pickedPlace = board.getPieceCoord(event.button);
                     pickedPiece = board.getPiece(pickedPlace);
                     int pickedColor = board.getPieceColor(pickedPiece);
 
+                    // Correct color
                     if (pickedColor != currentMoveColor)
                         break;
-                    std::cerr << "Correct color\n";
 
+                    // Picked place inside of board
                     prevCoordinate = pickedPlace;
                     if (pickedPlace == Coordinate(-1, -1))
                         break;
-                    std::cerr << "Picked place inside of board\n";
 
+                    // Legal movement
                     if (pickedPiece == '0')
                         break;
-                    std::cerr << "Legal movement\n";
 
                     isLeftMouseHolding = true;
-                    // cerr << pickedPiece << " " << pickedPlace.getX() << " " << pickedPlace.getY() << "\n";
 
                     possibleMoves.clear();
                     possibleCaptures.clear();
                     possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-
                     possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    if (1 || !boardIsRendered)
-                    {
-                        board.render();
-                        boardIsRendered = true;
-                    }
-                    // board.log("Done present");
+
+                    // Frame handling
+                    SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                    SDL_RenderClear(renderer);
+
+                    GameGUILoad();
+                    board.render();
+
+                    SDL_RenderPresent(renderer);
+
                     board.deleteCell(pickedPlace);
-                    // board.log("Done delete");
                     break;
                 }
                 case SDL_MOUSEMOTION:
                 {
                     if (isLeftMouseHolding == false) // Mouse hover
                         break;
-                    if (1 || !boardIsRendered)
-                    {
-                        board.render();
-                        boardIsRendered = true;
-                    }
+                    // Frame handling
+                    SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                    SDL_RenderClear(renderer);
+
+                    GameGUILoad();
+                    board.render();
                     board.renderMove(possibleMoves, possibleCaptures);
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                    // board.log("Done render animation");
+
+                    SDL_RenderPresent(renderer);
+
                     break;
                 }
                 case SDL_MOUSEBUTTONUP:
                 {
                     if (event.button.button != SDL_BUTTON_LEFT)
                         break;
+
                     if (isLeftMouseHolding)
                     {
                         isLeftMouseHolding = false;
@@ -689,31 +698,44 @@ int main(int argc, char *args[])
                         {
                             // Dropping at same place
                             board.writeCell(droppedPlace, pickedPiece);
-                            if (1 || !boardIsRendered)
-                            {
-                                board.render();
-                                boardIsRendered = true;
-                            }
+
+                            // // Frame handling
+                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                            SDL_RenderClear(renderer);
+
+                            GameGUILoad();
+                            board.render();
                             board.renderMove(possibleMoves, possibleCaptures);
+
+                            SDL_RenderPresent(renderer);
                         }
                         else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                         {
-                            // board.present();
+                            // Check if there is any pawn under promotion
                             if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
                             {
                                 isUnderPromotion = true;
                                 board.enablePawnPromotion(droppedPlace.getX(), droppedPlace.getY());
                             }
+
+                            // Check if there is any king being checked
                             board.setRenderCheck(COLOR_NONE);
+
+                            // Update Castling informations
                             board.updateCastlingStatus();
+
                             prevCoordinate = Coordinate(-1, -1);
                             pickedPiece = ' ';
 
-                            if (1 || !boardIsRendered)
-                            {
-                                board.render();
-                                boardIsRendered = true;
-                            }
+                            // Frame handling
+                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                            SDL_RenderClear(renderer);
+
+                            GameGUILoad();
+                            board.render();
+
+                            SDL_RenderPresent(renderer);
+
                             if (!isUnderPromotion)
                             {
                                 if (currentMoveColor == WHITE)
@@ -724,42 +746,93 @@ int main(int argc, char *args[])
                         }
                         else // invalid move
                         {
+                            // break;
                             board.writeCell(prevCoordinate, pickedPiece);
-                            if (1 || !boardIsRendered)
-                            {
-                                board.render();
-                                boardIsRendered = true;
-                            }
+                            std::cerr.flush();
+                            std::cerr << "Done putting back to original\n";
+                            board.debugBoard();
+                            // Frame handling
+                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                            SDL_RenderClear(renderer);
+
+                            GameGUILoad();
+                            board.render();
+
+                            SDL_RenderPresent(renderer);
+                            std::cerr << "done rendering\n";
                         }
                     }
                     if (!isUnderPromotion)
                     {
-                        board.highlightKingStatus(isEnded, boardIsRendered);
+                        if (board.isCheckmate(WHITE) || board.isCheckmate(BLACK))
+                        {
+                            isEnded = true;
+                            if (board.isCheckmate(WHITE))
+                                board.setRenderCheckmate(WHITE);
+                            else
+                                board.setRenderCheckmate(BLACK);
+                            SDL_Log("End game: Checkmate");
+
+                            // Frame handling
+                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                            SDL_RenderClear(renderer);
+
+                            GameGUILoad();
+                            board.render();
+
+                            SDL_RenderPresent(renderer);
+                            break;
+                        }
+                        if (!board.isKingSafe(WHITE) || !board.isKingSafe(BLACK))
+                        {
+                            if (!board.isKingSafe(WHITE))
+                                board.setRenderCheck(WHITE);
+                            else
+                                board.setRenderCheck(BLACK);
+
+                            // Frame handling
+                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                            SDL_RenderClear(renderer);
+
+                            GameGUILoad();
+                            board.render();
+
+                            SDL_RenderPresent(renderer);
+                            break;
+                        }
+                        if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
+                        {
+                            isEnded = true;
+                            if (board.isStatemate(WHITE))
+                                board.setRenderCheckmate(WHITE);
+                            else
+                                board.setRenderCheckmate(BLACK);
+                            SDL_Log("End game: Statemate");
+
+                            // Frame handling
+                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                            SDL_RenderClear(renderer);
+
+                            GameGUILoad();
+                            board.render();
+
+                            SDL_RenderPresent(renderer);
+                            break;
+                        }
                     }
-                    // board.log(event.button, "released");
-                    // std::cerr << board.boardstateToFEN(currentMoveColor) << "\n"
-                    //           << currentMoveColor << "\n\n";
                     break;
                 }
+                    // default:
+                    // board.present();
                 }
                 SDL_RenderPresent(renderer);
                 GameGUIButtonsHandling();
             }
 
-            if (1 || !boardIsRendered)
-            {
-                board.render();
-                SDL_RenderPresent(renderer);
-                boardIsRendered = true;
-            }
-
-            // Update screen
-
             GameGUIButtonsClicked();
 
-            GameGUIReset();
-
             break;
+        }
         case SAVE:
         {
             renderOnce = false;
@@ -773,7 +846,6 @@ int main(int argc, char *args[])
             isOn = START;
             std::cerr << "Currently in Settings ";
             break;
-        }
         }
         }
     }

@@ -156,25 +156,25 @@ void Button::handleEvent(SDL_Event *e)
 
     switch (e->type)
     {
-        case SDL_MOUSEMOTION:
+    case SDL_MOUSEMOTION:
+    {
+        if (inside)
         {
-            if (inside)
-            {
-                isHovered = true;
-            }
-            else
-            {
-                isHovered = false;
-            }
-            break;
+            isHovered = true;
         }
-        case SDL_MOUSEBUTTONDOWN:
+        else
         {
-            if (inside)
-            {
-                isClicked = true;
-            }
+            isHovered = false;
         }
+        break;
+    }
+    case SDL_MOUSEBUTTONDOWN:
+    {
+        if (inside)
+        {
+            isClicked = true;
+        }
+    }
     }
 }
 
@@ -207,8 +207,3 @@ void Button::setColor(colorRGBA color)
 //     if (rect.x == -1 || rect.y == -1 || rect.w == -1 || rect.h == -1) return;
 //     renderRect(rect, bgColor);
 // }
-
-void Button::clear()
-{
-    renderRect(rect, bgColor);
-}

@@ -1209,8 +1209,10 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         for (int j = 0; j < 8; j++)
             if (board[i][j] != '0')
                 prevTotalPiece--;
-    if (prevTotalPiece != 0 || getPieceName(piece) == PAWN) halfmoves = 0;
-    else halfmoves++;
+    if (prevTotalPiece != 0 || getPieceName(piece) == PAWN)
+        halfmoves = 0;
+    else
+        halfmoves++;
     return true;
 }
 
@@ -1540,4 +1542,91 @@ string Board::boardstateToFEN(int color)
 {
     isPlayerTurn = !color;
     return boardstateToFEN();
+}
+
+bool Board::nextMove(int color, Communicator &communicator)
+{
+    std::string fen = boardstateToFEN(color);
+    std::string bestMove = communicator.getMove(fen, Difficulty::MEDIUM);
+    std::cerr << bestMove << std::endl;
+    if (bestMove == "(none)")
+    {
+        std::cerr << "End game" << std::endl;
+        debugBoard();
+        return false;
+    }
+    int srcCol = bestMove[0] - 'a';
+    int srcRow = '8' - bestMove[1];
+    int destCol = bestMove[2] - 'a';
+    int destRow = '8' - bestMove[3];
+
+    char promotionPiece = '0';
+    if (bestMove.length() > 4)
+        promotionPiece = bestMove[4];
+    if (color == WHITE)
+        promotionPiece = promotionPiece - 'a' + 'A';
+    // std::cerr << "previous: " << std::endl;
+    // board.debugBoard();
+    // std::cerr << fen << std::endl;
+    char piece = getPiece(srcCol, srcRow);
+
+    std::cerr << "Moved " << piece << " from " << srcCol << " " << srcRow << " to " << destCol << " " << destRow << "\n";
+
+    // std::cerr << "Deleted: \n";
+    // board.debugBoard();
+
+    auto moveList = getPossibleMoves(piece, srcCol, srcRow);
+    for (auto cell : moveList)
+        std::cerr << cell.getX() << " " << cell.getY() << "\n";
+    auto captureList = getPossibleCaptures(piece, srcCol, srcRow);
+    for (auto cell : captureList)
+        std::cerr << cell.getX() << " " << cell.getY() << "\n";
+    makeMove(Coordinate(srcCol, srcRow), Coordinate(destCol, destRow), piece, moveList, captureList);
+    if (bestMove.length() != 4)
+    {
+        piece = promotionPiece;
+        writeCell(destCol, destRow, piece);
+    }
+    updateCastlingStatus();
+    std::cerr << "after: \n";
+    debugBoard();
+    std::cerr << "Reached end of nextMove\n";
+    return true;
+}
+
+void Board::highlightKingStatus(bool &isEnded)
+{
+    if (isCheckmate(WHITE) || isCheckmate(BLACK))
+    {
+        isEnded = true;
+        if (isCheckmate(WHITE))
+            setRenderCheckmate(WHITE);
+        else
+            setRenderCheckmate(BLACK);
+        SDL_Log("End game: Checkmate");
+        render();
+        return;
+    }
+    if (!isKingSafe(WHITE) || !isKingSafe(BLACK))
+    {
+        if (!isKingSafe(WHITE))
+            setRenderCheck(WHITE);
+        else
+            setRenderCheck(BLACK);
+        render();
+        return;
+    }
+    if (isStalemate(WHITE) || isStalemate(BLACK))
+    {
+        isEnded = true;
+        if (isStalemate(WHITE))
+            setRenderStalemate(WHITE);
+        else
+            setRenderStalemate(BLACK);
+        SDL_Log("End game: Statemate");
+        render();
+        return;
+    }
+
+    std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";
 }

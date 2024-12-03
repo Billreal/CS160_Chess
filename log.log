@@ -8,7 +8,7 @@ R 0 0 0 0 0 k 0
 0 0 0 0 0 0 0 0
 
 written to stockfish: 
-uci
+uci 
 written to stockfish: 
 setoption name Hash value 128
 written to stockfish: 

@@ -225,7 +225,9 @@ int main(int argc, char *args[])
     // }
 
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
-
+    Communicator communicator;
+    communicator.init();
+    communicator.startNewGame();
     // Handling SDL_events
     SDL_Event event;
 
@@ -237,6 +239,7 @@ int main(int argc, char *args[])
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
     bool isLeftMouseHolding = false;
+    bool isSinglePlayer = true;
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
     SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
@@ -490,6 +493,19 @@ int main(int argc, char *args[])
         }
         case GAME:
         {
+            // * Computer's turn
+            if (isSinglePlayer && currentMoveColor == BLACK)
+            {
+                board.nextMove(currentMoveColor, communicator);
+                currentMoveColor = 1 - currentMoveColor;
+                cerr << "done alternating moves\n";
+                board.render();
+                cerr << "done rendering\n";
+                board.present();
+                cerr << "done presenting\n";
+                board.highlightKingStatus(isEnded);
+                break;
+            }
             SDL_RenderCopy(renderer, rightPanelTexture, NULL, &rightPanelInfos);
             SDL_RenderCopy(renderer, bottomPanelTexture, NULL, &bottomPanelInfos);
             // std::cerr << isOnStartMenu << "\n";
@@ -564,8 +580,8 @@ int main(int argc, char *args[])
                         Coordinate pickedPlace = board.getPieceCoord(event.button);
                         pickedPiece = board.getPiece(pickedPlace);
                         int pickedColor = board.getPieceColor(pickedPiece);
-                        // if (pickedColor != currentMoveColor)
-                        //     break;
+                        if (pickedColor != currentMoveColor)
+                            break;
                         // ! Remove this in production
                         std::cerr << "Correct color\n";
                         prevCoordinate = pickedPlace;
@@ -651,39 +667,7 @@ int main(int argc, char *args[])
                         }
                         if (!isUnderPromotion)
                         {
-                            if (board.isCheckmate(WHITE) || board.isCheckmate(BLACK))
-                            {
-                                isEnded = true;
-                                if (board.isCheckmate(WHITE))
-                                    board.setRenderCheckmate(WHITE);
-                                else
-                                    board.setRenderCheckmate(BLACK);
-                                SDL_Log("End game: Checkmate");
-                                board.render();
-                                break;
-                            }
-                            if (!board.isKingSafe(WHITE) || !board.isKingSafe(BLACK))
-                            {
-                                if (!board.isKingSafe(WHITE))
-                                    board.setRenderCheck(WHITE);
-                                else
-                                    board.setRenderCheck(BLACK);
-                                board.render();
-                                break;
-                            }
-                            if (board.isStalemate(WHITE) || board.isStalemate(BLACK))
-                            {
-                                isEnded = true;
-                                if (board.isStalemate(WHITE))
-                                    board.setRenderStalemate(WHITE);
-                                else
-                                    board.setRenderStalemate(BLACK);
-                                SDL_Log("End game: Statemate");
-                                board.render();
-                                break;
-                            }
-
-                            std::cerr << "Statemate status: " << board.isStalemate(WHITE) << " and " << board.isStalemate(BLACK) << "\n";
+                            board.highlightKingStatus(isEnded);
                         }
                         // board.log(event.button, "released");
                         std::cerr << board.boardstateToFEN(currentMoveColor) << "\n" << currentMoveColor << "\n\n";

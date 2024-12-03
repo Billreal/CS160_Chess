@@ -22,7 +22,7 @@ clean:
 # chess: main color board colorScheme background pieces coordinate
 compile:
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER)
-chess: main color board colorScheme coordinate pieces button
+chess: main color board colorScheme coordinate pieces button communicator
 
 main:
 	g++ -c src/main.cpp -o src/main.o $(COMPILER_FLAG) $(LINKER)

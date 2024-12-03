@@ -30,185 +30,89 @@ info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 2 multipv 1 score cp -839 nodes 5 nps 2500 hashfull 0 tbhits 0 time 2 pv g6g7
-info depth 2 seldepth 2 multipv 1 score cp -839 nodes 24 nps 12000 hashfull 0 tbhits 0 time 2 pv g6g7
-info depth 3 seldepth 2 multipv 1 score cp -839 nodes 29 nps 14500 hashfull 0 tbhits 0 time 2 pv g6g7
-info depth 4 seldepth 2 multipv 1 score cp -839 nodes 35 nps 17500 hashfull 0 tbhits 0 time 2 pv g6g7
-info depth 5 seldepth 4 multipv 1 score cp -851 nodes 62 nps 31000 hashfull 0 tbhits 0 time 2 pv g6g7 a6a7 g7h6
-bestmove g6g7 ponder a6a7
+info depth 1 seldepth 4 multipv 1 score cp -30 nodes 24 nps 8000 hashfull 0 tbhits 0 time 3 pv e7e5
+info depth 2 seldepth 2 multipv 1 score cp -24 nodes 54 nps 18000 hashfull 0 tbhits 0 time 3 pv c7c5
+info depth 3 seldepth 2 multipv 1 score cp -12 nodes 79 nps 26333 hashfull 0 tbhits 0 time 3 pv e7e5
+info depth 4 seldepth 2 multipv 1 score cp -12 nodes 100 nps 33333 hashfull 0 tbhits 0 time 3 pv e7e5
+info depth 5 seldepth 3 multipv 1 score cp -9 nodes 132 nps 44000 hashfull 0 tbhits 0 time 3 pv e7e5
+bestmove e7e5
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 851 nodes 53 nps 26500 hashfull 0 tbhits 0 time 2 pv a6a7 g7h6
-info depth 2 seldepth 3 multipv 1 score cp 851 nodes 116 nps 58000 hashfull 0 tbhits 0 time 2 pv a6a7 g7h6
-info depth 3 seldepth 3 multipv 1 score cp 850 nodes 160 nps 80000 hashfull 0 tbhits 0 time 2 pv a6a7 g7h6
-info depth 4 seldepth 3 multipv 1 score cp 850 nodes 205 nps 102500 hashfull 0 tbhits 0 time 2 pv a6a7 g7h6
-info depth 5 seldepth 3 multipv 1 score cp 850 nodes 250 nps 83333 hashfull 0 tbhits 0 time 3 pv a6a7 g7h6
-bestmove a6a7 ponder g7h6
+info depth 1 seldepth 3 multipv 1 score cp -4 nodes 33 nps 16500 hashfull 0 tbhits 0 time 2 pv e5f4
+info depth 2 seldepth 3 multipv 1 score cp 12 nodes 107 nps 53500 hashfull 0 tbhits 0 time 2 pv d7d5
+info depth 3 seldepth 3 multipv 1 score cp 71 nodes 146 nps 73000 hashfull 0 tbhits 0 time 2 pv e5f4
+info depth 4 seldepth 2 multipv 1 score cp 71 nodes 177 nps 88500 hashfull 0 tbhits 0 time 2 pv e5f4
+info depth 5 seldepth 3 multipv 1 score cp 85 nodes 212 nps 106000 hashfull 0 tbhits 0 time 2 pv e5f4
+bestmove e5f4
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 2 multipv 1 score cp -850 nodes 3 nps 1000 hashfull 0 tbhits 0 time 3 pv g7h6
-info depth 2 seldepth 2 multipv 1 score cp -850 nodes 6 nps 2000 hashfull 0 tbhits 0 time 3 pv g7h6
-info depth 3 seldepth 2 multipv 1 score cp -850 nodes 9 nps 3000 hashfull 0 tbhits 0 time 3 pv g7h6
-info depth 4 seldepth 2 multipv 1 score cp -850 nodes 12 nps 4000 hashfull 0 tbhits 0 time 3 pv g7h6
-info depth 5 seldepth 4 multipv 1 score cp -850 nodes 20 nps 6666 hashfull 0 tbhits 0 time 3 pv g7h6 a7a6 h6g7
-bestmove g7h6 ponder a7a6
+info depth 1 seldepth 4 multipv 1 score cp 11 nodes 33 nps 33000 hashfull 0 tbhits 0 time 1 pv b8c6
+info depth 2 seldepth 2 multipv 1 score cp 32 nodes 66 nps 66000 hashfull 0 tbhits 0 time 1 pv a7a6
+info depth 3 seldepth 5 multipv 1 score cp 50 nodes 131 nps 131000 hashfull 0 tbhits 0 time 1 pv b8c6
+info depth 4 seldepth 2 multipv 1 score cp 50 nodes 161 nps 161000 hashfull 0 tbhits 0 time 1 pv b8c6
+info depth 5 seldepth 3 multipv 1 score cp 80 nodes 194 nps 194000 hashfull 0 tbhits 0 time 1 pv b8c6
+bestmove b8c6
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 839 nodes 49 nps 24500 hashfull 0 tbhits 0 time 2 pv a7a6 h6g7
-info depth 2 seldepth 7 multipv 1 score cp 806 nodes 132 nps 66000 hashfull 0 tbhits 0 time 2 pv b8h8 h6g6 a7a6 g6f7
-info depth 3 seldepth 5 multipv 1 score cp 804 nodes 177 nps 88500 hashfull 0 tbhits 0 time 2 pv b8h8 h6g6 a7a6 g6f7
-info depth 4 seldepth 5 multipv 1 score cp 803 nodes 223 nps 111500 hashfull 0 tbhits 0 time 2 pv b8h8 h6g6 a7a6 g6f7
-info depth 5 seldepth 5 multipv 1 score cp 802 nodes 274 nps 137000 hashfull 0 tbhits 0 time 2 pv b8h8 h6g6 a7a6 g6f7
-bestmove b8h8 ponder h6g6
+info depth 1 seldepth 2 multipv 1 score cp 13 nodes 34 nps 17000 hashfull 0 tbhits 0 time 2 pv g8f6
+info depth 2 seldepth 2 multipv 1 score cp 23 nodes 73 nps 36500 hashfull 0 tbhits 0 time 2 pv c6a5
+info depth 3 seldepth 2 multipv 1 score cp 54 nodes 110 nps 55000 hashfull 0 tbhits 0 time 2 pv a7a6
+info depth 4 seldepth 2 multipv 1 score cp 54 nodes 143 nps 71500 hashfull 0 tbhits 0 time 2 pv a7a6
+info depth 5 seldepth 3 multipv 1 score cp 61 nodes 178 nps 59333 hashfull 0 tbhits 0 time 3 pv a7a6
+bestmove a7a6
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 4 multipv 1 score cp -800 nodes 4 nps 2000 hashfull 0 tbhits 0 time 2 pv h6g6 a7a6 g6f7
-info depth 2 seldepth 4 multipv 1 score cp -800 nodes 8 nps 4000 hashfull 0 tbhits 0 time 2 pv h6g6 a7a6 g6f7
-info depth 3 seldepth 4 multipv 1 score cp -800 nodes 12 nps 6000 hashfull 0 tbhits 0 time 2 pv h6g6 a7a6 g6f7
-info depth 4 seldepth 4 multipv 1 score cp -800 nodes 16 nps 8000 hashfull 0 tbhits 0 time 2 pv h6g6 a7a6 g6f7
-info depth 5 seldepth 4 multipv 1 score cp -800 nodes 20 nps 10000 hashfull 0 tbhits 0 time 2 pv h6g6 a7a6 g6f7
-bestmove h6g6 ponder a7a6
+info depth 1 seldepth 3 multipv 1 score cp -34 nodes 36 nps 12000 hashfull 0 tbhits 0 time 3 pv g7g5
+info depth 2 seldepth 2 multipv 1 score cp -34 nodes 74 nps 24666 hashfull 0 tbhits 0 time 3 pv g7g5
+info depth 3 seldepth 2 multipv 1 score cp -34 nodes 107 nps 35666 hashfull 0 tbhits 0 time 3 pv g7g5
+info depth 4 seldepth 2 multipv 1 score cp -34 nodes 141 nps 35250 hashfull 0 tbhits 0 time 4 pv g7g5
+info depth 5 seldepth 3 multipv 1 score cp 53 nodes 177 nps 44250 hashfull 0 tbhits 0 time 4 pv g7g5
+bestmove g7g5
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 800 nodes 62 nps 20666 hashfull 0 tbhits 0 time 3 pv a7a6 g6f7
-info depth 2 seldepth 3 multipv 1 score cp 800 nodes 117 nps 39000 hashfull 0 tbhits 0 time 3 pv a7a6 g6f7
-info depth 3 seldepth 3 multipv 1 score cp 800 nodes 157 nps 52333 hashfull 0 tbhits 0 time 3 pv a7a6 g6f7
-info depth 4 seldepth 3 multipv 1 score cp 800 nodes 201 nps 67000 hashfull 0 tbhits 0 time 3 pv a7a6 g6f7
-info depth 5 seldepth 3 multipv 1 score cp 800 nodes 245 nps 81666 hashfull 0 tbhits 0 time 3 pv a7a6 g6f7
-bestmove a7a6 ponder g6f7
+info depth 1 seldepth 5 multipv 1 score cp 203 nodes 46 nps 23000 hashfull 0 tbhits 0 time 2 pv d8g5
+info depth 2 seldepth 2 multipv 1 score cp 203 nodes 80 nps 40000 hashfull 0 tbhits 0 time 2 pv d8g5
+info depth 3 seldepth 2 multipv 1 score cp 203 nodes 113 nps 56500 hashfull 0 tbhits 0 time 2 pv d8g5
+info depth 4 seldepth 2 multipv 1 score cp 203 nodes 147 nps 73500 hashfull 0 tbhits 0 time 2 pv d8g5
+info depth 5 seldepth 3 multipv 1 score cp 371 nodes 183 nps 91500 hashfull 0 tbhits 0 time 2 pv d8g5
+bestmove d8g5
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 2 multipv 1 score cp -800 nodes 2 nps 2000 hashfull 0 tbhits 0 time 1 pv g6f7
-info depth 2 seldepth 2 multipv 1 score cp -800 nodes 4 nps 2000 hashfull 0 tbhits 0 time 2 pv g6f7
-info depth 3 seldepth 2 multipv 1 score cp -800 nodes 6 nps 3000 hashfull 0 tbhits 0 time 2 pv g6f7
-info depth 4 seldepth 2 multipv 1 score cp -800 nodes 8 nps 4000 hashfull 0 tbhits 0 time 2 pv g6f7
-info depth 5 seldepth 4 multipv 1 score cp -800 nodes 16 nps 8000 hashfull 0 tbhits 0 time 2 pv g6f7 a6a7 f7g6
-bestmove g6f7 ponder a6a7
+info depth 1 seldepth 10 multipv 1 score cp 345 nodes 82 nps 41000 hashfull 0 tbhits 0 time 2 pv f8c5 d3d4 c5d4 d1d4 c6d4
+info depth 2 seldepth 7 multipv 1 score cp 321 nodes 145 nps 48333 hashfull 0 tbhits 0 time 3 pv f8c5 g1h1
+info depth 3 seldepth 3 multipv 1 score cp 321 nodes 195 nps 65000 hashfull 0 tbhits 0 time 3 pv f8c5 g1h1
+info depth 4 seldepth 3 multipv 1 score cp 321 nodes 246 nps 82000 hashfull 0 tbhits 0 time 3 pv f8c5 g1h1
+info depth 5 seldepth 3 multipv 1 score cp 321 nodes 298 nps 99333 hashfull 0 tbhits 0 time 3 pv f8c5 g1h1
+bestmove f8c5 ponder g1h1
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 794 nodes 54 nps 27000 hashfull 0 tbhits 0 time 2 pv a6a7 f7g6
-info depth 2 seldepth 5 multipv 1 score cp 786 nodes 124 nps 62000 hashfull 0 tbhits 0 time 2 pv a6a7 f7g6 a7a6 g6f7
-info depth 3 seldepth 5 multipv 1 score cp 800 nodes 172 nps 86000 hashfull 0 tbhits 0 time 2 pv a6a7 f7g6 h8g7 g6h5
-info depth 4 seldepth 5 multipv 1 score cp 819 nodes 222 nps 111000 hashfull 0 tbhits 0 time 2 pv a6a7 f7g6 h8h7 g6f6
-info depth 5 seldepth 5 multipv 1 score cp 819 nodes 267 nps 133500 hashfull 0 tbhits 0 time 2 pv a6a7 f7g6 h8h7 g6f6
-bestmove a6a7 ponder f7g6
+info depth 1 seldepth 5 multipv 1 score cp 507 nodes 58 nps 19333 hashfull 0 tbhits 0 time 3 pv c5f2 g1f2
+info depth 2 seldepth 3 multipv 1 score cp 507 nodes 116 nps 38666 hashfull 0 tbhits 0 time 3 pv c5f2 g1f2
+info depth 3 seldepth 3 multipv 1 score cp 507 nodes 169 nps 56333 hashfull 0 tbhits 0 time 3 pv c5f2 g1f2
+info depth 4 seldepth 3 multipv 1 score cp 507 nodes 222 nps 74000 hashfull 0 tbhits 0 time 3 pv c5f2 g1f2
+info depth 5 seldepth 3 multipv 1 score cp 507 nodes 275 nps 91666 hashfull 0 tbhits 0 time 3 pv c5f2 g1f2
+bestmove c5f2 ponder g1f2
 info string Available processors: 0-7
 info string Using 1 thread
 info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
 info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 2 multipv 1 score cp -819 nodes 2 nps 1000 hashfull 0 tbhits 0 time 2 pv f7g6
-info depth 2 seldepth 4 multipv 1 score cp -819 nodes 7 nps 3500 hashfull 0 tbhits 0 time 2 pv f7g6 h8h7 g6f6
-info depth 3 seldepth 4 multipv 1 score cp -819 nodes 14 nps 7000 hashfull 0 tbhits 0 time 2 pv f7g6 h8h7 g6f6
-info depth 4 seldepth 4 multipv 1 score cp -819 nodes 19 nps 9500 hashfull 0 tbhits 0 time 2 pv f7g6 h8h7 g6f6
-info depth 5 seldepth 4 multipv 1 score cp -819 nodes 23 nps 11500 hashfull 0 tbhits 0 time 2 pv f7g6 h8h7 g6f6
-bestmove f7g6 ponder h8h7
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 819 nodes 42 nps 42000 hashfull 0 tbhits 0 time 1 pv h8h7 g6f6
-info depth 2 seldepth 4 multipv 1 score cp 848 nodes 98 nps 98000 hashfull 0 tbhits 0 time 1 pv h8g8 g6h5
-info depth 3 seldepth 4 multipv 1 score cp 848 nodes 141 nps 70500 hashfull 0 tbhits 0 time 2 pv h8g8 g6h5
-info depth 4 seldepth 4 multipv 1 score cp 848 nodes 188 nps 94000 hashfull 0 tbhits 0 time 2 pv h8g8 g6h5
-info depth 5 seldepth 5 multipv 1 score cp 859 nodes 243 nps 121500 hashfull 0 tbhits 0 time 2 pv h8h7 g6f6 h7h8 f6g6
-bestmove h8h7 ponder g6f6
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 4 multipv 1 score cp -859 nodes 5 nps 5000 hashfull 0 tbhits 0 time 1 pv g6f6 h7h8 f6g6
-info depth 2 seldepth 4 multipv 1 score cp -859 nodes 10 nps 10000 hashfull 0 tbhits 0 time 1 pv g6f6 h7h8 f6g6
-info depth 3 seldepth 4 multipv 1 score cp -859 nodes 15 nps 15000 hashfull 0 tbhits 0 time 1 pv g6f6 h7h8 f6g6
-info depth 4 seldepth 4 multipv 1 score cp -859 nodes 20 nps 20000 hashfull 0 tbhits 0 time 1 pv g6f6 h7h8 f6g6
-info depth 5 seldepth 4 multipv 1 score cp -859 nodes 25 nps 25000 hashfull 0 tbhits 0 time 1 pv g6f6 h7h8 f6g6
-bestmove g6f6 ponder h7h8
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 859 nodes 52 nps 52000 hashfull 0 tbhits 0 time 1 pv h7h8 f6g6
-info depth 2 seldepth 7 multipv 1 score cp 873 nodes 132 nps 66000 hashfull 0 tbhits 0 time 2 pv h7g7 f6e6 g7g6 e6d5
-info depth 3 seldepth 7 multipv 1 score cp 873 nodes 178 nps 89000 hashfull 0 tbhits 0 time 2 pv h7g7 f6e6 g7g6 e6d5
-info depth 4 seldepth 7 multipv 1 score cp 873 nodes 230 nps 115000 hashfull 0 tbhits 0 time 2 pv h7g7 f6e6 g7g6 e6d5
-info depth 5 seldepth 7 multipv 1 score cp 873 nodes 284 nps 142000 hashfull 0 tbhits 0 time 2 pv h7g7 f6e6 g7g6 e6d5
-bestmove h7g7 ponder f6e6
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 6 multipv 1 score cp -873 nodes 7 nps 3500 hashfull 0 tbhits 0 time 2 pv f6e6 g7g6 e6d5
-info depth 2 seldepth 6 multipv 1 score cp -873 nodes 14 nps 7000 hashfull 0 tbhits 0 time 2 pv f6e6 g7g6 e6d5
-info depth 3 seldepth 6 multipv 1 score cp -880 nodes 28 nps 14000 hashfull 0 tbhits 0 time 2 pv f6e6 g7e7 e6f5
-info depth 4 seldepth 4 multipv 1 score cp -880 nodes 33 nps 16500 hashfull 0 tbhits 0 time 2 pv f6e6 g7e7 e6f5
-info depth 5 seldepth 4 multipv 1 score cp -862 nodes 48 nps 24000 hashfull 0 tbhits 0 time 2 pv f6f5
-bestmove f6f5
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 751 nodes 67 nps 67000 hashfull 0 tbhits 0 time 1 pv g7f8 f5g4
-info depth 2 seldepth 5 multipv 1 score cp 808 nodes 124 nps 62000 hashfull 0 tbhits 0 time 2 pv g7d7 f5e5
-info depth 3 seldepth 3 multipv 1 score cp 804 nodes 162 nps 81000 hashfull 0 tbhits 0 time 2 pv g7d7 f5e5
-info depth 4 seldepth 5 multipv 1 score cp 833 nodes 213 nps 106500 hashfull 0 tbhits 0 time 2 pv g7f8 f5g4 f8f3 g4h4
-info depth 5 seldepth 5 multipv 1 score cp 822 nodes 290 nps 145000 hashfull 0 tbhits 0 time 2 pv g7d7 f5f6 d7e7 f6g6
-bestmove g7d7 ponder f5f6
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 7 multipv 1 score cp -822 nodes 21 nps 21000 hashfull 0 tbhits 0 time 1 pv f5f6
-info depth 2 seldepth 4 multipv 1 score cp -821 nodes 29 nps 29000 hashfull 0 tbhits 0 time 1 pv f5f6 d7e7 f6g6
-info depth 3 seldepth 4 multipv 1 score cp -821 nodes 41 nps 41000 hashfull 0 tbhits 0 time 1 pv f5f6 d7e7 f6g6
-info depth 4 seldepth 4 multipv 1 score cp -821 nodes 48 nps 48000 hashfull 0 tbhits 0 time 1 pv f5f6 d7e7 f6g6
-info depth 5 seldepth 6 multipv 1 score cp -848 nodes 94 nps 94000 hashfull 0 tbhits 0 time 1 pv f5g6 d7h7 g6f6 h7h8 f6g6
-bestmove f5g6 ponder d7h7
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score cp 848 nodes 45 nps 22500 hashfull 0 tbhits 0 time 2 pv d7h7 g6f6
-info depth 2 seldepth 5 multipv 1 score mate 2 nodes 108 nps 54000 hashfull 0 tbhits 0 time 2 pv d7f7 g6h6 f7h7
-info depth 3 seldepth 4 multipv 1 score mate 2 nodes 184 nps 92000 hashfull 0 tbhits 0 time 2 pv d7f7 g6h6 f7h7
-info depth 4 seldepth 4 multipv 1 score mate 2 nodes 255 nps 127500 hashfull 0 tbhits 0 time 2 pv d7f7 g6h6 f7h7
-info depth 5 seldepth 4 multipv 1 score mate 2 nodes 325 nps 162500 hashfull 0 tbhits 0 time 2 pv d7f7 g6h6 f7h7
-bestmove d7f7 ponder g6h6
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 3 multipv 1 score mate -1 nodes 2 nps 2000 hashfull 0 tbhits 0 time 1 pv g6h6 f7h7
-info depth 2 seldepth 3 multipv 1 score mate -1 nodes 4 nps 4000 hashfull 0 tbhits 0 time 1 pv g6h6 f7h7
-info depth 3 seldepth 3 multipv 1 score mate -1 nodes 6 nps 6000 hashfull 0 tbhits 0 time 1 pv g6h6 f7h7
-info depth 4 seldepth 3 multipv 1 score mate -1 nodes 8 nps 8000 hashfull 0 tbhits 0 time 1 pv g6h6 f7h7
-info depth 5 seldepth 3 multipv 1 score mate -1 nodes 10 nps 10000 hashfull 0 tbhits 0 time 1 pv g6h6 f7h7
-bestmove g6h6 ponder f7h7
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 1 seldepth 2 multipv 1 score mate 1 nodes 43 nps 21500 hashfull 0 tbhits 0 time 2 pv f7h7
-info depth 2 seldepth 2 multipv 1 score mate 1 nodes 80 nps 40000 hashfull 0 tbhits 0 time 2 pv f7h7
-info depth 3 seldepth 2 multipv 1 score mate 1 nodes 117 nps 58500 hashfull 0 tbhits 0 time 2 pv f7h7
-info depth 4 seldepth 2 multipv 1 score mate 1 nodes 154 nps 77000 hashfull 0 tbhits 0 time 2 pv f7h7
-info depth 5 seldepth 2 multipv 1 score mate 1 nodes 191 nps 95500 hashfull 0 tbhits 0 time 2 pv f7h7
-bestmove f7h7
-info string Available processors: 0-7
-info string Using 1 thread
-info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
-info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
-info depth 0 score mate 0
-bestmove (none)
+info depth 1 seldepth 5 multipv 1 score cp 630 nodes 65 nps 32500 hashfull 0 tbhits 0 time 2 pv g5c5 c1e3 f4e3 f2f1
+info depth 2 seldepth 6 multipv 1 score cp 539 nodes 141 nps 70500 hashfull 0 tbhits 0 time 2 pv g5h4 f2g1
+info depth 3 seldepth 3 multipv 1 score cp 539 nodes 190 nps 95000 hashfull 0 tbhits 0 time 2 pv g5h4 f2g1
+info depth 4 seldepth 3 multipv 1 score cp 539 nodes 235 nps 117500 hashfull 0 tbhits 0 time 2 pv g5h4 f2g1
+info depth 5 seldepth 3 multipv 1 score cp 539 nodes 287 nps 143500 hashfull 0 tbhits 0 time 2 pv g5h4 f2g1
+bestmove g5h4 ponder f2g1

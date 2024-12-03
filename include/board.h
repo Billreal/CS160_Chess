@@ -6,6 +6,7 @@
 #include <string.h>
 #include <vector>
 #include "button.h"
+#include "communicator.h"
 #include <algorithm>
 // #include "background.h"
 #include "colorScheme.h"
@@ -273,7 +274,10 @@ public:
     void renderPawnPromotion();
     bool handlePawnPromotion(SDL_Event *ev);
 
-
     string boardstateToFEN();
     string boardstateToFEN(int color);
+
+    bool nextMove(int color, Communicator &communicator);
+
+    void highlightKingStatus(bool &isEnded);
 };

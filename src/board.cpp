@@ -1492,3 +1492,12 @@ void Board::highlightKingStatus(bool &isEnded, bool &isRendered)
 
     if(false) std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";
 }
+
+void Board::clear()
+{
+    setRendererColor(bgColor);
+    // SDL_Rect rect = {SIDE_MARGIN, TOP_MARGIN, 8 * SIDE_LENGTH, 8 * SIDE_LENGTH};
+    // SDL_RenderFillRect(renderer, &rect);
+    // renderChessboard();
+    // SDL_RenderClear(renderer);
+}

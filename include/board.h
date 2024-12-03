@@ -80,7 +80,7 @@ public:
     Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor);
     ~Board();
     // Clear renderer
-    void clear() const { SDL_RenderClear(renderer); }
+    void clear();
 
     // Update renderer
     void present() const { SDL_RenderPresent(renderer); }

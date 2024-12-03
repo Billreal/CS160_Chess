@@ -420,6 +420,7 @@ int main(int argc, char *args[])
         {
         case START:
         {
+            renderOnce = false;
             SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
             SDL_RenderClear(renderer);
             while (SDL_PollEvent(&event) != 0)
@@ -474,6 +475,7 @@ int main(int argc, char *args[])
         }
         case LOAD:
         {
+            renderOnce = false;
             std::cerr << "Currently at load\n";
             SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
             SDL_RenderClear(renderer);
@@ -564,6 +566,7 @@ int main(int argc, char *args[])
                 board.nextMove(currentMoveColor, communicator);
                 currentMoveColor = 1 - currentMoveColor;
                 // cerr << "done alternating moves\n";
+                GameGUILoad();
                 board.render();
                 // cerr << "done rendering\n";
                 board.present();
@@ -571,13 +574,13 @@ int main(int argc, char *args[])
                 board.highlightKingStatus(isEnded, boardIsRendered);
                 break;
             }
-            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
-            SDL_RenderClear(renderer);
 
             GameGUILoad();
 
             if (!renderOnce)
             {
+                SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
+                SDL_RenderClear(renderer);
                 board.renderFen();
                 // board.present();
                 renderOnce = true;
@@ -611,7 +614,7 @@ int main(int argc, char *args[])
                                 isUnderPromotion = false;
                                 currentMoveColor = 1 - currentMoveColor;
                                 // the current move color is switched, opposite of promoted piece
-                                if (!boardIsRendered)
+                                if (1 || !boardIsRendered)
                                 {
                                     board.render();
                                     boardIsRendered = true;
@@ -649,7 +652,7 @@ int main(int argc, char *args[])
                     possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
 
                     possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    if (!boardIsRendered)
+                    if (1 || !boardIsRendered)
                     {
                         board.render();
                         boardIsRendered = true;
@@ -663,7 +666,7 @@ int main(int argc, char *args[])
                 {
                     if (isLeftMouseHolding == false) // Mouse hover
                         break;
-                    if (!boardIsRendered)
+                    if (1 || !boardIsRendered)
                     {
                         board.render();
                         boardIsRendered = true;
@@ -686,7 +689,7 @@ int main(int argc, char *args[])
                         {
                             // Dropping at same place
                             board.writeCell(droppedPlace, pickedPiece);
-                            if (!boardIsRendered)
+                            if (1 || !boardIsRendered)
                             {
                                 board.render();
                                 boardIsRendered = true;
@@ -695,11 +698,6 @@ int main(int argc, char *args[])
                         }
                         else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                         {
-                            if (!boardIsRendered)
-                            {
-                                board.render();
-                                boardIsRendered = true;
-                            }
                             // board.present();
                             if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
                             {
@@ -711,7 +709,7 @@ int main(int argc, char *args[])
                             prevCoordinate = Coordinate(-1, -1);
                             pickedPiece = ' ';
 
-                            if (!boardIsRendered)
+                            if (1 || !boardIsRendered)
                             {
                                 board.render();
                                 boardIsRendered = true;
@@ -727,7 +725,7 @@ int main(int argc, char *args[])
                         else // invalid move
                         {
                             board.writeCell(prevCoordinate, pickedPiece);
-                            if (!boardIsRendered)
+                            if (1 || !boardIsRendered)
                             {
                                 board.render();
                                 boardIsRendered = true;
@@ -744,17 +742,18 @@ int main(int argc, char *args[])
                     break;
                 }
                 }
+                SDL_RenderPresent(renderer);
                 GameGUIButtonsHandling();
             }
 
-            if (!boardIsRendered)
+            if (1 || !boardIsRendered)
             {
                 board.render();
+                SDL_RenderPresent(renderer);
                 boardIsRendered = true;
             }
 
             // Update screen
-            SDL_RenderPresent(renderer);
 
             GameGUIButtonsClicked();
 
@@ -763,12 +762,14 @@ int main(int argc, char *args[])
             break;
         case SAVE:
         {
+            renderOnce = false;
             isOn = START;
             std::cerr << "Currently in Save ";
             break;
         }
         case SETTINGS:
         {
+            renderOnce = false;
             isOn = START;
             std::cerr << "Currently in Settings ";
             break;

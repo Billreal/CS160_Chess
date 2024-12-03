@@ -657,8 +657,8 @@ int main(int argc, char *args[])
 
                     GameGUILoad();
                     board.render();
-                    board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                     board.renderMove(possibleMoves, possibleCaptures);
+                    board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
 
                     SDL_RenderPresent(renderer);
 
@@ -724,22 +724,25 @@ int main(int argc, char *args[])
                                     currentMoveColor = WHITE;
                             }
                         }
+                        else // invalid move
+                        {
+                            // break;
+                            board.writeCell(prevCoordinate, pickedPiece);
+                            std::cerr.flush();
+                            std::cerr << "Done putting back to original\n";
+                            board.debugBoard();
+                            // Frame handling
+                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                            SDL_RenderClear(renderer);
+
+                            GameGUILoad();
+                            board.render();
+
+                            SDL_RenderPresent(renderer);
+                            std::cerr << "done rendering\n";
+                        }
                     }
-                    else // invalid move
-                    {
-                        break;
-                        board.writeCell(prevCoordinate, pickedPiece);
-                        // Frame handling
-                        SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                        SDL_RenderClear(renderer);
-
-                        GameGUILoad();
-                        board.render();
-
-                        SDL_RenderPresent(renderer);
-                    }
-
-                    if (isUnderPromotion)
+                    if (!isUnderPromotion)
                     {
                         if (board.isCheckmate(WHITE) || board.isCheckmate(BLACK))
                         {

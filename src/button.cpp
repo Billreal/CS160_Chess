@@ -126,7 +126,7 @@ void Button::render()
     int textHeight = textSurface->h;
     SDL_FreeSurface(textSurface);
     SDL_Rect textRect = {rect.x + (rect.w - textWidth) / 2, rect.y + (rect.h - textHeight) / 2, textWidth, textHeight};
-    std::cerr << textRect.x << " " << textRect.y << " " << textRect.w << " " << textRect.h << "\n";
+    // std::cerr << textRect.x << " " << textRect.y << " " << textRect.w << " " << textRect.h << "\n";
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_DestroyTexture(textTexture);
 }

@@ -120,26 +120,12 @@ void Board::loadTextures()
 
 void Board::renderFen()
 {
-
     splitSequence(CURRENT_FEN);
-    // std::cerr << "Begin rendering\n";
-    // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    // drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
-
     CURRENT_FEN = STARTING_FEN;
     reloadFen();
-
-    // std::cerr << "Rendering Done\n";
-    // flush();
 }
 void Board::reloadFen()
 {
-    // std::cerr << "Begin rendering\n";
-    // drawTexture(pieces[0][1], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    // drawTexture(pieces[0], MARGIN, MARGIN, SIDE_LENGTH, SIDE_LENGTH);
-    // drawTexture(pieces[6], MARGIN + 70 * 7, MARGIN + 70 * 7, SIDE_LENGTH, SIDE_LENGTH);
-
     splitSequence(CURRENT_FEN);
 
     if (checkBoardSeq())
@@ -153,7 +139,6 @@ void Board::reloadFen()
         countTotalMove(boardSequence[5]);
     }
 
-    // std::cerr << "Rendering Done\n";
     // flush();
 }
 
@@ -225,7 +210,6 @@ void Board::updateFen(std::string fen)
 void Board::updatePlayerStatus(std::string player)
 {
     isPlayerTurn = player == "w" ? 1 : 0; // 1 stands for white turn, 0 for black turn
-    // std::cerr << "Player " << isPlayerTurn << " is playing\n";
 }
 
 void Board::updateCastlingStatus(std::string seq)
@@ -413,7 +397,6 @@ void Board::renderPieceByCoordinate(int pieceName, int color, int x, int y)
 
 void Board::parseFENToBoard(std::string fenConfig)
 {
-    // std::cerr << fenConfig << "\n";
     int row = 0;
     int col = 0;
     for (int i = 0; i < 8; i++)
@@ -437,9 +420,6 @@ void Board::parseFENToBoard(std::string fenConfig)
         board[row][col] = chr;
         col++;
     }
-    // for (int i = 0; i < 8; i++)
-    //     for (int j = 0; j < 8; j++)
-    //         std::cerr << board[i][j] << " \n"[j == 7];
 }
 
 void Board::renderFromBoard()
@@ -449,16 +429,13 @@ void Board::renderFromBoard()
 
         for (int col = 0; col < BOARD_SIZE; col++)
         {
-            // std::cerr << board[row][col] << " ";
             if (board[row][col] == '0')
                 continue;
             int name = getPieceName(board[row][col]);
             int color = getPieceColor(board[row][col]);
             renderPieceByCoordinate(name, color, col, row);
         }
-        // std::cerr << std::endl;
     }
-    // std::cerr << std::endl;
 }
 
 int Board::getPieceColor(char piece)
@@ -552,41 +529,20 @@ void Board::renderChessboard()
 
 void Board::render()
 {
-    // setRendererColor(backgroundColor);
-    // clear();
-    // background.render(backgroundColor);
     renderChessboard();
     renderLastMove();
     renderCheck();
     renderCheckmate();
     renderStalemate();
     renderFromBoard();
-    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
-              << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
-              << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
+    present();
     if (isUnderPromotion)
         renderPawnPromotion();
 }
 
-// void Board::renderFromFen()
-// {
-//     // setRendererColor(backgroundColor);
-//     // clear();
-//     // background.render(backgroundColor);
-//     renderChessboard();
-//     renderFromBoard();
-//     std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
-//              << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
-//              << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
-//     if (isUnderPromotion)
-//         renderPawnPromotion();
-// }
 
 void Board::renderFromFen()
 {
-    // setRendererColor(backgroundColor);
-    // clear();
-    // background.render(backgroundColor);
     renderChessboard();
     renderFen();
 }
@@ -602,14 +558,12 @@ bool Board::isNum(char c)
 }
 // TODO: render next move possible for a chess
 
-// colorRGBA indicator(75, 72, 71, 127);
 void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
 {
     for (Coordinate cell : moveList)
         drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + SIDE_MARGIN + (SIDE_LENGTH * (1 - MOVE_INDICATOR_SCALE)) / 2, cell.getY() * SIDE_LENGTH + TOP_MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     for (Coordinate cell : captureList)
     {
-        // std::cerr << "Rendering capture move at " << cell.getX() << " " << cell.getY() << "\n";
         drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + SIDE_MARGIN, cell.getY() * SIDE_LENGTH + TOP_MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     }
 }
@@ -618,7 +572,6 @@ void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordina
 
 vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
 {
-    // std::cerr << "Begin getting possible moves at: " << coordX << " " << coordY << "\n";
     int originCol = coordX, originRow = coordY;
     int pieceName = getPieceName(piece);
     int color = getPieceColor(piece);
@@ -635,7 +588,6 @@ vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
             if (isSafeMove(color, piece, Coordinate(coordX, coordY), cell))
                 res.push_back(cell);
         }
-    // std::cerr << "Done getting possible moves at: " << coordX << " " << coordY << "\n";
 
     // Generating castling
     if (pieceName == KING)
@@ -670,7 +622,6 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
     int color = getPieceColor(piece);
     vector<vector<Coordinate>> allMoves = chessPiece.listAllMove(pieceName, color, coordX, coordY);
     vector<Coordinate> res;
-    // std::cerr << "Begin checking ordinary moves of: " << piece << " at " << coordX << " " << coordY << "\n";
 
     if (pieceName != PAWN)
     {
@@ -685,7 +636,6 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
 
                 if (getPieceColor(board[row][col]) != color && isSafeMove(color, piece, currentCoordinate, cell))
                     res.push_back(cell);
-                // std::cerr << "Can capture at " << row << " " << col << "\n";
                 break;
             }
         }
@@ -705,9 +655,7 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
         }
 
         int leftColor = getPieceColor(board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()]);
-        // std::cerr << leftColor << " " << board[leftDiagonalCapture.getY()][leftDiagonalCapture.getX()] << "\n";
         int rightColor = getPieceColor(board[rightDiagonalCapture.getY()][rightDiagonalCapture.getX()]);
-        // std::cerr << rightColor << " " << board[rightDiagonalCapture.getY()][rightDiagonalCapture.getX()] << "\n";
         if (isInBound(leftDiagonalCapture))
             if (leftColor != color && leftColor != COLOR_NONE && isSafeMove(color, piece, currentCoordinate, leftDiagonalCapture))
                 res.push_back(leftDiagonalCapture);
@@ -715,7 +663,6 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
             if (rightColor != color && rightColor != COLOR_NONE && isSafeMove(color, piece, currentCoordinate, rightDiagonalCapture))
                 res.push_back(rightDiagonalCapture);
     }
-    // std::cerr << "Done ordinary moves of: " << piece << " at: " << coordX << " " << coordY << std::endl;
     // Generating en passant capture
     if (getPieceName(piece) == PAWN)
     {
@@ -731,7 +678,6 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
         int color = getPieceColor(piece);
         if (color == getPieceColor(EPSPiece))
             return res;
-        // std::cerr << "Can enpassant at: " << enPassantCoord.getX() << " " << enPassantCoord.getY() << "\n";
         if (color == WHITE)
         {
             Coordinate enPassantMove = enPassantCoord - Coordinate(0, 1);
@@ -744,11 +690,8 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
             if (isSafeMove(color, piece, currentCoordinate, enPassantMove))
                 res.push_back(enPassantMove);
         }
-        // std::cerr << "Done checking en passant at: " << coordX << " " << coordY << "\n";
     }
 
-    // for (auto cell : res)
-    //     std::cerr << "Can capture at " << cell.getX() << " " << cell.getY() << "\n";
     return res;
 }
 
@@ -759,13 +702,11 @@ bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordin
     // Generating the next board
     for (Coordinate cell : moveList)
     {
-        // std::cerr << cell.getX() << " " << cell.getY() << " " << dest.getX() << " " << dest.getY() << "\n";
         if (dest == cell)
             return true;
     }
     for (Coordinate cell : captureList)
     {
-        // std::cerr << cell.getX() << " " << cell.getY() << " " << dest.getX() << " " << dest.getY() << "\n";
         if (dest == cell)
             return true;
     }
@@ -796,14 +737,12 @@ bool Board::testMovesKingSafety(Coordinate src, Coordinate dest, char movingPiec
 bool Board::isKingSafe(int color)
 {
     using std::cerr;
-    // cerr << "Entering isKingSafe\n";
 
     int kingRow, kingCol;
     // Always have
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            // cerr << board[i][j] << " ";
 
             if (getPieceName(board[i][j]) == KING && getPieceColor(board[i][j]) == color)
             {
@@ -812,12 +751,8 @@ bool Board::isKingSafe(int color)
                 break;
             }
         }
-    // cerr << "\n";
-    // std::cerr << kingRow << " " << kingCol << " " << color << "\n";
     int oppositeColor = 1 - color;
     bool res = true;
-    // cerr << "Current Color is " << color << "\n";
-    // cerr << "Opposite Color is " << oppositeColor << "\n";
     // * 3 - getPieceColor(movingPiece) return the opposite color to movingPiece
     int cardinalRow[8] = {-1, -1, -1, 0, 1, 1, 1, 0};
     int cardinalCol[8] = {-1, 0, 1, 1, 1, 0, -1, -1};
@@ -918,7 +853,6 @@ void Board::updateCastlingStatus()
         blackKingSide = false;
         blackQueenSide = false;
     }
-    // std::cerr << whiteKingSide << whiteQueenSide << blackKingSide << blackQueenSide << "\n";
 }
 
 bool Board::canWhiteCastlingKing()
@@ -1002,20 +936,17 @@ bool Board::canBlackCastlingQueen()
     board[0][0] = '0';
     for (int col = 4; col >= 2 && res; col--)
     {
-        // std::cerr << "Checking black queen castling at: " << 0 << " " << col << ": ";
-        // std::cerr << getPieceName(board[0][col]) << "\n";
         if (getPieceName(board[0][col]) != -1)
         {
             res = false;
-            // std::cerr << "Exist piece at " << 0 << " " << col << "\n";
             continue;
         }
 
         board[0][col] = 'k';
         if (!isKingSafe(BLACK))
         {
-            // std::cerr << "King is not safe at: " << 0 << " " << col << "\n";
             res = false;
+            continue;
         }
         board[0][col] = '0';
     }
@@ -1023,7 +954,6 @@ bool Board::canBlackCastlingQueen()
     board[0][0] = 'r';
     if (getPieceName(board[0][1]) != -1)
     {
-        // std::cerr << "Exist piece at " << 0 << " " << 1 << "\n";
         res = false;
     }
     return res;
@@ -1094,12 +1024,6 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
             if (board[i][j] != '0')
                 prevTotalPiece++;
     // * Consider special moves: En passant
-    // std::cerr << enPassant << " "
-    //          << getPieceName(piece) << " "
-    //          << getPieceColor(piece) << " "
-    //          << getPieceColor(getPiece(enPassantCoord)) << " "
-    //          << getPiece(dest) << std::endl;
-    // std::cerr << displacement.getX() << " " << displacement.getY() << std::endl;
     if (enPassant && getPieceName(piece) == PAWN && getPieceColor(piece) != getPieceColor(getPiece(enPassantCoord)) && getPiece(dest) == '0')
     {
         if (abs(displacement.getX()) == 1 && abs(displacement.getY()) == 1)
@@ -1155,7 +1079,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
 
 void Board::log(std::string message)
 {
-    std::cerr << message << std::endl;
+    if(false) std::cerr << message << std::endl;
 }
 
 bool Board::isStalemate(int color)
@@ -1180,7 +1104,6 @@ bool Board::isStalemate(int color)
 
 bool Board::isSafeMove(int color, char piece, Coordinate src, Coordinate dest)
 {
-    // return true;
     int rowDest = dest.getY();
     int colDest = dest.getX();
     int rowSrc = src.getY();
@@ -1188,7 +1111,6 @@ bool Board::isSafeMove(int color, char piece, Coordinate src, Coordinate dest)
     char originDestPiece = getPiece(dest);
     writeCell(dest, piece);
     deleteCell(src);
-    // std::cerr << "Checking move of " << piece << " to " << dest.getX() << " " << dest.getY() << "\n";
     bool res = isKingSafe(color);
     writeCell(src, piece);
     writeCell(dest, originDestPiece);
@@ -1249,7 +1171,6 @@ void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
 
 void Board::setRenderCheck(chessColor color)
 {
-    std::cerr << "Entering set render check\n";
     Coordinate kingPlace = Coordinate(-1, -1);
     if (color != COLOR_NONE)
         for (int row = 0; row < BOARD_SIZE; row++)
@@ -1257,7 +1178,6 @@ void Board::setRenderCheck(chessColor color)
                 if (board[row][col] == getPieceFromInfo(KING, color))
                 {
                     kingPlace = Coordinate(col, row); // col as x, row as y
-                    std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
                 }
     dangerCoordinate = kingPlace;
 }
@@ -1266,7 +1186,6 @@ void Board::renderCheck()
 {
     if (dangerCoordinate == Coordinate(-1, -1))
         return;
-    // std::cerr << "Rendering check indicator at" << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n";
     renderBlendCell(dangerCoordinate, checkIndicator);
 }
 
@@ -1309,47 +1228,38 @@ void Board::enablePawnPromotion(int x, int y) // In cell coordinate
         knightPromotionCellColor = bishopPromotionCellColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
         queenPromotionCellColor = rookPromotionCellColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
     }
-    std::cerr << queenButtonCoordinate.getX() << " " << queenButtonCoordinate.getY() << "\n"
-              << knightButtonCoordinate.getX() << " " << knightButtonCoordinate.getY() << "\n"
-              << rookButtonCoordinate.getX() << " " << rookButtonCoordinate.getY() << "\n"
-              << bishopButtonCoordinate.getX() << " " << bishopButtonCoordinate.getY() << "\n";
     SDL_Color blackColor = {black.getR(), black.getG(), black.getA(), black.getB()};
     queenPromotion = Button(renderer, queenButtonCoordinate.getX(), queenButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, queenPromotionCellColor, blackColor, ".", font);
     knightPromotion = Button(renderer, knightButtonCoordinate.getX(), knightButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, knightPromotionCellColor, blackColor, ".", font);
     rookPromotion = Button(renderer, rookButtonCoordinate.getX(), rookButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, rookPromotionCellColor, blackColor, ".", font);
     bishopPromotion = Button(renderer, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, bishopPromotionCellColor, blackColor, ".", font);
     promotionCoord = Coordinate(x, y);
-    std::cerr << "Done initializing\n";
 }
 void Board::renderPawnPromotion()
 {
-    std::cerr << "Entering rendering of pawn promotion\n";
+    if(false) std::cerr << "Entering rendering of pawn promotion\n";
     Button *arr[4] = {&queenPromotion, &knightPromotion, &rookPromotion, &bishopPromotion};
     Coordinate coord[4] = {queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate};
     for (int i = 0; i < 4; i++)
     {
         int colorX = (coord[i].getX() - SIDE_MARGIN) / SIDE_LENGTH;
         int colorY = (coord[i].getY() - TOP_MARGIN) / SIDE_LENGTH;
-        // std::cerr << coord[i].getX() << " " << coord[i].getY() << "\n";
         if ((colorX + colorY) % 2 == 1)
             arr[i]->setColor(secondaryColor);
         else
             arr[i]->setColor(primaryColor);
         arr[i]->render();
     }
-    std::cerr << "Done calling rendering button\n";
     renderPiece(QUEEN, promotionColor, queenButtonCoordinate.getX(), queenButtonCoordinate.getY());
     renderPiece(KNIGHT, promotionColor, knightButtonCoordinate.getX(), knightButtonCoordinate.getY());
     renderPiece(ROOK, promotionColor, rookButtonCoordinate.getX(), rookButtonCoordinate.getY());
     renderPiece(BISHOP, promotionColor, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY());
-    std::cerr << "Done rendering pieces\n";
 }
 
 bool Board::handlePawnPromotion(SDL_Event *ev)
 {
     int row = promotionCoord.getY();
     int col = promotionCoord.getX();
-    std::cerr << row << " " << col << "\n";
     vector<Button *> button = {&queenPromotion, &rookPromotion, &bishopPromotion, &knightPromotion};
     for (Button *currentButton : button)
         currentButton->handleEvent(ev);
@@ -1377,7 +1287,6 @@ bool Board::handlePawnPromotion(SDL_Event *ev)
             currentButton->resetClicked();
             currentButton->clear();
         }
-        // board.render();
         isUnderPromotion = false;
         return true;
     }
@@ -1485,10 +1394,10 @@ bool Board::nextMove(int color, Communicator &communicator)
 {
     std::string fen = boardstateToFEN(color);
     std::string bestMove = communicator.getMove(fen, Difficulty::MEDIUM);
-    std::cerr << bestMove << std::endl;
+    // std::cerr << bestMove << std::endl;
     if (bestMove == "(none)")
     {
-        std::cerr << "End game" << std::endl;
+        // std::cerr << "End game" << std::endl;
         debugBoard();
         return false;
     }
@@ -1502,22 +1411,22 @@ bool Board::nextMove(int color, Communicator &communicator)
         promotionPiece = bestMove[4];
     if (color == WHITE)
         promotionPiece = promotionPiece - 'a' + 'A';
-    // std::cerr << "previous: " << std::endl;
+    // // std::cerr << "previous: " << std::endl;
     // board.debugBoard();
-    // std::cerr << fen << std::endl;
+    // // std::cerr << fen << std::endl;
     char piece = getPiece(srcCol, srcRow);
 
-    std::cerr << "Moved " << piece << " from " << srcCol << " " << srcRow << " to " << destCol << " " << destRow << "\n";
+    // std::cerr << "Moved " << piece << " from " << srcCol << " " << srcRow << " to " << destCol << " " << destRow << "\n";
 
-    // std::cerr << "Deleted: \n";
+    // // std::cerr << "Deleted: \n";
     // board.debugBoard();
 
     auto moveList = getPossibleMoves(piece, srcCol, srcRow);
     for (auto cell : moveList)
-        std::cerr << cell.getX() << " " << cell.getY() << "\n";
+        if(false) std::cerr << cell.getX() << " " << cell.getY() << "\n";
     auto captureList = getPossibleCaptures(piece, srcCol, srcRow);
     for (auto cell : captureList)
-        std::cerr << cell.getX() << " " << cell.getY() << "\n";
+        if(false) std::cerr << cell.getX() << " " << cell.getY() << "\n";
     makeMove(Coordinate(srcCol, srcRow), Coordinate(destCol, destRow), piece, moveList, captureList);
     if (bestMove.length() != 4)
     {
@@ -1525,9 +1434,9 @@ bool Board::nextMove(int color, Communicator &communicator)
         writeCell(destCol, destRow, piece);
     }
     updateCastlingStatus();
-    std::cerr << "after: \n";
+    if(false) std::cerr << "after: \n";
     debugBoard();
-    std::cerr << "Reached end of nextMove\n";
+    if(false) std::cerr << "Reached end of nextMove\n";
     return true;
 }
 
@@ -1577,5 +1486,5 @@ void Board::highlightKingStatus(bool &isEnded, bool &isRendered)
         return;
     }
 
-    std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";
+    if(false) std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";
 }

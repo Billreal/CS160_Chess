@@ -413,7 +413,7 @@ int main(int argc, char *args[])
     while (running)
     {
         // Check if the window is running or not
-
+        std::cerr << isOn << "\n";
         // Start menu
         // Clear screen
         switch (isOn)
@@ -474,6 +474,7 @@ int main(int argc, char *args[])
         }
         case LOAD:
         {
+            std::cerr << "Currently at load\n";
             SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
             SDL_RenderClear(renderer);
 
@@ -538,6 +539,7 @@ int main(int argc, char *args[])
                 if (loadFileBtns[i].clicked())
                 {
                     // std::cerr << "Button clicked!\n";
+                    loadFileBtns[i].resetClicked();
                     loadGame(board, files[i]);
                     isOn = GAME;
                     loadFileBtns[i].resetHovered(); // Reset button state
@@ -561,11 +563,11 @@ int main(int argc, char *args[])
             {
                 board.nextMove(currentMoveColor, communicator);
                 currentMoveColor = 1 - currentMoveColor;
-                cerr << "done alternating moves\n";
+                // cerr << "done alternating moves\n";
                 board.render();
-                cerr << "done rendering\n";
+                // cerr << "done rendering\n";
                 board.present();
-                cerr << "done presenting\n";
+                // cerr << "done presenting\n";
                 board.highlightKingStatus(isEnded, boardIsRendered);
                 break;
             }
@@ -737,8 +739,8 @@ int main(int argc, char *args[])
                         board.highlightKingStatus(isEnded, boardIsRendered);
                     }
                     // board.log(event.button, "released");
-                    std::cerr << board.boardstateToFEN(currentMoveColor) << "\n"
-                              << currentMoveColor << "\n\n";
+                    // std::cerr << board.boardstateToFEN(currentMoveColor) << "\n"
+                    //           << currentMoveColor << "\n\n";
                     break;
                 }
                 }

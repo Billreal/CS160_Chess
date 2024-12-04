@@ -26,3 +26,9 @@ uciok
 info string Using 1 thread
 readyok
 readyok
+info string Available processors: 0-7
+info string Using 1 thread
+info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
+info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
+info depth 1 seldepth 2 multipv 1 score cp 31 nodes 20 nps 10000 hashfull 0 tbhits 0 time 2 pv d7d5
+bestmove d7d5

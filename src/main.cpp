@@ -675,10 +675,10 @@ int main(int argc, char *args[])
                     SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
                     SDL_RenderClear(renderer);
 
-                    GameGUILoad();
                     board.render();
                     board.renderMove(possibleMoves, possibleCaptures);
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
+                    GameGUILoad();
 
                     SDL_RenderPresent(renderer);
 

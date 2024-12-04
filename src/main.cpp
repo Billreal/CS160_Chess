@@ -656,6 +656,7 @@ int main(int argc, char *args[])
 
                     isLeftMouseHolding = true;
 
+                    // * Getting possible moves
                     possibleMoves.clear();
                     possibleCaptures.clear();
                     possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
@@ -699,7 +700,7 @@ int main(int argc, char *args[])
                     {
                         isLeftMouseHolding = false;
                         Coordinate droppedPlace = board.getPieceCoord(event.button);
-
+                        // * Case player don't move
                         if (droppedPlace == prevCoordinate)
                         {
                             // Dropping at same place
@@ -715,6 +716,7 @@ int main(int argc, char *args[])
 
                             SDL_RenderPresent(renderer);
                         }
+                        // * Case player did a legal move
                         else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                         {
                             // Check if there is any pawn under promotion
@@ -750,6 +752,7 @@ int main(int argc, char *args[])
                                     currentMoveColor = WHITE;
                             }
                         }
+                        // * Case player did a illegal move
                         else // invalid move
                         {
                             // break;
@@ -768,6 +771,7 @@ int main(int argc, char *args[])
                             std::cerr << "done rendering\n";
                         }
                     }
+                    // * King status is checked after move and promotion have done
                     if (!isUnderPromotion)
                     {
                         if (board.highlightKingStatus(isEnded))

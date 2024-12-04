@@ -230,6 +230,10 @@ int main(int argc, char *args[])
     Communicator communicator;
     communicator.init();
     communicator.startNewGame();
+
+    // ! ----- Temporary setting for communicator -----
+    communicator.setDifficulty(Difficulty::HARD);
+    // ! ---------------------------------------------
     // Handling SDL_events
     SDL_Event event;
 

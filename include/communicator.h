@@ -20,6 +20,10 @@ class Communicator
     FILE *process = nullptr;
     bool isRunning;
     std::ifstream inputFile;
+    int stockfishELO;
+    int searchDepth;
+    int timeAllowed;
+    std::string getBestMove(const std::string &fen); // maximumTime is in miliseconds
 
 public:
     Communicator();
@@ -30,10 +34,10 @@ public:
 
     void waitForReady();
     std::string readLine();
-    std::string getBestMove(const std::string &fen, int depth, int maximumTime); // maximumTime is in miliseconds
     void stop();
     ~Communicator();
-    std::string getMove(const std::string &fen, Difficulty difficulty);
+    std::string getMove(const std::string &fen);
     std::string getLineStockfishOutput();
     std::string readResponse();
+    void setDifficulty(Difficulty difficulty);
 };

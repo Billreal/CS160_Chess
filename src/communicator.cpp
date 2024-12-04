@@ -31,6 +31,7 @@ void Communicator::init()
     writeCommand("setoption name Hash value 128");
     writeCommand("setoption name Threads value 1");
     writeCommand("isready");
+    writeCommand("setoption name UCI_LimitStrength value true");
 }
 
 void Communicator::startNewGame()
@@ -46,25 +47,19 @@ std::string Communicator::getLineStockfishOutput()
     return res;
 }
 
-std::string Communicator::getMove(const std::string &fen, Difficulty difficulty)
+std::string Communicator::getMove(const std::string &fen)
 {
-    if (difficulty == Difficulty::EASY)
-        return getBestMove(fen, 1, 100);
-    if (difficulty == Difficulty::MEDIUM)
-        return getBestMove(fen, 3, 500);
-    if (difficulty == Difficulty::HARD)
-        return getBestMove(fen, 8, 2000);
-    return getBestMove(fen, 20, 5000);
+    return getBestMove(fen);
 }
 
-std::string Communicator::getBestMove(const std::string &fen, int depth, int maximumTime)
+std::string Communicator::getBestMove(const std::string &fen)
 {
     std::string fenSet = "position fen " + fen;
-    std::string goCommand = "go depth " + std::to_string(depth) + " movetime " + std::to_string(maximumTime);
+    std::string goCommand = "go depth " + std::to_string(searchDepth) + " movetime " + std::to_string(timeAllowed);
     writeCommand(fenSet);
     writeCommand(goCommand);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(maximumTime + 500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(timeAllowed + 500));
     std::string response = readResponse();
     if (response == "checkmate") return response;
     size_t pos = response.find("bestmove");
@@ -89,4 +84,27 @@ std::string Communicator::readResponse()
             break;
     }
     return response;
+}
+
+void Communicator::setDifficulty(Difficulty difficulty)
+{
+    if (difficulty == Difficulty::EASY)
+    {
+        stockfishELO = 1320;
+        searchDepth = 2;
+        timeAllowed = 300;
+    }
+    else if (difficulty == Difficulty::MEDIUM)
+    {
+        stockfishELO = 2000;
+        searchDepth = 5;
+        timeAllowed = 500;
+    }
+    else 
+    {
+        stockfishELO = 3190;
+        searchDepth = 10;
+        timeAllowed = 1000;
+    }
+    writeCommand("setoption name UCI_Elo value " + std::to_string(stockfishELO));
 }

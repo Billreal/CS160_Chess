@@ -159,6 +159,7 @@ int main(int argc, char *args[])
     bool isPlayer1White = false;
     bool isAgainstBot = true;
     bool isToRotate = (isPlayer1White == false) && isAgainstBot;
+    bool isToHighlightMove = false;
     // ! End of temporary variable
 
     // Initializing main components
@@ -678,7 +679,7 @@ int main(int argc, char *args[])
                 {
                     if (isLeftMouseHolding == false) // Mouse hover
                         break;
-                    // Frame handling
+                    // * Render piece that moves with cursor
                     SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
                     SDL_RenderClear(renderer);
 
@@ -713,7 +714,7 @@ int main(int argc, char *args[])
                             GameGUILoad();
                             board.render();
                             board.renderMove(possibleMoves, possibleCaptures);
-
+                            isToHighlightMove = true;
                             SDL_RenderPresent(renderer);
                         }
                         // * Case player did a legal move
@@ -778,7 +779,14 @@ int main(int argc, char *args[])
                         {
                             GameGUILoad();
                             board.render();
+                            if (isToHighlightMove)
+                            {
+                                isToHighlightMove = false;
+                                board.renderMove(possibleMoves, possibleCaptures);
+                            }
+                            // board.renderMove(possibleMoves, possibleCaptures);
                         }
+                        isToHighlightMove = false;
                     }
                     break;
                 }

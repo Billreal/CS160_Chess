@@ -546,7 +546,6 @@ void Board::render()
         renderPawnPromotion();
 }
 
-
 void Board::renderFromFen()
 {
     renderChessboard();
@@ -1085,7 +1084,8 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
 
 void Board::log(std::string message)
 {
-    if(false) std::cerr << message << std::endl;
+    if (false)
+        std::cerr << message << std::endl;
 }
 
 bool Board::isStalemate(int color)
@@ -1178,17 +1178,15 @@ void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
 void Board::setRenderCheck(chessColor color)
 {
     // std::cerr << "Entering set render check\n";
-    Coordinate kingPlace = Coordinate(-1, -1);
+    dangerCoordinate = Coordinate(-1, -1);
     if (color != COLOR_NONE)
         for (int row = 0; row < BOARD_SIZE; row++)
             for (int col = 0; col < BOARD_SIZE; col++)
                 if (board[row][col] == getPieceFromInfo(KING, color))
                 {
-                    kingPlace = Coordinate(col, row); // col as x, row as y
-                    dangerCoordinate = kingPlace;
-
-                    // std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
+                    dangerCoordinate = Coordinate(col, row); // col as x, row as y
                     return;
+                    // std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
                 }
     // dangerCoordinate = kingPlace;
 }
@@ -1442,10 +1440,12 @@ bool Board::nextMove(int color, Communicator &communicator)
 
     auto moveList = getPossibleMoves(piece, srcCol, srcRow);
     for (auto cell : moveList)
-        if(false) std::cerr << cell.getX() << " " << cell.getY() << "\n";
+        if (false)
+            std::cerr << cell.getX() << " " << cell.getY() << "\n";
     auto captureList = getPossibleCaptures(piece, srcCol, srcRow);
     for (auto cell : captureList)
-        if(false) std::cerr << cell.getX() << " " << cell.getY() << "\n";
+        if (false)
+            std::cerr << cell.getX() << " " << cell.getY() << "\n";
     makeMove(Coordinate(srcCol, srcRow), Coordinate(destCol, destRow), piece, moveList, captureList);
     if (bestMove.length() != 4)
     {
@@ -1453,13 +1453,15 @@ bool Board::nextMove(int color, Communicator &communicator)
         writeCell(destCol, destRow, piece);
     }
     updateCastlingStatus();
-    if(false) std::cerr << "after: \n";
+    if (false)
+        std::cerr << "after: \n";
     debugBoard();
-    if(false) std::cerr << "Reached end of nextMove\n";
+    if (false)
+        std::cerr << "Reached end of nextMove\n";
     return true;
 }
 
-void Board::highlightKingStatus(bool &isEnded, bool &isRendered)
+bool Board::highlightKingStatus(bool &isEnded)
 {
     if (isCheckmate(WHITE) || isCheckmate(BLACK))
     {
@@ -1469,12 +1471,8 @@ void Board::highlightKingStatus(bool &isEnded, bool &isRendered)
         else
             setRenderCheckmate(BLACK);
         SDL_Log("End game: Checkmate");
-        if (!isRendered)
-        {
-            isRendered = true;
-            render();
-        }
-        return;
+
+        return true;
     }
     if (!isKingSafe(WHITE) || !isKingSafe(BLACK))
     {
@@ -1482,12 +1480,7 @@ void Board::highlightKingStatus(bool &isEnded, bool &isRendered)
             setRenderCheck(WHITE);
         else
             setRenderCheck(BLACK);
-        if (!isRendered)
-        {
-            isRendered = true;
-            render();
-        }
-        return;
+        return true;
     }
     if (isStalemate(WHITE) || isStalemate(BLACK))
     {
@@ -1497,15 +1490,11 @@ void Board::highlightKingStatus(bool &isEnded, bool &isRendered)
         else
             setRenderStalemate(BLACK);
         SDL_Log("End game: Statemate");
-        if (!isRendered)
-        {
-            isRendered = true;
-            render();
-        }
-        return;
+        return true;
     }
-
-    if(false) std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";
+    return false;
+    if (false)
+        std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";
 }
 
 void Board::clear()

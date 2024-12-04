@@ -565,12 +565,12 @@ int main(int argc, char *args[])
                 board.nextMove(currentMoveColor, communicator);
                 currentMoveColor = 1 - currentMoveColor;
                 // cerr << "done alternating moves\n";
+                // cerr << "done rendering\n";
+                // cerr << "done presenting\n";
+                board.highlightKingStatus(isEnded);
                 GameGUILoad();
                 board.render();
-                // cerr << "done rendering\n";
                 board.present();
-                // cerr << "done presenting\n";
-                board.highlightKingStatus(isEnded, boardIsRendered);
                 break;
             }
 
@@ -764,60 +764,11 @@ int main(int argc, char *args[])
                     }
                     if (!isUnderPromotion)
                     {
-                        if (board.isCheckmate(WHITE) || board.isCheckmate(BLACK))
+                        if (board.highlightKingStatus(isEnded))
+
                         {
-                            isEnded = true;
-                            if (board.isCheckmate(WHITE))
-                                board.setRenderCheckmate(WHITE);
-                            else
-                                board.setRenderCheckmate(BLACK);
-                            SDL_Log("End game: Checkmate");
-
-                            // Frame handling
-                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                            SDL_RenderClear(renderer);
-
                             GameGUILoad();
                             board.render();
-
-                            SDL_RenderPresent(renderer);
-                            break;
-                        }
-                        if (!board.isKingSafe(WHITE) || !board.isKingSafe(BLACK))
-                        {
-                            if (!board.isKingSafe(WHITE))
-                                board.setRenderCheck(WHITE);
-                            else
-                                board.setRenderCheck(BLACK);
-
-                            // Frame handling
-                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                            SDL_RenderClear(renderer);
-
-                            GameGUILoad();
-                            board.render();
-
-                            SDL_RenderPresent(renderer);
-                            break;
-                        }
-                        if (board.isStatemate(WHITE) || board.isStatemate(BLACK))
-                        {
-                            isEnded = true;
-                            if (board.isStatemate(WHITE))
-                                board.setRenderCheckmate(WHITE);
-                            else
-                                board.setRenderCheckmate(BLACK);
-                            SDL_Log("End game: Statemate");
-
-                            // Frame handling
-                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                            SDL_RenderClear(renderer);
-
-                            GameGUILoad();
-                            board.render();
-
-                            SDL_RenderPresent(renderer);
-                            break;
                         }
                     }
                     break;

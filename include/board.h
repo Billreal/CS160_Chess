@@ -280,5 +280,5 @@ public:
 
     bool nextMove(int color, Communicator &communicator);
 
-    void highlightKingStatus(bool &isEnded, bool &isRendered);
+    bool highlightKingStatus(bool &isEnded);
 };

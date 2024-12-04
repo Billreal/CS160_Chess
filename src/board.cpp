@@ -1407,10 +1407,10 @@ string Board::boardstateToFEN(int color)
     return boardstateToFEN();
 }
 
-bool Board::nextMove(int color, Communicator &communicator)
+bool Board::nextMove(int color)
 {
     std::string fen = boardstateToFEN(color);
-    std::string bestMove = communicator.getMove(fen, Difficulty::EASY);
+    std::string bestMove = communicator -> getMove(fen, Difficulty::EASY);
     // std::cerr << bestMove << std::endl;
     if (bestMove == "(none)")
     {
@@ -1504,4 +1504,22 @@ void Board::clear()
     // SDL_RenderFillRect(renderer, &rect);
     // renderChessboard();
     // SDL_RenderClear(renderer);
+}
+
+bool Board::resetBoardState(bool &isEnded)
+{
+    isEnded = false;
+    Coordinate nullCell = Coordinate(-1, -1);
+    dangerCoordinate = nullCell;
+    checkmateCoordinate = nullCell;
+    stalemateCoordinate = nullCell;
+    previousCoordinate = nullCell;
+    currentCoordinate = nullCell;
+    communicator -> startNewGame();
+    return highlightKingStatus(isEnded);
+}
+
+void Board::setCommunicator(Communicator* communicator)
+{
+    this -> communicator = communicator;
 }

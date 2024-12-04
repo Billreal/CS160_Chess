@@ -72,7 +72,7 @@ private:
     bool isUnderPromotion = false;
     Coordinate promotionCoord;
     TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
-
+    Communicator *communicator;
 public:
     Board(); // Barebone board used for testing
     Board(SDL_Renderer *renderer);
@@ -278,7 +278,11 @@ public:
     string boardstateToFEN();
     string boardstateToFEN(int color);
 
-    bool nextMove(int color, Communicator &communicator);
+    bool nextMove(int color);
 
     bool highlightKingStatus(bool &isEnded);
+
+    bool resetBoardState(bool &isEnded);
+
+    void setCommunicator(Communicator* communicator);
 };

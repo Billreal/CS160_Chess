@@ -248,6 +248,7 @@ int main(int argc, char *args[])
     SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
     SDL_RenderClear(renderer);
     board.setColor(modernPrimary, modernSecondary);
+    board.setCommunicator(&communicator);
     // board.renderPieces();
     // board.render();
     // board.present();
@@ -542,6 +543,7 @@ int main(int argc, char *args[])
                     // std::cerr << "Button clicked!\n";
                     loadFileBtns[i].resetClicked();
                     loadGame(board, files[i]);
+                    board.resetBoardState(isEnded);
                     isOn = GAME;
                     loadFileBtns[i].resetHovered(); // Reset button state
                 }
@@ -562,7 +564,7 @@ int main(int argc, char *args[])
             // * Computer's turn
             if (isSinglePlayer && currentMoveColor == BLACK)
             {
-                board.nextMove(currentMoveColor, communicator);
+                board.nextMove(currentMoveColor);
                 currentMoveColor = 1 - currentMoveColor;
                 // cerr << "done alternating moves\n";
                 // cerr << "done rendering\n";
@@ -765,7 +767,6 @@ int main(int argc, char *args[])
                     if (!isUnderPromotion)
                     {
                         if (board.highlightKingStatus(isEnded))
-
                         {
                             GameGUILoad();
                             board.render();

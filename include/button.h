@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 #include <string>
 #include "color.h"
 #include "colorScheme.h"
@@ -30,6 +31,7 @@ public:
 
     void render();
     void renderSVG(std::string svgFilePath, double scale);
+    void renderPNG(std::string pngFilePath);
 
     // Clear renderer
     void clear() const { SDL_RenderClear(renderer); }

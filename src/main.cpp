@@ -16,6 +16,7 @@
 #include "./../include/button.h"
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
+#include "./../include/gameStateManager.h"
 
 using std::cerr;
 using std::cout;
@@ -152,18 +153,17 @@ struct ThemeList
     colorRGBA primaryColor;
     colorRGBA secondaryColor;
 };
+
 int main(int argc, char *args[])
 {
     // ! Temporary variable, will change in later version
     bool running = true;
-    bool isPlayer1White = false;
-    bool isAgainstBot = true;
-    bool isToRotate = (isPlayer1White == false) && isAgainstBot;
     bool isToHighlightMove = false;
     // ! End of temporary variable
 
     // Initializing main components
     GUI_State isOn = START;
+    GameStateManager gameState;
     renderer = NULL;
     window = NULL;
 
@@ -245,62 +245,45 @@ int main(int argc, char *args[])
     // for (auto x : dbg)
     //     cerr << x.getX() << " " << x.getY() << "\n";
 
+    // Game States
     bool isLeftMouseHolding = false;
-    bool isSinglePlayer = true;
-    bool boardIsRendered = false;
+    bool isSinglePlayer = false;
+    int currentMoveColor = WHITE;
+    bool renderOnce = false;
+
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
-    SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
-    SDL_RenderClear(renderer);
-    board.setColor(modernPrimary, modernSecondary);
-    board.setCommunicator(&communicator);
-    // board.renderPieces();
-    // board.render();
-    // board.present();
-    vector<Coordinate> possibleMoves;
-    vector<Coordinate> possibleCaptures;
     Coordinate pickedPlace(-1, -1);
 
-    // Init logo
+    board.setColor(modernPrimary, modernSecondary);
+    // board.setCommunicator(&communicator);
+
+    vector<Coordinate> possibleMoves;
+    vector<Coordinate> possibleCaptures;
+
+    bool isEnded = false;
+
+    //// Initialize start menu
+    // Initizalize logo
     const int logoWidth = 500;
     const int logoHeight = 177;
     SDL_Rect logoInfos = {(SCREEN_WIDTH - logoWidth) / 2, 120, logoWidth, logoHeight};
     SDL_Texture *logoTexture = loadTexture("./assets/logo.png");
-    int currentMoveColor = WHITE;
-    Coordinate enPassantCoord;
-    bool isEnded = false;
 
-    bool isOnStartMenu = true;
-    bool renderOnce = false;
-    // board.renderPieces();
-    // board.render();
-    // board.present();
+    // Initialize buttons
     const int X_COLUMN_BUTTON[2] = {700, 1000};
     const int Y_ROW_BUTTON[7] = {80, 180, 280, 380, 480, 580, 680};
-    // Initialize buttons
     const int startMenuBtnWidth = 500;
     const int startMenuBtnHeight = 100;
     SDL_Color startMenuBtnColor = {118, 150, 85, 255};
     SDL_Color loadMenuBtnColor = {38, 37, 33, 1};
     SDL_Color white = {255, 255, 255, 255};
-    Button startBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 350, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Start", font);
+    Button startBtn2P(renderer, (SCREEN_WIDTH - 500) / 2, 350, 240, startMenuBtnHeight, startMenuBtnColor, white, "2 Player", font);
+    Button startBtnAI(renderer, SCREEN_WIDTH / 2 + 10, 350, 240, startMenuBtnHeight, startMenuBtnColor, white, "vs AI", font);
     Button loadBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 500, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Load", font);
     Button quitBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 650, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Quit", font);
 
-    // Initialize right panel
-    const int panelMargin = 60;
-    const int rightPanelWidth = 180;
-    const int rightPanelHeight = 640;
-    SDL_Rect rightPanelInfos = {SCREEN_WIDTH - panelMargin - rightPanelWidth, TOP_MARGIN, rightPanelWidth, rightPanelHeight};
-    SDL_Texture *rightPanelTexture = loadTexture("./assets/right_panel.svg");
-
-    // Initialize bottom panel
-    const int bottomPanelWidth = 640;
-    const int bottomPanelHeight = 70;
-    SDL_Rect bottomPanelInfos = {SIDE_MARGIN, SCREEN_HEIGHT - panelMargin - bottomPanelHeight, bottomPanelWidth, bottomPanelHeight};
-    SDL_Texture *bottomPanelTexture = loadTexture("./assets/bottom_panel.svg");
-
-    // Initialize load menu
+    //// Initialize load menu
     SDL_Rect loadInfos = {60, 80, 900, 850};
     SDL_Texture *loadMenuTexture = loadTexture("./assets/load.png");
     TTF_Font *loadMenuFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 24);
@@ -338,6 +321,21 @@ int main(int argc, char *args[])
         loadFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
     }
 
+    //// Initialize game GUI
+
+    // Initialize right panel
+    const int panelMargin = 60;
+    const int rightPanelWidth = 180;
+    const int rightPanelHeight = 640;
+    SDL_Rect rightPanelInfos = {SCREEN_WIDTH - panelMargin - rightPanelWidth, TOP_MARGIN, rightPanelWidth, rightPanelHeight};
+    SDL_Texture *rightPanelTexture = loadTexture("./assets/right_panel.svg");
+
+    // Initialize bottom panel
+    const int bottomPanelWidth = 640;
+    const int bottomPanelHeight = 70;
+    SDL_Rect bottomPanelInfos = {SIDE_MARGIN, SCREEN_HEIGHT - panelMargin - bottomPanelHeight, bottomPanelWidth, bottomPanelHeight};
+    SDL_Texture *bottomPanelTexture = loadTexture("./assets/bottom_panel.svg");
+
     // Inintialize game buttons
     Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
     Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
@@ -348,11 +346,29 @@ int main(int argc, char *args[])
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
                                    {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
+    Button undoBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 - 34 - 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button redoBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 + 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button beginBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 - 5 - 34 - 10 - 59, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button endBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 + 5 + 34 + 10, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
+
     int currentThemeIndex = 0;
     Button *currentThemeButton = &ingameColorSwitchModern;
     bool isUnderPromotion = false;
 
-    // Load Game GUI
+    //// Pseudo codes
+    auto resetGameState = [&]()
+    {
+        isSinglePlayer = false;
+        prevCoordinate = Coordinate(-1, -1);
+        pickedPiece = ' ';
+        pickedPlace = Coordinate(-1, -1);
+        currentMoveColor = board.getCurrentTurn();
+        ;
+        renderOnce = false;
+        board.resetBoardState(isEnded);
+        gameState.clear();
+    };
+
     auto GameGUILoad = [&]()
     {
         // Render Panels
@@ -360,22 +376,28 @@ int main(int argc, char *args[])
         SDL_RenderCopy(renderer, bottomPanelTexture, NULL, &bottomPanelInfos);
 
         // Render Buttons
-        saveBtn.renderSVG("./assets/button_small.svg", SVG_SCALE);
-        loadBtnInGame.renderSVG("./assets/button_small.svg", SVG_SCALE);
-        settingsBtn.renderSVG("./assets/button_small.svg", SVG_SCALE);
-        currentThemeButton->renderSVG("./assets/button_small.svg", SVG_SCALE);
+        saveBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
+        loadBtnInGame.renderSVG("./assets/game_button.svg", SVG_SCALE);
+        settingsBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
+        currentThemeButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
+        undoBtn.renderPNG("./assets/undo.png");
+        redoBtn.renderPNG("./assets/redo.png");
+        beginBtn.renderPNG("./assets/begin.png");
+        endBtn.renderPNG("./assets/end.png");
     };
 
-    // Handle button events
     auto GameGUIButtonsHandling = [&]()
     {
         currentThemeButton->handleEvent(&event);
         saveBtn.handleEvent(&event);
         loadBtnInGame.handleEvent(&event);
         settingsBtn.handleEvent(&event);
+        undoBtn.handleEvent(&event);
+        redoBtn.handleEvent(&event);
+        beginBtn.handleEvent(&event);
+        endBtn.handleEvent(&event);
     };
 
-    // Handle button click
     auto GameGUIButtonsClicked = [&]()
     {
         if (saveBtn.clicked())
@@ -403,29 +425,72 @@ int main(int argc, char *args[])
             currentThemeIndex = (currentThemeIndex + 1) % 3;
             currentThemeButton = &themeList[currentThemeIndex].button;
             board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
-            currentThemeButton->resetClicked();              // Reset button state
-            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-            SDL_RenderClear(renderer);
 
-            GameGUILoad();
-            board.render();
-
-            SDL_RenderPresent(renderer);
+            renderOnce = false;
+            currentThemeButton->resetClicked(); // Reset button state
+        }
+        if (undoBtn.clicked())
+        {
+            SDL_Log("Undo clicked!");
+            if (gameState.canUndo())
+            {
+                std::string prevFen = gameState.undo();
+                board.updateFen(prevFen);
+                currentMoveColor = 1 - currentMoveColor;
+                std::cerr << prevFen << "\n";
+                renderOnce = false;
+            }
+            undoBtn.resetClicked(); // Reset button state
+        }
+        if (redoBtn.clicked())
+        {
+            SDL_Log("Redo clicked!");
+            if (gameState.canRedo())
+            {
+                std::string nextFen = gameState.redo();
+                board.updateFen(nextFen);
+                currentMoveColor = 1 - currentMoveColor;
+                std::cerr << nextFen << "\n";
+                renderOnce = false;
+            }
+            redoBtn.resetClicked(); // Reset button state
+        }
+        if (beginBtn.clicked())
+        {
+            SDL_Log("Begin state!");
+            resetGameState();
+            board.resetBoardState(isEnded);
+            board.startNewGame();
+            gameState.pushState(board.getFen());
+            beginBtn.resetClicked(); // Reset button state
+        }
+        if (endBtn.clicked())
+        {
+            SDL_Log("Settings clicked!");
+            isOn = START;
+            endBtn.resetClicked(); // Reset button state
         }
     };
+
+    auto GameBoardRender = [&]()
+    {
+        // Background color
+        SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA());
+        SDL_RenderClear(renderer);
+
+        GameGUILoad();
+        board.render();
+    };
+    // Main app
     while (running)
     {
-        // Check if the window is running or not
-        // std::cerr << isOn << "\n";
-        // Start menu
-        // Clear screen
         switch (isOn)
         {
         case START:
         {
-            renderOnce = false;
             SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
             SDL_RenderClear(renderer);
+
             while (SDL_PollEvent(&event) != 0)
             {
                 if (event.type == SDL_QUIT)
@@ -434,7 +499,8 @@ int main(int argc, char *args[])
                 }
 
                 // Handle button events
-                startBtn.handleEvent(&event);
+                startBtn2P.handleEvent(&event);
+                startBtnAI.handleEvent(&event);
                 loadBtn.handleEvent(&event);
                 quitBtn.handleEvent(&event);
             }
@@ -443,21 +509,36 @@ int main(int argc, char *args[])
             SDL_RenderCopy(renderer, logoTexture, NULL, &logoInfos);
 
             // Render button
-            startBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
-            loadBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
-            quitBtn.renderSVG("./assets/start_menu_button.svg", SVG_SCALE);
+            startBtn2P.renderSVG("./assets/start_button_small.svg", SVG_SCALE);
+            startBtnAI.renderSVG("./assets/start_button_small.svg", SVG_SCALE);
+            loadBtn.renderSVG("./assets/start_button.svg", SVG_SCALE);
+            quitBtn.renderSVG("./assets/start_button.svg", SVG_SCALE);
 
             // Update screen
             SDL_RenderPresent(renderer);
 
             // Check if button was clicked
-            if (startBtn.clicked())
+            if (startBtn2P.clicked())
             {
-                SDL_Log("Button clicked!");
-                board.updateFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                SDL_Log("Start 2 Players game");
+                resetGameState();
+                board.resetBoardState(isEnded);
+                board.startNewGame();
+                gameState.pushState(board.getFen());
                 isOn = GAME;
-
-                startBtn.resetClicked(); // Reset button state
+                startBtn2P.resetClicked(); // Reset button state
+                break;
+            }
+            if (startBtnAI.clicked())
+            {
+                SDL_Log("Start game with AI");
+                resetGameState();
+                board.resetBoardState(isEnded);
+                board.startNewGame();
+                gameState.pushState(board.getFen());
+                isOn = GAME;
+                isSinglePlayer = true;
+                startBtnAI.resetClicked(); // Reset button state
                 break;
             }
             if (loadBtn.clicked())
@@ -473,15 +554,14 @@ int main(int argc, char *args[])
                 quitBtn.resetClicked(); // Reset button state
             }
 
-            startBtn.clear();
+            startBtn2P.clear();
+            startBtnAI.clear();
             loadBtn.clear();
             quitBtn.clear();
             break;
         }
         case LOAD:
         {
-            renderOnce = false;
-            std::cerr << "Currently at load\n";
             SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
             SDL_RenderClear(renderer);
 
@@ -511,7 +591,6 @@ int main(int argc, char *args[])
             for (Button btn : loadFileBtns)
             {
                 btn.render();
-                // std::cerr << loadFileBtns[i].getX() << " " << loadFileBtns[i].getY() << "\n";
             }
             SDL_RenderPresent(renderer);
 
@@ -546,21 +625,15 @@ int main(int argc, char *args[])
                 if (loadFileBtns[i].clicked())
                 {
                     // std::cerr << "Button clicked!\n";
-                    loadFileBtns[i].resetClicked();
+                    resetGameState();
                     loadGame(board, files[i]);
                     board.resetBoardState(isEnded);
+                    gameState.pushState(board.getFen());
+
                     isOn = GAME;
-                    loadFileBtns[i].resetHovered(); // Reset button state
+                    loadFileBtns[i].resetClicked();
                 }
             }
-
-            // Clear buttons
-            for (Button btn : loadFileBtns)
-            {
-                btn.clear();
-            }
-
-            // demoBoard.clear();
             // SDL_Delay(1000);
             break;
         }
@@ -606,6 +679,8 @@ int main(int argc, char *args[])
                 }
                 case SDL_MOUSEBUTTONDOWN:
                 {
+                    if (isEnded)
+                        break;
                     if (event.button.button != SDL_BUTTON_LEFT)
                         break;
                     if (!board.testInbound(event.button))
@@ -616,17 +691,14 @@ int main(int argc, char *args[])
                         if (isUnderPromotion)
                             if (board.handlePawnPromotion(&event))
                             {
+                                gameState.pushState(board.getFen());
                                 isUnderPromotion = false;
                                 board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor(); 
                                 // the current move color is switched, opposite of promoted piece
 
                                 // Frame handling
-                                SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                                SDL_RenderClear(renderer);
-
-                                GameGUILoad();
-                                board.render();
+                                GameBoardRender();
 
                                 SDL_RenderPresent(renderer);
                             }
@@ -634,7 +706,7 @@ int main(int argc, char *args[])
                     }
 
                     // Clicked inside of board
-                    if (isUnderPromotion || isEnded)
+                    if (isUnderPromotion)
                         break;
 
                     // Passing game state conditions
@@ -664,12 +736,7 @@ int main(int argc, char *args[])
                     possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
 
                     // Frame handling
-                    SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                    SDL_RenderClear(renderer);
-
-                    GameGUILoad();
-                    board.render();
-
+                    GameBoardRender();
                     SDL_RenderPresent(renderer);
 
                     board.deleteCell(pickedPlace);
@@ -679,14 +746,10 @@ int main(int argc, char *args[])
                 {
                     if (isLeftMouseHolding == false) // Mouse hover
                         break;
-                    // * Render piece that moves with cursor
-                    SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                    SDL_RenderClear(renderer);
-
-                    board.render();
-                    board.renderMove(possibleMoves, possibleCaptures);
+                    // Frame handling
+                    GameBoardRender();
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-                    GameGUILoad();
+                    board.renderMove(possibleMoves, possibleCaptures);
 
                     SDL_RenderPresent(renderer);
 
@@ -708,11 +771,7 @@ int main(int argc, char *args[])
                             board.writeCell(droppedPlace, pickedPiece);
 
                             // // Frame handling
-                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                            SDL_RenderClear(renderer);
-
-                            GameGUILoad();
-                            board.render();
+                            GameBoardRender();
                             board.renderMove(possibleMoves, possibleCaptures);
                             isToHighlightMove = true;
                             SDL_RenderPresent(renderer);
@@ -737,11 +796,8 @@ int main(int argc, char *args[])
                             pickedPiece = ' ';
 
                             // Frame handling
-                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                            SDL_RenderClear(renderer);
-
-                            GameGUILoad();
-                            board.render();
+                            gameState.pushState(board.getFen());
+                            GameBoardRender();
 
                             SDL_RenderPresent(renderer);
 
@@ -760,11 +816,7 @@ int main(int argc, char *args[])
                             std::cerr << "Done putting back to original\n";
                             board.debugBoard();
                             // Frame handling
-                            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                            SDL_RenderClear(renderer);
-
-                            GameGUILoad();
-                            board.render();
+                            GameBoardRender();
 
                             SDL_RenderPresent(renderer);
                             std::cerr << "done rendering\n";
@@ -791,7 +843,7 @@ int main(int argc, char *args[])
                     // default:
                     // board.present();
                 }
-                SDL_RenderPresent(renderer);
+                // SDL_RenderPresent(renderer);
                 GameGUIButtonsHandling();
             }
 

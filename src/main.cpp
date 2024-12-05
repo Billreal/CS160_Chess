@@ -570,10 +570,9 @@ int main(int argc, char *args[])
             if (isSinglePlayer && currentMoveColor == BLACK)
             {
                 board.nextMove(currentMoveColor);
-                currentMoveColor = 1 - currentMoveColor;
-                // cerr << "done alternating moves\n";
-                // cerr << "done rendering\n";
-                // cerr << "done presenting\n";
+                board.nextMoveColor();
+                currentMoveColor = board.getMoveColor();
+                board.setRenderCheck(COLOR_NONE);
                 board.highlightKingStatus(isEnded);
                 GameGUILoad();
                 board.render();
@@ -618,7 +617,8 @@ int main(int argc, char *args[])
                             if (board.handlePawnPromotion(&event))
                             {
                                 isUnderPromotion = false;
-                                currentMoveColor = 1 - currentMoveColor;
+                                board.nextMoveColor();
+                                currentMoveColor = board.getMoveColor(); 
                                 // the current move color is switched, opposite of promoted piece
 
                                 // Frame handling
@@ -747,10 +747,8 @@ int main(int argc, char *args[])
 
                             if (!isUnderPromotion)
                             {
-                                if (currentMoveColor == WHITE)
-                                    currentMoveColor = BLACK;
-                                else if (currentMoveColor == BLACK)
-                                    currentMoveColor = WHITE;
+                                board.nextMoveColor();
+                                currentMoveColor = board.getMoveColor();
                             }
                         }
                         // * Case player did a illegal move

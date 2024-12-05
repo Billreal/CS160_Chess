@@ -285,4 +285,6 @@ public:
     bool resetBoardState(bool &isEnded);
 
     void setCommunicator(Communicator* communicator);
+    void nextMoveColor();
+    chessColor getMoveColor();
 };

@@ -491,6 +491,7 @@ void Board::render()
     renderCheckmate();
     renderStalemate();
     renderFromBoard();
+    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
 }
@@ -1423,4 +1424,14 @@ bool Board::resetBoardState(bool &isEnded)
 void Board::setCommunicator(Communicator* communicator)
 {
     this -> communicator = communicator;
+}
+
+void Board::nextMoveColor()
+{
+    isPlayerTurn = !isPlayerTurn;
+}
+
+chessColor Board::getMoveColor()
+{
+    return (chessColor)(!isPlayerTurn);
 }

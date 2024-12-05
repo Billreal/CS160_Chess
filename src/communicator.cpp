@@ -20,6 +20,7 @@ void Communicator::stop()
 void Communicator::writeCommand(const std::string &command)
 {
     // std::cerr << "written to stockfish: \n" << command << "\n";
+    if (!process) return;
     fprintf(process, (command + "\n").c_str());
     fflush(process);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));

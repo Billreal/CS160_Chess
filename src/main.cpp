@@ -234,7 +234,7 @@ int main(int argc, char *args[])
 
     // ! ----- Temporary setting for communicator -----
     communicator.setDifficulty(Difficulty::HARD);
-    // ! ---------------------------------------------
+    // ! ----------------------------------------------
     // Handling SDL_events
     SDL_Event event;
 

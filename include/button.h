@@ -21,7 +21,6 @@ private:
 
     void renderRect(SDL_Rect rect, SDL_Color color);
     void renderRect(SDL_Rect rect, colorRGBA color);
-    // SDL_Texture *loadTexture(std::string filePath, int width, int height, double scale);
 
 public:
     Button(SDL_Renderer *renderer);

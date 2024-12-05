@@ -7,13 +7,11 @@
 #include <stdio.h>
 #include <algorithm>
 #include <sstream>
-// #include "./../include/colorScheme.h"
 #define NANOSVG_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 
-// #include "colorScheme.cpp"
 Board::Board()
 {
 }
@@ -23,7 +21,6 @@ Board::Board(SDL_Renderer *renderer) : renderer(renderer)
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             isMoved[i][j] = false;
-    // background = Background(renderer);
 }
 Board::Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondaryColor, colorRGBA backgroundColor) : renderer(renderer), primaryColor(primaryColor), secondaryColor(secondaryColor), backgroundColor(backgroundColor)
 {
@@ -31,7 +28,6 @@ Board::Board(SDL_Renderer *renderer, colorRGBA primaryColor, colorRGBA secondary
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             isMoved[i][j] = false;
-    // background = Background(renderer);
 }
 
 Board::~Board()
@@ -68,21 +64,6 @@ SDL_Texture *Board::loadTexture(const char *filePath, int width, int height, dou
     return texture;
 }
 
-// SDL_Texture *Board::loadTexture(const std::string &path)
-// {
-//     SDL_Surface *surface = IMG_Load(path.c_str());
-//     // Check if surface is loaded
-//     if (!surface)
-//     {
-//         SDL_Log("Failed to load texture %s: %s", path.c_str(), SDL_GetError());
-//         return nullptr;
-//     }
-//     TextureList.push_back(SDL_CreateTextureFromSurface(renderer, surface));
-//     SDL_Texture *texture = TextureList.back();
-//     SDL_FreeSurface(surface);
-//     return texture;
-// }
-
 void Board::setMargin(int sideMargin, int topMargin)
 {
     SIDE_MARGIN = sideMargin;
@@ -114,8 +95,6 @@ void Board::loadTextures()
     pieces[11] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     possibleMoveIndicator = loadTexture("./assets/move_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, MOVE_INDICATOR_SCALE);
     possibleCaptureIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, CAPTURE_INDICATOR_SCALE);
-    // pieces[0][0] = loadTexture("./assets/white_pawn.png");
-    // pieces[1][0] = loadTexture("./assets/black_pawn.png");
 }
 
 void Board::startNewGame()
@@ -142,8 +121,6 @@ void Board::reloadFen()
         countHalfmove(boardSequence[4]);
         countTotalMove(boardSequence[5]);
     }
-
-    // flush();
 }
 
 void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
@@ -169,24 +146,8 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
             SDL_RenderFillRect(renderer, &currentCell);
         }
     // Update the screen with any rendering performed since the previous call.
-    // flush();
 }
 
-void Board::renderIndex(colorRGBA primary, colorRGBA secondary, bool rotationFlag)
-{
-    // i is row index
-    // j is column index
-    // * Bottom to up, left to right
-    for (int i = 1; i <= BOARD_SIZE; i++)
-        for (int j = 1; j <= BOARD_SIZE; j++)
-        {
-            if (j != 1 || i != BOARD_SIZE)
-                continue;
-            bool cellType = (i + j) % 2 ^ 1; // As to contrast the cell's color
-            int currentX = SIDE_MARGIN + SIDE_LENGTH * (i - 1);
-            int currentY = TOP_MARGIN + SIDE_LENGTH * (j - 1);
-        }
-}
 
 bool Board::checkBoardSeq()
 {
@@ -346,19 +307,14 @@ Coordinate Board::getPieceCoord(SDL_MouseButtonEvent ev)
 
 void Board::renderPiece(int pieceName, int color, int x, int y)
 {
-    // std::swap(x, y);
-    // Swapped x and y for real positioning
     if (color < 0 || pieceName < 0)
         return;
     int pieceIndex = pieceName + color * 6;
     drawTexture(pieces[pieceIndex], x, y, SIDE_LENGTH, SIDE_LENGTH);
-    // SDL_Log("Rendering chess pieces at %d %d", x, y);
 }
 
 void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
 {
-    // std::swap(x, y);
-    // Swapped x and y
     renderPiece(pieceName, color, x - SIDE_LENGTH / 2, y - SIDE_LENGTH / 2);
     int leftEdge = x - SIDE_LENGTH / 2;
     int rightEdge = x + SIDE_LENGTH / 2;
@@ -385,8 +341,6 @@ void Board::renderPieceByCursor(int pieceName, int color, int x, int y)
         SDL_Rect fillRect = {SIDE_MARGIN + SIDE_LENGTH * 8, upperEdge, rightEdge - (SIDE_MARGIN + SIDE_LENGTH * 8), SIDE_LENGTH};
         SDL_RenderFillRect(renderer, &fillRect);
     }
-
-    // SDL_Log("Rendering chess pieces at %d %d", x, y);
 }
 
 void Board::renderPieceByCursor(char piece, int x, int y)
@@ -413,7 +367,6 @@ void Board::parseFENToBoard(std::string fenConfig)
             col = col + chr - '0';
             continue;
         }
-
         if (chr == '/')
         {
             row++;
@@ -481,7 +434,6 @@ int Board::getPieceName(char piece)
 char Board::getPiece(int x, int y)
 {
     std::swap(x, y);
-    // Coordinate boardCoordinate = getPieceCoord(x, y);
     return board[x][y];
 }
 
@@ -539,9 +491,6 @@ void Board::render()
     renderCheckmate();
     renderStalemate();
     renderFromBoard();
-    // std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n"
-    //           << checkmateCoordinate.getX() << " " << checkmateCoordinate.getY() << "\n"
-    //           << stalemateCoordinate.getX() << " " << stalemateCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
 }
@@ -561,7 +510,6 @@ bool Board::isNum(char c)
 {
     return 0 <= (c - '0') && (c - '0') <= 9;
 }
-// TODO: render next move possible for a chess
 
 void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
 {
@@ -572,8 +520,6 @@ void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordina
         drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + SIDE_MARGIN, cell.getY() * SIDE_LENGTH + TOP_MARGIN, SIDE_LENGTH, SIDE_LENGTH);
     }
 }
-
-// * renderMove is gonna be replaced
 
 vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
 {
@@ -593,8 +539,6 @@ vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
             if (isSafeMove(color, piece, Coordinate(coordX, coordY), cell))
                 res.push_back(cell);
         }
-
-    // Generating castling
     if (pieceName == KING)
     {
         if (color == BLACK)
@@ -696,15 +640,12 @@ vector<Coordinate> Board::getPossibleCaptures(char piece, int coordX, int coordY
                 res.push_back(enPassantMove);
         }
     }
-
     return res;
 }
 
 bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList, Coordinate dest)
 {
-    // ! Piece at src doesn't exist
     // * Check if moving the piece doesn't put the king in danger and the destination is valid
-    // Generating the next board
     for (Coordinate cell : moveList)
     {
         if (dest == cell)
@@ -716,8 +657,6 @@ bool Board::isValidMove(const vector<Coordinate> &moveList, const vector<Coordin
             return true;
     }
     return false;
-
-    // * Check if the king is in check after moving the piece
 }
 bool Board::testMovesKingSafety(Coordinate src, Coordinate dest, char movingPiece)
 {
@@ -758,7 +697,6 @@ bool Board::isKingSafe(int color)
         }
     int oppositeColor = 1 - color;
     bool res = true;
-    // * 3 - getPieceColor(movingPiece) return the opposite color to movingPiece
     int cardinalRow[8] = {-1, -1, -1, 0, 1, 1, 1, 0};
     int cardinalCol[8] = {-1, 0, 1, 1, 1, 0, -1, -1};
 
@@ -1011,16 +949,10 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
 {
     if (dest == Coordinate(-1, -1))
         return false;
-    log("Done checking out of bound");
     if (!isValidMove(moveList, captureList, dest))
         return false;
-    log("Done checking violation of moving rules");
-    // * Check king's safety
     if (!testMovesKingSafety(src, dest, piece))
         return false;
-    log("done checking King's safety");
-    // * Record change in position
-    log("Done updating current piece");
     Coordinate displacement = dest - src;
     int prevTotalPiece = 0;
     // * Counting total piece before
@@ -1150,7 +1082,6 @@ void Board::recordMove(Coordinate src, Coordinate dest)
 }
 void Board::renderLastMove()
 {
-    // if (previousCoordinate == Coordinate(-1, -1) || currentCoordinate == Coordinate(-1, -1)) return;
     renderBlendCell(previousCoordinate, moveIndicator);
     renderBlendCell(currentCoordinate, moveIndicator);
 }
@@ -1163,21 +1094,15 @@ void Board::renderBlendCell(Coordinate coordinate, colorRGBA color)
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     bool cellType = (coordinate.getX() + coordinate.getY()) % 2;
     setRendererColor(color);
-    // if (cellType)
-    //     setRendererColor(primaryColor);
-    // else setRendererColor(secondaryColor);
     SDL_Rect renderRect = {coordinate.getX(), coordinate.getY(), SIDE_LENGTH, SIDE_LENGTH};
     SDL_RenderFillRect(renderer, &renderRect);
-    // SDL_Log(SDL_GetError());
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 
 void Board::setRenderCheck(chessColor color)
 {
-    // std::cerr << "Entering set render check\n";
     dangerCoordinate = Coordinate(-1, -1);
     if (color != COLOR_NONE)
         for (int row = 0; row < BOARD_SIZE; row++)
@@ -1186,9 +1111,7 @@ void Board::setRenderCheck(chessColor color)
                 {
                     dangerCoordinate = Coordinate(col, row); // col as x, row as y
                     return;
-                    // std::cerr << "Found " << board[row][col] << " at " << row << " " << col << "\n";
                 }
-    // dangerCoordinate = kingPlace;
 }
 
 void Board::renderCheck()
@@ -1237,21 +1160,15 @@ void Board::enablePawnPromotion(int x, int y) // In cell coordinate
         knightPromotionCellColor = bishopPromotionCellColor = {secondaryColor.getR(), secondaryColor.getG(), secondaryColor.getB(), secondaryColor.getA()};
         queenPromotionCellColor = rookPromotionCellColor = {primaryColor.getR(), primaryColor.getG(), primaryColor.getB(), primaryColor.getA()};
     }
-    // std::cerr << queenButtonCoordinate.getX() << " " << queenButtonCoordinate.getY() << "\n"
-    //           << knightButtonCoordinate.getX() << " " << knightButtonCoordinate.getY() << "\n"
-    //           << rookButtonCoordinate.getX() << " " << rookButtonCoordinate.getY() << "\n"
-    //           << bishopButtonCoordinate.getX() << " " << bishopButtonCoordinate.getY() << "\n";
     SDL_Color blackColor = {black.getR(), black.getG(), black.getA(), black.getB()};
     queenPromotion = Button(renderer, queenButtonCoordinate.getX(), queenButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, queenPromotionCellColor, blackColor, ".", font);
     knightPromotion = Button(renderer, knightButtonCoordinate.getX(), knightButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, knightPromotionCellColor, blackColor, ".", font);
     rookPromotion = Button(renderer, rookButtonCoordinate.getX(), rookButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, rookPromotionCellColor, blackColor, ".", font);
     bishopPromotion = Button(renderer, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY(), SIDE_LENGTH, SIDE_LENGTH, bishopPromotionCellColor, blackColor, ".", font);
     promotionCoord = Coordinate(x, y);
-    // std::cerr << "Done initializing\n";
 }
 void Board::renderPawnPromotion()
 {
-    // std::cerr << "Entering rendering of pawn promotion\n";
     Button *arr[4] = {&queenPromotion, &knightPromotion, &rookPromotion, &bishopPromotion};
     Coordinate coord[4] = {queenButtonCoordinate, knightButtonCoordinate, rookButtonCoordinate, bishopButtonCoordinate};
     for (int i = 0; i < 4; i++)
@@ -1264,19 +1181,16 @@ void Board::renderPawnPromotion()
             arr[i]->setColor(primaryColor);
         arr[i]->render();
     }
-    // std::cerr << "Done calling rendering button\n";
     renderPiece(QUEEN, promotionColor, queenButtonCoordinate.getX(), queenButtonCoordinate.getY());
     renderPiece(KNIGHT, promotionColor, knightButtonCoordinate.getX(), knightButtonCoordinate.getY());
     renderPiece(ROOK, promotionColor, rookButtonCoordinate.getX(), rookButtonCoordinate.getY());
     renderPiece(BISHOP, promotionColor, bishopButtonCoordinate.getX(), bishopButtonCoordinate.getY());
-    // std::cerr << "Done rendering pieces\n";
 }
 
 bool Board::handlePawnPromotion(SDL_Event *ev)
 {
     int row = promotionCoord.getY();
     int col = promotionCoord.getX();
-    // std::cerr << row << " " << col << "\n";
     vector<Button *> button = {&queenPromotion, &rookPromotion, &bishopPromotion, &knightPromotion};
     for (Button *currentButton : button)
         currentButton->handleEvent(ev);
@@ -1411,10 +1325,8 @@ bool Board::nextMove(int color)
 {
     std::string fen = boardstateToFEN(color);
     std::string bestMove = communicator -> getMove(fen);
-    // std::cerr << bestMove << std::endl;
     if (bestMove == "(none)")
     {
-        // std::cerr << "End game" << std::endl;
         debugBoard();
         return false;
     }
@@ -1428,15 +1340,7 @@ bool Board::nextMove(int color)
         promotionPiece = bestMove[4];
     if (color == WHITE)
         promotionPiece = promotionPiece - 'a' + 'A';
-    // // std::cerr << "previous: " << std::endl;
-    // board.debugBoard();
-    // // std::cerr << fen << std::endl;
     char piece = getPiece(srcCol, srcRow);
-
-    // std::cerr << "Moved " << piece << " from " << srcCol << " " << srcRow << " to " << destCol << " " << destRow << "\n";
-
-    // // std::cerr << "Deleted: \n";
-    // board.debugBoard();
 
     auto moveList = getPossibleMoves(piece, srcCol, srcRow);
     for (auto cell : moveList)
@@ -1500,14 +1404,11 @@ bool Board::highlightKingStatus(bool &isEnded)
 void Board::clear()
 {
     setRendererColor(bgColor);
-    // SDL_Rect rect = {SIDE_MARGIN, TOP_MARGIN, 8 * SIDE_LENGTH, 8 * SIDE_LENGTH};
-    // SDL_RenderFillRect(renderer, &rect);
-    // renderChessboard();
-    // SDL_RenderClear(renderer);
 }
 
 bool Board::resetBoardState(bool &isEnded)
 {
+
     isEnded = false;
     Coordinate nullCell = Coordinate(-1, -1);
     dangerCoordinate = nullCell;

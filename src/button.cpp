@@ -32,6 +32,34 @@ void Button::renderRect(SDL_Rect rect, colorRGBA color)
     renderRect(rect, newColor);
 }
 
+// Function to render PNG
+
+void Button::renderPNG(std::string pngFilePath)
+{
+    // Load the PNG image
+    SDL_Surface *surface = IMG_Load(pngFilePath.c_str());
+    if (!surface)
+    {
+        std::cerr << "Failed to load PNG image: " << IMG_GetError() << std::endl;
+        return;
+    }
+
+    // Create a texture from the surface
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    if (!texture)
+    {
+        std::cerr << "Failed to create texture: " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    // Render the texture to the button's rectangle
+    SDL_RenderCopy(renderer, texture, NULL, &rect);
+
+    // Clean up
+    SDL_DestroyTexture(texture);
+}
+
 // Function to render SVG with text in the middle
 void Button::renderSVG(std::string svgFilePath, double scale)
 {

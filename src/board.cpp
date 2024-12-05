@@ -491,7 +491,7 @@ void Board::render()
     renderCheckmate();
     renderStalemate();
     renderFromBoard();
-    std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n";
+    // std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
 }

@@ -256,7 +256,7 @@ int main(int argc, char *args[])
     Coordinate pickedPlace(-1, -1);
 
     board.setColor(modernPrimary, modernSecondary);
-    // board.setCommunicator(&communicator);
+    board.setCommunicator(&communicator);
 
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
@@ -435,6 +435,7 @@ int main(int argc, char *args[])
             if (gameState.canUndo())
             {
                 std::string prevFen = gameState.undo();
+                board.resetBoardState(isEnded);
                 board.updateFen(prevFen);
                 currentMoveColor = 1 - currentMoveColor;
                 std::cerr << prevFen << "\n";
@@ -449,6 +450,7 @@ int main(int argc, char *args[])
             {
                 std::string nextFen = gameState.redo();
                 board.updateFen(nextFen);
+                board.resetBoardState(isEnded);
                 currentMoveColor = 1 - currentMoveColor;
                 std::cerr << nextFen << "\n";
                 renderOnce = false;
@@ -522,8 +524,8 @@ int main(int argc, char *args[])
             {
                 SDL_Log("Start 2 Players game");
                 resetGameState();
-                board.resetBoardState(isEnded);
                 board.startNewGame();
+                board.resetBoardState(isEnded);
                 gameState.pushState(board.getFen());
                 isOn = GAME;
                 startBtn2P.resetClicked(); // Reset button state
@@ -533,8 +535,8 @@ int main(int argc, char *args[])
             {
                 SDL_Log("Start game with AI");
                 resetGameState();
-                board.resetBoardState(isEnded);
                 board.startNewGame();
+                board.resetBoardState(isEnded);
                 gameState.pushState(board.getFen());
                 isOn = GAME;
                 isSinglePlayer = true;

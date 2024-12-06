@@ -363,7 +363,6 @@ int main(int argc, char *args[])
         pickedPiece = ' ';
         pickedPlace = Coordinate(-1, -1);
         currentMoveColor = board.getCurrentTurn();
-        ;
         renderOnce = false;
         board.resetBoardState(isEnded);
         gameState.clear();
@@ -460,9 +459,9 @@ int main(int argc, char *args[])
         if (beginBtn.clicked())
         {
             SDL_Log("Begin state!");
-            resetGameState();
-            board.resetBoardState(isEnded);
             board.startNewGame();
+            board.resetBoardState(isEnded);
+            resetGameState();
             gameState.pushState(board.getFen());
             beginBtn.resetClicked(); // Reset button state
         }
@@ -523,9 +522,9 @@ int main(int argc, char *args[])
             if (startBtn2P.clicked())
             {
                 SDL_Log("Start 2 Players game");
-                resetGameState();
                 board.startNewGame();
                 board.resetBoardState(isEnded);
+                resetGameState();
                 gameState.pushState(board.getFen());
                 isOn = GAME;
                 startBtn2P.resetClicked(); // Reset button state
@@ -534,9 +533,9 @@ int main(int argc, char *args[])
             if (startBtnAI.clicked())
             {
                 SDL_Log("Start game with AI");
-                resetGameState();
                 board.startNewGame();
                 board.resetBoardState(isEnded);
+                resetGameState();
                 gameState.pushState(board.getFen());
                 isOn = GAME;
                 isSinglePlayer = true;
@@ -643,6 +642,19 @@ int main(int argc, char *args[])
         case GAME:
         {
             // * Computer's turn
+            // std::cerr << currentMoveColor << "\n"; 
+            if (!renderOnce)
+            {
+                SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+                SDL_RenderClear(renderer);
+
+                GameGUILoad();
+                board.renderFromFen();
+                board.render();
+                SDL_RenderPresent(renderer);
+                renderOnce = true;
+                continue;
+            }
             if (isSinglePlayer && currentMoveColor == BLACK)
             {
                 board.nextMove(currentMoveColor);
@@ -658,17 +670,6 @@ int main(int argc, char *args[])
 
             GameGUILoad();
 
-            if (!renderOnce)
-            {
-                SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-                SDL_RenderClear(renderer);
-
-                GameGUILoad();
-                board.renderFromFen();
-
-                SDL_RenderPresent(renderer);
-                renderOnce = true;
-            }
 
             // Check if the window is running or not
             while (SDL_PollEvent(&event) != 0)

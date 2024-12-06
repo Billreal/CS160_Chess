@@ -99,11 +99,13 @@ void Board::loadTextures()
 
 void Board::startNewGame()
 {
+    std::cerr << "Starting new game: \n";
     CURRENT_FEN = STARTING_FEN;
     renderFen();
 }
 void Board::renderFen()
 {
+    std::cerr << "Begin splitting fen\n";
     splitSequence(CURRENT_FEN);
 
     if (checkBoardSeq())
@@ -168,7 +170,8 @@ void Board::updateFen(std::string fen)
 
 void Board::updatePlayerStatus(std::string player)
 {
-    nextPlayerTurn = player == "w" ? 0 :10; // 0 stands for white turn, 1 for black turn
+    nextPlayerTurn = (player == "w" ? 0 : 1); // 0 stands for white turn, 1 for black turn
+    std::cerr << "Updated nextPlayerTurn to: " << nextPlayerTurn << "\n";
 }
 
 void Board::updateCastlingStatus(std::string seq)
@@ -583,17 +586,17 @@ bool Board::isNum(char c)
 void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
 {
     for (Coordinate cell : moveList)
-        drawTexture(possibleMoveIndicator, 
-                    SIDE_MARGIN + cell.getX() * SIDE_LENGTH + SIDE_LENGTH * (0.375), 
+        drawTexture(possibleMoveIndicator,
+                    SIDE_MARGIN + cell.getX() * SIDE_LENGTH + SIDE_LENGTH * (0.375),
                     TOP_MARGIN + cell.getY() * SIDE_LENGTH + SIDE_LENGTH * (0.375),
-                    SIDE_LENGTH, 
+                    SIDE_LENGTH,
                     SIDE_LENGTH);
     for (Coordinate cell : captureList)
     {
-        drawTexture(possibleCaptureIndicator, 
-                    cell.getX() * SIDE_LENGTH + SIDE_MARGIN, 
-                    cell.getY() * SIDE_LENGTH + TOP_MARGIN, 
-                    SIDE_LENGTH, 
+        drawTexture(possibleCaptureIndicator,
+                    cell.getX() * SIDE_LENGTH + SIDE_MARGIN,
+                    cell.getY() * SIDE_LENGTH + TOP_MARGIN,
+                    SIDE_LENGTH,
                     SIDE_LENGTH);
     }
 }
@@ -1337,7 +1340,8 @@ void Board::renderStalemate()
 
 chessColor Board::getCurrentTurn()
 {
-    return (chessColor)(!nextPlayerTurn);
+    std::cerr << "Current turn is: " << nextPlayerTurn << "\n";
+    return (chessColor)(nextPlayerTurn);
 }
 
 string Board::boardstateToFEN()
@@ -1364,7 +1368,7 @@ string Board::boardstateToFEN()
             returnStr << '/';
     }
     returnStr << " ";
-    returnStr << (nextPlayerTurn ? 'w' : 'b');
+    returnStr << (nextPlayerTurn ? 'b' : 'w');
     returnStr << ' ';
     if (!blackKingSide && !blackQueenSide && !whiteQueenSide && !whiteKingSide)
         returnStr << "-";
@@ -1395,7 +1399,7 @@ string Board::boardstateToFEN()
 }
 string Board::boardstateToFEN(int color)
 {
-    nextPlayerTurn = !color;
+    nextPlayerTurn = color;
     return boardstateToFEN();
 }
 
@@ -1503,7 +1507,8 @@ void Board::setCommunicator(Communicator *communicator)
     this->communicator = communicator;
 }
 
-void Board::nextMoveColor(){
+void Board::nextMoveColor()
+{
     nextPlayerTurn = !nextPlayerTurn;
 }
 

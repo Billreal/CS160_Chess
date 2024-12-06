@@ -772,7 +772,7 @@ int main(int argc, char *args[])
                     GameBoardRender();
                     board.renderMove(possibleMoves, possibleCaptures);
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
-
+                    GameGUILoad();
                     SDL_RenderPresent(renderer);
 
                     break;
@@ -848,6 +848,7 @@ int main(int argc, char *args[])
                     // * King status is checked after move and promotion have done
                     if (!isUnderPromotion)
                     {
+                        // std::cerr << "Highlighting " << currentMoveColor << "\n";
                         if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
                         {
                             GameGUILoad();

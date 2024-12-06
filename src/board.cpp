@@ -1459,7 +1459,6 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
     }
     if (!isKingSafe(color))
     {
-        if (!isKingSafe(WHITE))
         setRenderCheck(color);
         return true;
     }

@@ -99,13 +99,13 @@ void Board::loadTextures()
 
 void Board::startNewGame()
 {
-    std::cerr << "Starting new game: \n";
+    // std::cerr << "Starting new game: \n";
     CURRENT_FEN = STARTING_FEN;
     renderFen();
 }
 void Board::renderFen()
 {
-    std::cerr << "Begin splitting fen\n";
+    // std::cerr << "Begin splitting fen\n";
     splitSequence(CURRENT_FEN);
 
     if (checkBoardSeq())
@@ -171,7 +171,7 @@ void Board::updateFen(std::string fen)
 void Board::updatePlayerStatus(std::string player)
 {
     nextPlayerTurn = (player == "w" ? 0 : 1); // 0 stands for white turn, 1 for black turn
-    std::cerr << "Updated nextPlayerTurn to: " << nextPlayerTurn << "\n";
+    // std::cerr << "Updated nextPlayerTurn to: " << nextPlayerTurn << "\n";
 }
 
 void Board::updateCastlingStatus(std::string seq)
@@ -1447,35 +1447,27 @@ bool Board::nextMove(int color)
     return true;
 }
 
-bool Board::highlightKingStatus(bool &isEnded)
+bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 {
-    if (isCheckmate(WHITE) || isCheckmate(BLACK))
+    if (isCheckmate(color))
     {
         isEnded = true;
-        if (isCheckmate(WHITE))
-            setRenderCheckmate(WHITE);
-        else
-            setRenderCheckmate(BLACK);
+        setRenderCheckmate(color);
         SDL_Log("End game: Checkmate");
 
         return true;
     }
-    if (!isKingSafe(WHITE) || !isKingSafe(BLACK))
+    if (!isKingSafe(color))
     {
         if (!isKingSafe(WHITE))
-            setRenderCheck(WHITE);
-        else
-            setRenderCheck(BLACK);
+        setRenderCheck(color);
         return true;
     }
-    if (isStalemate(WHITE) || isStalemate(BLACK))
+    if (isStalemate(color))
     {
         isEnded = true;
-        if (isStalemate(WHITE))
-            setRenderStalemate(WHITE);
-        else
-            setRenderStalemate(BLACK);
-        SDL_Log("End game: Statemate");
+        setRenderStalemate(color);
+        SDL_Log("End game: Stalemate");
         return true;
     }
     return false;
@@ -1499,7 +1491,7 @@ bool Board::resetBoardState(bool &isEnded)
     previousCoordinate = nullCell;
     currentCoordinate = nullCell;
     communicator->startNewGame();
-    return highlightKingStatus(isEnded);
+    return highlightKingStatus(isEnded, WHITE) || highlightKingStatus(isEnded, BLACK);
 }
 
 void Board::setCommunicator(Communicator *communicator)

@@ -282,7 +282,7 @@ public:
 
     bool nextMove(int color);
 
-    bool highlightKingStatus(bool &isEnded);
+    bool highlightKingStatus(bool &isEnded, chessColor color);
 
     bool resetBoardState(bool &isEnded);
 

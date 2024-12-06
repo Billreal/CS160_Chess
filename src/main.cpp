@@ -643,6 +643,7 @@ int main(int argc, char *args[])
         {
             // * Computer's turn
             // std::cerr << currentMoveColor << "\n"; 
+            currentMoveColor = board.getMoveColor();
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
@@ -653,7 +654,7 @@ int main(int argc, char *args[])
                 board.render();
                 SDL_RenderPresent(renderer);
                 renderOnce = true;
-                continue;
+                break;
             }
             if (isSinglePlayer && currentMoveColor == BLACK)
             {
@@ -661,7 +662,7 @@ int main(int argc, char *args[])
                 board.nextMoveColor();
                 currentMoveColor = board.getMoveColor();
                 board.setRenderCheck(COLOR_NONE);
-                board.highlightKingStatus(isEnded);
+                board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor));
                 GameGUILoad();
                 board.render();
                 board.present();
@@ -831,7 +832,7 @@ int main(int argc, char *args[])
                     // * King status is checked after move and promotion have done
                     if (!isUnderPromotion)
                     {
-                        if (board.highlightKingStatus(isEnded))
+                        if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
                         {
                             GameGUILoad();
                             board.render();

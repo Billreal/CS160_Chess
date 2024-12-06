@@ -105,11 +105,6 @@ void Board::startNewGame()
 void Board::renderFen()
 {
     splitSequence(CURRENT_FEN);
-    reloadFen();
-}
-void Board::reloadFen()
-{
-    splitSequence(CURRENT_FEN);
 
     if (checkBoardSeq())
     {
@@ -148,7 +143,6 @@ void Board::renderChessboard(colorRGBA primary, colorRGBA secondary)
     // Update the screen with any rendering performed since the previous call.
 }
 
-
 bool Board::checkBoardSeq()
 {
     // Check if FEN Notation sequences are available. If not, end the function
@@ -169,12 +163,12 @@ void Board::updateFen(std::string fen)
         return;
     }
     CURRENT_FEN = fen;
-    reloadFen();
+    renderFen();
 }
 
 void Board::updatePlayerStatus(std::string player)
 {
-    isPlayerTurn = player == "w" ? 1 : 0; // 1 stands for white turn, 0 for black turn
+    nextPlayerTurn = player == "w" ? 0 :10; // 0 stands for white turn, 1 for black turn
 }
 
 void Board::updateCastlingStatus(std::string seq)
@@ -189,19 +183,92 @@ void Board::updateCastlingStatus(std::string seq)
 void Board::updateEnPassantStatus(std::string seq)
 {
     enPassant = seq == "-" ? false : true;
-    enPassantCoord = Coordinate(seq[0] - 'a', seq[1] - '1');
+    if (enPassant)
+        enPassantCoord = Coordinate(seq[0] - 'a', seq[1] - '1');
+    else
+        enPassantCoord = Coordinate(-1, -1);
 }
 
 // Halfmoves, used to enforce the 50-move draw rule
 void Board::countHalfmove(std::string num)
 {
-    halfmoves = stringToNum(boardSequence[4]);
+    halfmoves = stringToNum(num);
 }
 
 // Total moves
 void Board::countTotalMove(std::string num)
 {
-    totalmoves = stringToNum(boardSequence[5]);
+    totalmoves = stringToNum(num);
+}
+
+std::string Board::boardToFen()
+{
+    std::stringstream fen;
+
+    // Piece placement
+    for (int row = 0; row < 8; ++row)
+    {
+        int emptyCount = 0;
+        for (int col = 0; col < 8; ++col)
+        {
+            char piece = board[row][col];
+            if (piece == '0')
+            {
+                ++emptyCount;
+            }
+            else
+            {
+                if (emptyCount > 0)
+                {
+                    fen << emptyCount;
+                    emptyCount = 0;
+                }
+                fen << piece;
+            }
+        }
+        if (emptyCount > 0)
+        {
+            fen << emptyCount;
+        }
+        if (row < 7)
+        {
+            fen << '/';
+        }
+    }
+
+    // Active color
+    fen << ' ' << (nextPlayerTurn == 0 ? 'w' : 'b');
+
+    // Castling availability
+    fen << ' ';
+    if (whiteKingSide)
+        fen << 'K';
+    if (whiteQueenSide)
+        fen << 'Q';
+    if (blackKingSide)
+        fen << 'k';
+    if (blackQueenSide)
+        fen << 'q';
+    if (!whiteKingSide && !whiteQueenSide && !blackKingSide && !blackQueenSide)
+    {
+        fen << '-';
+    }
+
+    // En passant target square
+    if (enPassantCoord != Coordinate(-1, -1))
+    {
+        fen << ' ' << (char)('a' + enPassantCoord.getX()) << (char)('1' + enPassantCoord.getY());
+    }
+    else
+        fen << "-";
+
+    // Halfmove clock
+    fen << ' ' << halfmoves;
+
+    // Fullmove number
+    fen << ' ' << totalmoves;
+
+    return fen.str();
 }
 
 std::string Board::getFen()
@@ -491,15 +558,16 @@ void Board::render()
     renderCheckmate();
     renderStalemate();
     renderFromBoard();
-    // std::cerr << dangerCoordinate.getX() << " " << dangerCoordinate.getY() << "\n";
     if (isUnderPromotion)
         renderPawnPromotion();
+    updateFen(boardToFen());
 }
 
 void Board::renderFromFen()
 {
     renderChessboard();
     renderFen();
+    updateFen(boardToFen());
 }
 
 void Board::setBackground(colorRGBA bg)
@@ -515,10 +583,18 @@ bool Board::isNum(char c)
 void Board::renderMove(const vector<Coordinate> &moveList, const vector<Coordinate> &captureList)
 {
     for (Coordinate cell : moveList)
-        drawTexture(possibleMoveIndicator, cell.getX() * SIDE_LENGTH + SIDE_MARGIN + (SIDE_LENGTH * (1 - MOVE_INDICATOR_SCALE)) / 2, cell.getY() * SIDE_LENGTH + TOP_MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+        drawTexture(possibleMoveIndicator, 
+                    SIDE_MARGIN + cell.getX() * SIDE_LENGTH + SIDE_LENGTH * (0.375), 
+                    TOP_MARGIN + cell.getY() * SIDE_LENGTH + SIDE_LENGTH * (0.375),
+                    SIDE_LENGTH, 
+                    SIDE_LENGTH);
     for (Coordinate cell : captureList)
     {
-        drawTexture(possibleCaptureIndicator, cell.getX() * SIDE_LENGTH + SIDE_MARGIN, cell.getY() * SIDE_LENGTH + TOP_MARGIN, SIDE_LENGTH, SIDE_LENGTH);
+        drawTexture(possibleCaptureIndicator, 
+                    cell.getX() * SIDE_LENGTH + SIDE_MARGIN, 
+                    cell.getY() * SIDE_LENGTH + TOP_MARGIN, 
+                    SIDE_LENGTH, 
+                    SIDE_LENGTH);
     }
 }
 
@@ -1012,6 +1088,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         halfmoves = 0;
     else
         halfmoves++;
+    debugBoard();
     return true;
 }
 
@@ -1258,9 +1335,9 @@ void Board::renderStalemate()
     renderBlendCell(stalemateCoordinate, stalemateIndicator);
 }
 
-int Board::getCurrentTurn()
+chessColor Board::getCurrentTurn()
 {
-    return !isPlayerTurn;
+    return (chessColor)(!nextPlayerTurn);
 }
 
 string Board::boardstateToFEN()
@@ -1287,7 +1364,7 @@ string Board::boardstateToFEN()
             returnStr << '/';
     }
     returnStr << " ";
-    returnStr << (isPlayerTurn ? 'w' : 'b');
+    returnStr << (nextPlayerTurn ? 'w' : 'b');
     returnStr << ' ';
     if (!blackKingSide && !blackQueenSide && !whiteQueenSide && !whiteKingSide)
         returnStr << "-";
@@ -1318,14 +1395,14 @@ string Board::boardstateToFEN()
 }
 string Board::boardstateToFEN(int color)
 {
-    isPlayerTurn = !color;
+    nextPlayerTurn = !color;
     return boardstateToFEN();
 }
 
 bool Board::nextMove(int color)
 {
     std::string fen = boardstateToFEN(color);
-    std::string bestMove = communicator -> getMove(fen);
+    std::string bestMove = communicator->getMove(fen);
     if (bestMove == "(none)")
     {
         debugBoard();
@@ -1417,21 +1494,20 @@ bool Board::resetBoardState(bool &isEnded)
     stalemateCoordinate = nullCell;
     previousCoordinate = nullCell;
     currentCoordinate = nullCell;
-    communicator -> startNewGame();
+    communicator->startNewGame();
     return highlightKingStatus(isEnded);
 }
 
-void Board::setCommunicator(Communicator* communicator)
+void Board::setCommunicator(Communicator *communicator)
 {
-    this -> communicator = communicator;
+    this->communicator = communicator;
 }
 
-void Board::nextMoveColor()
-{
-    isPlayerTurn = !isPlayerTurn;
+void Board::nextMoveColor(){
+    nextPlayerTurn = !nextPlayerTurn;
 }
 
 chessColor Board::getMoveColor()
 {
-    return (chessColor)(!isPlayerTurn);
+    return (chessColor)(nextPlayerTurn);
 }

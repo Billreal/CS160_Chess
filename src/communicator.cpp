@@ -3,7 +3,7 @@
 Communicator::Communicator()
 {
     inputFile.open("tmp/stockfish_output.txt");
-    process = _popen("stockfish.exe > tmp/stockfish_output.txt", "w");
+    process = popen("stockfish.exe > tmp/stockfish_output.txt", "w");
     isRunning = true;
 }
 

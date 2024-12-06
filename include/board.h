@@ -30,7 +30,7 @@ private:
     colorRGBA backgroundColor;
     chessPieces chessPiece;
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
-    int isPlayerTurn = -1; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
+    int nextPlayerTurn = -1; // contains either 0 or 1, which 1 stands for white turn, 0 for black turn
     bool whiteKingSide;
     bool whiteQueenSide;
     bool blackKingSide;
@@ -49,7 +49,7 @@ private:
     std::vector<std::string> MOVES;
 
     const double IMG_SCALE = 1.8;
-    const double MOVE_INDICATOR_SCALE = 0.9;
+    const double MOVE_INDICATOR_SCALE = 0.45;
     const double CAPTURE_INDICATOR_SCALE = 1.8;
 
     std::vector<SDL_Texture *> TextureList;
@@ -127,14 +127,14 @@ public:
     void renderFen();
 
     // Infos
-    int getCurrentTurn();
+    chessColor getCurrentTurn();
     std::string getTurn()
     {
-        if (isPlayerTurn == -1)
+        if (nextPlayerTurn == -1)
         {
             return "";
         }
-        return isPlayerTurn == 1 ? "White" : "Black";
+        return nextPlayerTurn == 1 ? "White" : "Black";
     }
 
     std::string getMoves()
@@ -197,6 +197,8 @@ public:
     int getPieceName(char piece);
 
     int getPieceColor(char piece);
+    
+    std::string boardToFen();
 
     std::string getFen();
 

@@ -630,6 +630,7 @@ int main(int argc, char *args[])
                     resetGameState();
                     loadGame(board, files[i]);
                     board.resetBoardState(isEnded);
+                    gameState.clear();
                     gameState.pushState(board.getFen());
 
                     isOn = GAME;
@@ -696,10 +697,11 @@ int main(int argc, char *args[])
                                 gameState.pushState(board.getFen());
                                 isUnderPromotion = false;
                                 board.nextMoveColor();
-                                currentMoveColor = board.getMoveColor(); 
+                                currentMoveColor = board.getMoveColor();
                                 // the current move color is switched, opposite of promoted piece
 
                                 // Frame handling
+                                std::cerr << board.getFen() << "\n";
                                 GameBoardRender();
 
                                 SDL_RenderPresent(renderer);
@@ -798,11 +800,12 @@ int main(int argc, char *args[])
                             pickedPiece = ' ';
 
                             // Frame handling
-                            gameState.pushState(board.getFen());
+                            std::cerr << board.getFen() << "\n";
                             GameBoardRender();
 
                             SDL_RenderPresent(renderer);
 
+                            gameState.pushState(board.getFen());
                             if (!isUnderPromotion)
                             {
                                 board.nextMoveColor();

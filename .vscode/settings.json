@@ -74,6 +74,12 @@
         "iomanip": "cpp",
         "sstream": "cpp",
         "__threading_support": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "__tree": "cpp",
+        "condition_variable": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp"
     }
 }

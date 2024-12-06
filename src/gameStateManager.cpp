@@ -37,6 +37,7 @@ std::string GameStateManager::undo()
         std::string currentState = undoStack.top();
         undoStack.pop();
         redoStack.push(currentState);
+        std::cerr << "Undo: " << undoStack.top() << "\n";
         return undoStack.empty() ? "" : undoStack.top();
     }
     return "";
@@ -49,6 +50,7 @@ std::string GameStateManager::redo()
         std::string currentState = redoStack.top();
         redoStack.pop();
         undoStack.push(currentState);
+        std::cerr << "Redo: " << currentState << "\n";
         return currentState;
     }
     return "";

@@ -219,21 +219,13 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    // Background background(renderer);
-    // background.render(bgColor);
-    // if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE) < 0)
-    // {
-    //     cerr << "Blending failure\n";
-    //     cerr << SDL_GetError() << "\n";
-    // }
-
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
-    Communicator communicator;
-    communicator.init();
-    communicator.startNewGame();
+    // Communicator communicator;
+    // communicator.init();
+    // communicator.startNewGame();
 
     // ! ----- Temporary setting for communicator -----
-    communicator.setDifficulty(Difficulty::HARD);
+    // communicator.setDifficulty(Difficulty::HARD);
     // ! ----------------------------------------------
     // Handling SDL_events
     SDL_Event event;
@@ -256,7 +248,7 @@ int main(int argc, char *args[])
     Coordinate pickedPlace(-1, -1);
 
     board.setColor(modernPrimary, modernSecondary);
-    board.setCommunicator(&communicator);
+    // board.setCommunicator(&communicator);
 
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
@@ -363,7 +355,7 @@ int main(int argc, char *args[])
         prevCoordinate = Coordinate(-1, -1);
         pickedPiece = ' ';
         pickedPlace = Coordinate(-1, -1);
-        currentMoveColor = board.getCurrentTurn();
+        currentMoveColor = WHITE;
         renderOnce = false;
         board.resetBoardState(isEnded);
         gameState.clear();
@@ -437,7 +429,12 @@ int main(int argc, char *args[])
                 std::string prevFen = gameState.undo();
                 board.resetBoardState(isEnded);
                 board.updateFen(prevFen);
-                currentMoveColor = 1 - currentMoveColor;
+
+                currentMoveColor = board.getMoveColor();
+                if (currentMoveColor)
+                    std::cerr << "Black\n";
+                else
+                    std::cerr << "White\n";
                 std::cerr << prevFen << "\n";
                 renderOnce = false;
             }
@@ -449,9 +446,14 @@ int main(int argc, char *args[])
             if (gameState.canRedo())
             {
                 std::string nextFen = gameState.redo();
-                board.updateFen(nextFen);
                 board.resetBoardState(isEnded);
-                currentMoveColor = 1 - currentMoveColor;
+                board.updateFen(nextFen);
+
+                currentMoveColor = board.getMoveColor();
+                if (currentMoveColor)
+                    std::cerr << "Black\n";
+                else
+                    std::cerr << "White\n";
                 std::cerr << nextFen << "\n";
                 renderOnce = false;
             }
@@ -483,6 +485,7 @@ int main(int argc, char *args[])
         GameGUILoad();
         board.render();
     };
+
     // Main app
     while (running)
     {
@@ -598,31 +601,6 @@ int main(int argc, char *args[])
             SDL_RenderPresent(renderer);
 
             // Update screen
-
-            // Handle button hovering
-            // for (int i = 0; i < loadFileBtns.size(); i++)
-            // {
-            //     if (loadFileBtns[i].hover())
-            //     {
-            //         std::cerr << "Hovering at button: " << i << "\n";
-            //         if (hoverLoading == false)
-            //         {
-            //             hoverLoading = true;
-            //             loadGame(demoBoard, files[i]);
-            //             // demoBoard.renderFromFen();
-            //         }
-            //         // std::cerr << "Button hovering!\n";
-            //         loadFileBtns[i].updateColor(startMenuBtnColor);
-            //         break;
-            //     }
-            //     else
-            //     {
-            //         // std::cerr << "Button no more hovering!\n";
-            //         loadFileBtns[i].updateColor(loadMenuBtnColor);
-            //         demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
-            //         hoverLoading = false;
-            //     }
-            // }
             hoverLoading = false;
             for (int i = 0; i < loadFileBtns.size(); i++)
             {
@@ -637,6 +615,7 @@ int main(int argc, char *args[])
             }
             if (!hoverLoading)
                 demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+
             // Handle button click
             for (int i = 0; i < loadFileBtns.size(); i++)
             {
@@ -668,18 +647,22 @@ int main(int argc, char *args[])
 
                 GameGUILoad();
                 board.renderFromFen();
-                board.render();
+                currentMoveColor = board.getMoveColor();
+
                 SDL_RenderPresent(renderer);
                 renderOnce = true;
                 break;
             }
+
             if (isSinglePlayer && currentMoveColor == BLACK)
             {
                 board.nextMove(currentMoveColor);
-                board.nextMoveColor();
-                currentMoveColor = board.getMoveColor();
+
                 board.setRenderCheck(COLOR_NONE);
                 board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor));
+
+                // board.updateFen(board.boardToFen());
+                currentMoveColor = board.getMoveColor();
                 GameGUILoad();
                 board.render();
                 board.present();
@@ -714,12 +697,13 @@ int main(int argc, char *args[])
                             {
                                 gameState.pushState(board.getFen());
                                 isUnderPromotion = false;
+
                                 board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor();
                                 // the current move color is switched, opposite of promoted piece
+                                board.updateFen(board.boardToFen());
 
                                 // Frame handling
-                                std::cerr << board.getFen() << "\n";
                                 GameBoardRender();
 
                                 SDL_RenderPresent(renderer);
@@ -773,6 +757,7 @@ int main(int argc, char *args[])
                     board.renderMove(possibleMoves, possibleCaptures);
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                     GameGUILoad();
+
                     SDL_RenderPresent(renderer);
 
                     break;
@@ -795,6 +780,7 @@ int main(int argc, char *args[])
                             // // Frame handling
                             GameBoardRender();
                             board.renderMove(possibleMoves, possibleCaptures);
+
                             isToHighlightMove = true;
                             SDL_RenderPresent(renderer);
                         }
@@ -818,15 +804,15 @@ int main(int argc, char *args[])
                             pickedPiece = ' ';
 
                             // Frame handling
-                            std::cerr << board.getFen() << "\n";
+                            // std::cerr << board.getFen() << "\n";
                             GameBoardRender();
 
                             SDL_RenderPresent(renderer);
 
+
                             gameState.pushState(board.getFen());
                             if (!isUnderPromotion)
                             {
-                                board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor();
                             }
                         }

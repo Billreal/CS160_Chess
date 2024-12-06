@@ -101,9 +101,10 @@ void Board::startNewGame()
 {
     // std::cerr << "Starting new game: \n";
     CURRENT_FEN = STARTING_FEN;
-    renderFen();
+    FenToStates();
 }
-void Board::renderFen()
+
+void Board::FenToStates()
 {
     // std::cerr << "Begin splitting fen\n";
     splitSequence(CURRENT_FEN);
@@ -111,7 +112,6 @@ void Board::renderFen()
     if (checkBoardSeq())
     {
         parseFENToBoard(boardSequence[0]);
-        renderFromBoard();
         updatePlayerStatus(boardSequence[1]);
         updateCastlingStatus(boardSequence[2]);
         updateEnPassantStatus(boardSequence[3]);
@@ -165,13 +165,12 @@ void Board::updateFen(std::string fen)
         return;
     }
     CURRENT_FEN = fen;
-    renderFen();
+    FenToStates();
 }
 
 void Board::updatePlayerStatus(std::string player)
 {
     nextPlayerTurn = (player == "w" ? 0 : 1); // 0 stands for white turn, 1 for black turn
-    // std::cerr << "Updated nextPlayerTurn to: " << nextPlayerTurn << "\n";
 }
 
 void Board::updateCastlingStatus(std::string seq)
@@ -202,76 +201,6 @@ void Board::countHalfmove(std::string num)
 void Board::countTotalMove(std::string num)
 {
     totalmoves = stringToNum(num);
-}
-
-std::string Board::boardToFen()
-{
-    std::stringstream fen;
-
-    // Piece placement
-    for (int row = 0; row < 8; ++row)
-    {
-        int emptyCount = 0;
-        for (int col = 0; col < 8; ++col)
-        {
-            char piece = board[row][col];
-            if (piece == '0')
-            {
-                ++emptyCount;
-            }
-            else
-            {
-                if (emptyCount > 0)
-                {
-                    fen << emptyCount;
-                    emptyCount = 0;
-                }
-                fen << piece;
-            }
-        }
-        if (emptyCount > 0)
-        {
-            fen << emptyCount;
-        }
-        if (row < 7)
-        {
-            fen << '/';
-        }
-    }
-
-    // Active color
-    fen << ' ' << (nextPlayerTurn == 0 ? 'w' : 'b');
-
-    // Castling availability
-    fen << ' ';
-    if (whiteKingSide)
-        fen << 'K';
-    if (whiteQueenSide)
-        fen << 'Q';
-    if (blackKingSide)
-        fen << 'k';
-    if (blackQueenSide)
-        fen << 'q';
-    if (!whiteKingSide && !whiteQueenSide && !blackKingSide && !blackQueenSide)
-    {
-        fen << '-';
-    }
-
-    // En passant target square
-    if (enPassantCoord != Coordinate(-1, -1))
-    {
-        fen << ' ' << (char)('a' + enPassantCoord.getX()) << (char)('1' + enPassantCoord.getY());
-    }
-    else
-        fen << "-";
-
-    // Halfmove clock
-    fen << ' ' << halfmoves;
-
-    // Fullmove number
-    fen << ' ' << totalmoves;
-
-    return fen.str();
 }
 
 std::string Board::getFen()
@@ -540,6 +469,7 @@ void Board::debugBoard()
         for (int j = 0; j <= 7; j++)
             std::cerr << board[i][j] << " \n"[j == 7];
     std::cerr << "\n";
+    std::cerr << CURRENT_FEN << '\n';
 }
 
 void Board::setColor(colorRGBA primary, colorRGBA secondary)
@@ -563,14 +493,12 @@ void Board::render()
     renderFromBoard();
     if (isUnderPromotion)
         renderPawnPromotion();
-    updateFen(boardToFen());
 }
 
 void Board::renderFromFen()
 {
-    renderChessboard();
-    renderFen();
-    updateFen(boardToFen());
+    FenToStates();
+    render();
 }
 
 void Board::setBackground(colorRGBA bg)
@@ -1091,7 +1019,14 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         halfmoves = 0;
     else
         halfmoves++;
+    nextMoveColor();
+    updateFen(boardToFen());
     debugBoard();
+
+    if (nextPlayerTurn)
+        std::cerr << "Black\n";
+    else
+        std::cerr << "White\n";
     return true;
 }
 
@@ -1338,13 +1273,7 @@ void Board::renderStalemate()
     renderBlendCell(stalemateCoordinate, stalemateIndicator);
 }
 
-chessColor Board::getCurrentTurn()
-{
-    std::cerr << "Current turn is: " << nextPlayerTurn << "\n";
-    return (chessColor)(nextPlayerTurn);
-}
-
-string Board::boardstateToFEN()
+string Board::boardToFen()
 {
     std::stringstream returnStr;
     for (int row = 0; row < BOARD_SIZE; row++)
@@ -1397,15 +1326,15 @@ string Board::boardstateToFEN()
     returnStr << totalmoves << " ";
     return returnStr.str();
 }
-string Board::boardstateToFEN(int color)
+string Board::boardToFen(int color)
 {
     nextPlayerTurn = color;
-    return boardstateToFEN();
+    return boardToFen();
 }
 
 bool Board::nextMove(int color)
 {
-    std::string fen = boardstateToFEN(color);
+    std::string fen = boardToFen(color);
     std::string bestMove = communicator->getMove(fen);
     if (bestMove == "(none)")
     {
@@ -1479,6 +1408,7 @@ void Board::clear()
     setRendererColor(bgColor);
 }
 
+// Reset board highlights
 bool Board::resetBoardState(bool &isEnded)
 {
 
@@ -1489,7 +1419,7 @@ bool Board::resetBoardState(bool &isEnded)
     stalemateCoordinate = nullCell;
     previousCoordinate = nullCell;
     currentCoordinate = nullCell;
-    communicator->startNewGame();
+    // communicator->startNewGame();
     return highlightKingStatus(isEnded, WHITE) || highlightKingStatus(isEnded, BLACK);
 }
 

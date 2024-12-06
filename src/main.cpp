@@ -626,8 +626,8 @@ int main(int argc, char *args[])
                 if (loadFileBtns[i].clicked())
                 {
                     // std::cerr << "Button clicked!\n";
-                    resetGameState();
                     loadGame(board, files[i]);
+                    resetGameState();
                     board.resetBoardState(isEnded);
                     gameState.clear();
                     gameState.pushState(board.getFen());
@@ -643,7 +643,7 @@ int main(int argc, char *args[])
         {
             // * Computer's turn
             // std::cerr << currentMoveColor << "\n"; 
-            currentMoveColor = board.getMoveColor();
+            // currentMoveColor = board.getMoveColor();
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color

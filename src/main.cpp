@@ -119,7 +119,7 @@ void loadGame(Board &board, const std::string &filename)
         saveFile.close();
         return;
     }
-    // // std::cerr << FEN << "\n";
+    // std::cerr << FEN << "\n";
     board.updateFen(FEN);
 
     saveFile.close();
@@ -308,6 +308,7 @@ int main(int argc, char *args[])
     std::vector<Button> loadFileBtns;
     for (int i = 0; i < files.size(); i++)
     {
+        std::cerr << files[i] << "\n";
         string name = "";
         for (int j = 0; j < files[i].length() - 3; j++)
         {
@@ -576,9 +577,10 @@ int main(int argc, char *args[])
                 for (int i = 0; i < loadFileBtns.size(); i++)
                 {
                     loadFileBtns[i].handleEvent(&event);
+                    // std::cerr << "Done handle " << i << "\n";
                 }
             }
-
+            // ? Handle success
             // Render demo board and infos
             demoBoard.renderFromFen();
             renderText(renderer, font, "Turn: " + demoBoard.getTurn(), white, {480, 700, 135, 30});
@@ -598,28 +600,43 @@ int main(int argc, char *args[])
             // Update screen
 
             // Handle button hovering
+            // for (int i = 0; i < loadFileBtns.size(); i++)
+            // {
+            //     if (loadFileBtns[i].hover())
+            //     {
+            //         std::cerr << "Hovering at button: " << i << "\n";
+            //         if (hoverLoading == false)
+            //         {
+            //             hoverLoading = true;
+            //             loadGame(demoBoard, files[i]);
+            //             // demoBoard.renderFromFen();
+            //         }
+            //         // std::cerr << "Button hovering!\n";
+            //         loadFileBtns[i].updateColor(startMenuBtnColor);
+            //         break;
+            //     }
+            //     else
+            //     {
+            //         // std::cerr << "Button no more hovering!\n";
+            //         loadFileBtns[i].updateColor(loadMenuBtnColor);
+            //         demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+            //         hoverLoading = false;
+            //     }
+            // }
+            hoverLoading = false;
             for (int i = 0; i < loadFileBtns.size(); i++)
             {
                 if (loadFileBtns[i].hover())
                 {
-                    if (hoverLoading == false)
-                    {
-                        hoverLoading = true;
-                        loadGame(demoBoard, files[i]);
-                    }
-                    // std::cerr << "Button hovering!\n";
+                    loadGame(demoBoard, files[i]);
+                    hoverLoading = true;
                     loadFileBtns[i].updateColor(startMenuBtnColor);
-                    break;
                 }
                 else
-                {
-                    // std::cerr << "Button no more hovering!\n";
                     loadFileBtns[i].updateColor(loadMenuBtnColor);
-                    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
-                    hoverLoading = false;
-                }
             }
-
+            if (!hoverLoading)
+                demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
             // Handle button click
             for (int i = 0; i < loadFileBtns.size(); i++)
             {
@@ -642,7 +659,7 @@ int main(int argc, char *args[])
         case GAME:
         {
             // * Computer's turn
-            // std::cerr << currentMoveColor << "\n"; 
+            // std::cerr << currentMoveColor << "\n";
             // currentMoveColor = board.getMoveColor();
             if (!renderOnce)
             {
@@ -670,7 +687,6 @@ int main(int argc, char *args[])
             }
 
             GameGUILoad();
-
 
             // Check if the window is running or not
             while (SDL_PollEvent(&event) != 0)

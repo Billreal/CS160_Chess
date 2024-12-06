@@ -752,8 +752,8 @@ int main(int argc, char *args[])
                         break;
                     // Frame handling
                     GameBoardRender();
-                    board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                     board.renderMove(possibleMoves, possibleCaptures);
+                    board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
 
                     SDL_RenderPresent(renderer);
 
@@ -839,6 +839,7 @@ int main(int argc, char *args[])
                                 isToHighlightMove = false;
                                 board.renderMove(possibleMoves, possibleCaptures);
                             }
+                            SDL_RenderPresent(renderer);
                             // board.renderMove(possibleMoves, possibleCaptures);
                         }
                         isToHighlightMove = false;

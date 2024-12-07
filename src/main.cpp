@@ -456,9 +456,9 @@ int main(int argc, char *args[])
         if (undoBtn.clicked())
         {
             SDL_Log("Undo clicked!");
-            if (gameState.canUndo())
+            if (gameState.canUndo(isSinglePlayer))
             {
-                std::string prevFen = gameState.undo();
+                std::string prevFen = gameState.undo(isSinglePlayer);
                 board.resetBoardState(isEnded);
                 board.updateFen(prevFen);
 
@@ -475,9 +475,9 @@ int main(int argc, char *args[])
         if (redoBtn.clicked())
         {
             SDL_Log("Redo clicked!");
-            if (gameState.canRedo())
+            if (gameState.canRedo(isSinglePlayer))
             {
-                std::string nextFen = gameState.redo();
+                std::string nextFen = gameState.redo(isSinglePlayer);
                 board.resetBoardState(isEnded);
                 board.updateFen(nextFen);
 
@@ -703,6 +703,7 @@ int main(int argc, char *args[])
 
                 board.nextMoveColor();
                 currentMoveColor = board.getMoveColor();
+                gameState.pushState(board.getFen());
                 // board.updateFen(board.boardToFen());
                 // board.updateFen(board.boardToFen());
                 board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
@@ -738,7 +739,7 @@ int main(int argc, char *args[])
                         if (isUnderPromotion)
                             if (board.handlePawnPromotion(&event))
                             {
-                                gameState.pushState(board.getFen());
+                                // gameState.pushState(board.getFen());
                                 isUnderPromotion = false;
 
                                 board.nextMoveColor();
@@ -749,6 +750,7 @@ int main(int argc, char *args[])
                                 // Frame handling
                                 GameBoardRender();
 
+                                gameState.pushState(board.getFen());
                                 GameTurnIndicatorLoad();
 
                                 SDL_RenderPresent(renderer);
@@ -863,7 +865,6 @@ int main(int argc, char *args[])
                             // std::cerr << board.getFen() << "\n";
                             GameBoardRender();
 
-                            gameState.pushState(board.getFen());
 
                             GameTurnIndicatorLoad();
 
@@ -892,6 +893,7 @@ int main(int argc, char *args[])
                             // std::cerr << "Highlighting " << currentMoveColor << "\n";
                             board.nextMoveColor();
                             currentMoveColor = board.getMoveColor();
+                            gameState.pushState(board.getFen());
                             if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
                             {
                                 GameGUILoad();

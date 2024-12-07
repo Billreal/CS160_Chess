@@ -3,6 +3,7 @@
 void GameStateManager::pushState(const std::string &fen)
 {
     undoStack.push(fen);
+    std::cerr << "Pushed" << fen << std::endl;
     // Clear the redo stack whenever a new state is pushed
     while (!redoStack.empty())
     {
@@ -30,28 +31,37 @@ void GameStateManager::clearRedo()
     }
 }
 
-std::string GameStateManager::undo()
+std::string GameStateManager::undo(bool isSinglePlayer)
 {
-    if (canUndo())
+    if (canUndo(isSinglePlayer))
     {
-        std::string currentState = undoStack.top();
-        undoStack.pop();
-        redoStack.push(currentState);
+        int steps;
+        if (isSinglePlayer) steps = 2;
+        else steps = 1;
+        for (int i = 1; i <= steps; i++)
+        {
+            redoStack.push(undoStack.top());
+            undoStack.pop();
+        } 
         std::cerr << "Undo: " << undoStack.top() << "\n";
         return undoStack.empty() ? "" : undoStack.top();
     }
     return "";
 }
 
-std::string GameStateManager::redo()
+std::string GameStateManager::redo(bool isSinglePlayer)
 {
-    if (canRedo())
+    if (canRedo(isSinglePlayer))
     {
-        std::string currentState = redoStack.top();
-        redoStack.pop();
-        undoStack.push(currentState);
-        std::cerr << "Redo: " << currentState << "\n";
-        return currentState;
+        int steps;
+        if (isSinglePlayer) steps = 2;
+        else steps = 1;
+        for (int i = 1; i <= steps; i++)
+        {
+            undoStack.push(redoStack.top());
+            redoStack.pop();
+        }
+        return undoStack.top();
     }
     return "";
 }
@@ -61,12 +71,12 @@ void GameStateManager::getLen()
     std::cerr << "unoStack size: " << undoStack.size() << "\nredoStack size: " << redoStack.size() << "\n";
 }
 
-bool GameStateManager::canUndo()
+bool GameStateManager::canUndo(bool isSinglePlayer)
 {
-    return !undoStack.empty();
+    return isSinglePlayer ? undoStack.size() >= 3 : undoStack.size() >= 2;
 }
 
-bool GameStateManager::canRedo()
+bool GameStateManager::canRedo(bool isSinglePlayer)
 {
-    return !redoStack.empty();
+    return isSinglePlayer ? redoStack.size() >= 2 : redoStack.size() >= 1;
 }

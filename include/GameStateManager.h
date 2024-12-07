@@ -11,8 +11,8 @@ private:
 public:
     // Update game state
     void pushState(const std::string &fen);
-    std::string undo();
-    std::string redo();
+    std::string undo(bool isSinglePlayer);
+    std::string redo(bool isSinglePlayer);
     std::string getFirstMove();
     std::string getLatestMove();
     void clear();
@@ -20,6 +20,6 @@ public:
 
     // Get infos
     void getLen();
-    bool canUndo();
-    bool canRedo();
+    bool canUndo(bool isSinglePlayer);
+    bool canRedo(bool isSinglePlayer);
 };

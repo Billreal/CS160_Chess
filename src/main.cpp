@@ -468,6 +468,9 @@ int main(int argc, char *args[])
                 else
                     std::cerr << "White\n";
                 std::cerr << prevFen << "\n";
+                board.setRenderCheck(COLOR_NONE);
+                board.highlightKingStatus(isEnded, BLACK);
+                board.highlightKingStatus(isEnded, WHITE);
                 renderOnce = false;
             }
             undoBtn.resetClicked(); // Reset button state
@@ -487,6 +490,9 @@ int main(int argc, char *args[])
                 else
                     std::cerr << "White\n";
                 std::cerr << nextFen << "\n";
+                board.setRenderCheck(COLOR_NONE);
+                board.highlightKingStatus(isEnded, BLACK);
+                board.highlightKingStatus(isEnded, WHITE);
                 renderOnce = false;
             }
             redoBtn.resetClicked(); // Reset button state

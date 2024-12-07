@@ -661,7 +661,7 @@ int main(int argc, char *args[])
                 board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor));
 
                 // board.updateFen(board.boardToFen());
-                board.nextMoveColor();
+                // board.nextMoveColor();
                 board.updateFen(board.boardToFen());
                 currentMoveColor = board.getMoveColor();
                 board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
@@ -700,7 +700,7 @@ int main(int argc, char *args[])
                                 gameState.pushState(board.getFen());
                                 isUnderPromotion = false;
 
-                                board.nextMoveColor();
+                                // board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor();
                                 // the current move color is switched, opposite of promoted piece
                                 board.updateFen(board.boardToFen());
@@ -815,7 +815,7 @@ int main(int argc, char *args[])
                             gameState.pushState(board.getFen());
                             if (!isUnderPromotion)
                             {
-                                board.nextMoveColor();
+                                // board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor();
                             }
                         }

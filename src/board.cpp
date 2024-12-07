@@ -1019,7 +1019,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         halfmoves = 0;
     else
         halfmoves++;
-    // nextMoveColor();
+    nextMoveColor();
     updateFen(boardToFen());
     debugBoard();
 
@@ -1419,7 +1419,7 @@ bool Board::resetBoardState(bool &isEnded)
     stalemateCoordinate = nullCell;
     previousCoordinate = nullCell;
     currentCoordinate = nullCell;
-    // communicator->startNewGame();
+    communicator->startNewGame();
     return highlightKingStatus(isEnded, WHITE) || highlightKingStatus(isEnded, BLACK);
 }
 

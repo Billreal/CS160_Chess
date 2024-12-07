@@ -329,6 +329,23 @@ int main(int argc, char *args[])
     SDL_Rect bottomPanelInfos = {SIDE_MARGIN, SCREEN_HEIGHT - panelMargin - bottomPanelHeight, bottomPanelWidth, bottomPanelHeight};
     SDL_Texture *bottomPanelTexture = loadTexture("./assets/bottom_panel.svg");
 
+    // Initialize turn indicator
+    const int turnIndicatorLogoWidth = 300;
+    const int turnIndicatorLogoHeight = 100;
+    const int turnIndicatorWidth = 446;
+    const int isTurnIndicatorHeight = 50;
+    const int notTurnIndicatorHeight = 25;
+    SDL_Rect isWhiteTurnIndicatorInfos = {SIDE_MARGIN, 0, turnIndicatorWidth, isTurnIndicatorHeight};
+    SDL_Rect isBlackTurnIndicatorInfos = {SCREEN_WIDTH - SIDE_MARGIN - turnIndicatorWidth, 0, turnIndicatorWidth, isTurnIndicatorHeight};
+    SDL_Rect notWhiteTurnIndicatorInfos = {SIDE_MARGIN, 0, turnIndicatorWidth, notTurnIndicatorHeight};
+    SDL_Rect notBlackTurnIndicatorInfos = {SCREEN_WIDTH - SIDE_MARGIN - turnIndicatorWidth, 0, turnIndicatorWidth, notTurnIndicatorHeight};
+    SDL_Rect turnIndicatorLogoInfos = {SCREEN_WIDTH / 2 - turnIndicatorLogoWidth / 2, 0, turnIndicatorLogoWidth, turnIndicatorLogoHeight};
+    SDL_Texture *turnIndicatorLogoTexture = loadTexture("./assets/game_turn_indicator_logo.png");
+    SDL_Texture *isWhiteTurnIndicatorTexture = loadTexture("./assets/is_white_turn.png");
+    SDL_Texture *isBlackTurnIndicatorTexture = loadTexture("./assets/is_black_turn.png");
+    SDL_Texture *notWhiteTurnIndicatorTexture = loadTexture("./assets/not_white_turn.png");
+    SDL_Texture *notBlackTurnIndicatorTexture = loadTexture("./assets/not_black_turn.png");
+
     // Inintialize game buttons
     Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
     Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
@@ -359,6 +376,21 @@ int main(int argc, char *args[])
         renderOnce = false;
         board.resetBoardState(isEnded);
         gameState.clear();
+    };
+
+    auto GameTurnIndicatorLoad = [&]()
+    {
+        if (currentMoveColor == WHITE)
+        {
+            SDL_RenderCopy(renderer, isWhiteTurnIndicatorTexture, NULL, &isWhiteTurnIndicatorInfos);
+            SDL_RenderCopy(renderer, notBlackTurnIndicatorTexture, NULL, &notBlackTurnIndicatorInfos);
+        }
+        else
+        {
+            SDL_RenderCopy(renderer, isBlackTurnIndicatorTexture, NULL, &isBlackTurnIndicatorInfos);
+            SDL_RenderCopy(renderer, notWhiteTurnIndicatorTexture, NULL, &notWhiteTurnIndicatorInfos);
+        }
+        SDL_RenderCopy(renderer, turnIndicatorLogoTexture, NULL, &turnIndicatorLogoInfos);
     };
 
     auto GameGUILoad = [&]()
@@ -648,7 +680,10 @@ int main(int argc, char *args[])
                 GameGUILoad();
                 board.renderFromFen();
 
+                GameTurnIndicatorLoad();
+
                 SDL_RenderPresent(renderer);
+
                 renderOnce = true;
                 break;
             }
@@ -704,9 +739,11 @@ int main(int argc, char *args[])
                                 currentMoveColor = board.getMoveColor();
                                 // the current move color is switched, opposite of promoted piece
                                 board.updateFen(board.boardToFen());
-                                board.highlightKingStatus(isEnded, (chessColor) currentMoveColor);
+                                board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
                                 // Frame handling
                                 GameBoardRender();
+
+                                GameTurnIndicatorLoad();
 
                                 SDL_RenderPresent(renderer);
                             }
@@ -745,6 +782,9 @@ int main(int argc, char *args[])
 
                     // Frame handling
                     GameBoardRender();
+
+                    GameTurnIndicatorLoad();
+
                     SDL_RenderPresent(renderer);
 
                     board.deleteCell(pickedPlace);
@@ -756,9 +796,12 @@ int main(int argc, char *args[])
                         break;
                     // Frame handling
                     GameBoardRender();
+                    
                     board.renderMove(possibleMoves, possibleCaptures);
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                     GameGUILoad();
+
+                    GameTurnIndicatorLoad();
 
                     SDL_RenderPresent(renderer);
 
@@ -781,9 +824,13 @@ int main(int argc, char *args[])
 
                             // // Frame handling
                             GameBoardRender();
+
                             board.renderMove(possibleMoves, possibleCaptures);
 
                             isToHighlightMove = true;
+
+                            GameTurnIndicatorLoad();
+
                             SDL_RenderPresent(renderer);
                         }
                         // * Case player did a legal move
@@ -809,15 +856,16 @@ int main(int argc, char *args[])
                             // std::cerr << board.getFen() << "\n";
                             GameBoardRender();
 
-                            SDL_RenderPresent(renderer);
-
-
                             gameState.pushState(board.getFen());
                             if (!isUnderPromotion)
                             {
                                 // board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor();
                             }
+
+                            GameTurnIndicatorLoad();
+
+                            SDL_RenderPresent(renderer);
                         }
                         // * Case player did a illegal move
                         else // invalid move
@@ -829,6 +877,8 @@ int main(int argc, char *args[])
                             board.debugBoard();
                             // Frame handling
                             GameBoardRender();
+
+                            GameTurnIndicatorLoad();
 
                             SDL_RenderPresent(renderer);
                             std::cerr << "done rendering\n";
@@ -847,6 +897,9 @@ int main(int argc, char *args[])
                                 isToHighlightMove = false;
                                 board.renderMove(possibleMoves, possibleCaptures);
                             }
+
+                            GameTurnIndicatorLoad();
+
                             SDL_RenderPresent(renderer);
                             // board.renderMove(possibleMoves, possibleCaptures);
                         }
@@ -857,10 +910,8 @@ int main(int argc, char *args[])
                     // default:
                     // board.present();
                 }
-                // SDL_RenderPresent(renderer);
                 GameGUIButtonsHandling();
             }
-
             GameGUIButtonsClicked();
 
             break;

@@ -119,6 +119,56 @@ void loadGame(Board &board, const std::string &filename)
         saveFile.close();
         return;
     }
+    board.updateFen(FEN);
+    saveFile.close();
+}
+void loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, Communicator &communicator)
+{
+    std::ifstream saveFile(filename);
+    std::string FEN;
+    if (!saveFile)
+    {
+        cerr << "Failed to open file for loading: " << filename << "\n";
+        return;
+    }
+
+    if (!std::getline(saveFile, FEN))
+    {
+        cerr << "Failed to read from file: " << filename << "\n";
+        saveFile.close();
+        return;
+    }
+    
+    bool tmp = 0;
+    if (!saveFile.eof())
+        saveFile >> tmp;
+    isSinglePlayer = tmp;
+    std::cerr << "isSinglePlayer is: " << tmp << "\n";
+    if (tmp)
+    {
+        isSinglePlayer = true;
+        int difficulty = 1;
+        saveFile >> difficulty;
+        switch (difficulty)
+        {
+            case 1:
+                communicator.setDifficulty(Difficulty::EASY);
+            break;
+        
+            case 2:
+                communicator.setDifficulty(Difficulty::MEDIUM);
+            break;
+            case 3:
+                communicator.setDifficulty(Difficulty::HARD);
+            break;
+            default:
+                communicator.setDifficulty(Difficulty::EASY);
+            break;
+        }
+        std::cerr << "Set difficulty to " << (1 <= difficulty && difficulty <= 3) ? difficulty : 1;
+    }
+    else
+        isSinglePlayer = false;
     // std::cerr << FEN << "\n";
     board.updateFen(FEN);
 
@@ -368,7 +418,6 @@ int main(int argc, char *args[])
     //// Pseudo codes
     auto resetGameState = [&]()
     {
-        isSinglePlayer = false;
         prevCoordinate = Coordinate(-1, -1);
         pickedPiece = ' ';
         pickedPlace = Coordinate(-1, -1);
@@ -660,12 +709,13 @@ int main(int argc, char *args[])
                 if (loadFileBtns[i].clicked())
                 {
                     // std::cerr << "Button clicked!\n";
-                    loadGame(board, files[i]);
+                    loadGame(board, files[i], isSinglePlayer, communicator);
                     resetGameState();
                     board.resetBoardState(isEnded);
                     gameState.clear();
                     gameState.pushState(board.getFen());
-
+                    board.highlightKingStatus(isEnded, WHITE);
+                    board.highlightKingStatus(isEnded, BLACK);
                     isOn = GAME;
                     loadFileBtns[i].resetClicked();
                 }

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  7 DEC 2024 00:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  7 DEC 2024 00:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -876,53 +876,80 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has b
 <to be read again> 
                    \relax 
 l.54 \end{abstract}
-                    [1]
+                    [1] (ChessGameReport.toc
+LaTeX Font Info:    Trying to load font information for OML+mlmm on input line 8.
+ (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\omlmlmm.fd
+File: omlmlmm.fd 2021/01/11 v1.0 Font defs for mlmodern
+)
+LaTeX Font Info:    Trying to load font information for OMS+mlmsy on input line 8.
+ (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\omsmlmsy.fd
+File: omsmlmsy.fd 2021/01/11 v1.0 Font defs for mlmodern
+)
+LaTeX Font Info:    Trying to load font information for OMX+mlmex on input line 8.
+ (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\omxmlmex.fd
+File: omxmlmex.fd 2021/01/11 v1.0 Font defs for mlmodern
+)
+LaTeX Font Info:    External font `mlmex10' loaded for size
+(Font)              <10> on input line 8.
+LaTeX Font Info:    External font `mlmex10' loaded for size
+(Font)              <7> on input line 8.
+LaTeX Font Info:    External font `mlmex10' loaded for size
+(Font)              <5> on input line 8.
+)
+\tf@toc=\write5
+\openout5 = `ChessGameReport.toc'.
+
+
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.64 \chapter
+             {REQUIREMENT} [1
+
+]
 Chapter 1.
 LaTeX Font Info:    Trying to load font information for TS1+mlmr on input line 69.
 (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ts1mlmr.fd
 File: ts1mlmr.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
 
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.101                         \item B
-                                     utton to cycle between modern, futurist... [1
+[2
 
 {C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}]
 
-[2]
+[3]
 LaTeX Font Info:    Trying to load font information for OT1+mlmtt on input line 137.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ot1mlmtt.fd
 File: ot1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
 
-[3{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rmtt.enc}]
+[4{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rmtt.enc}]
 
-[4]
+[5]
 Chapter 2.
-
-
-[5
-
-]
-Chapter 3.
 
 
 [6
 
 ]
-Chapter 4.
+Chapter 3.
 
 
 [7
 
 ]
-Chapter 5.
+Chapter 4.
 
 
 [8
+
+]
+Chapter 5.
+
+
+[9
 
 ] (ChessGameReport.aux)
  ***********
@@ -936,17 +963,17 @@ Package logreq Info: Writing requests to 'ChessGameReport.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 20150 strings out of 473899
- 358389 string characters out of 5726500
+ 20211 strings out of 473899
+ 359857 string characters out of 5726500
  1937960 words of memory out of 5000000
- 42765 multiletter control sequences out of 15000+600000
- 601054 words of font info for 50 fonts, out of 8000000 for 9000
+ 42803 multiletter control sequences out of 15000+600000
+ 612084 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,5n,81p,767b,1986s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,5n,81p,767b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on ChessGameReport.pdf (10 pages, 143219 bytes).
+Output written on ChessGameReport.pdf (11 pages, 155193 bytes).
 PDF statistics:
- 174 PDF objects out of 1000 (max. 8388607)
- 30 named destinations out of 1000 (max. 500000)
+ 199 PDF objects out of 1000 (max. 8388607)
+ 32 named destinations out of 1000 (max. 500000)
  153 words of extra memory for PDF output out of 10000 (max. 10000000)
 

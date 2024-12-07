@@ -1019,7 +1019,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         halfmoves = 0;
     else
         halfmoves++;
-    nextMoveColor();
+    // nextMoveColor();
     updateFen(boardToFen());
     debugBoard();
 

@@ -220,12 +220,12 @@ int main(int argc, char *args[])
     }
 
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
-    // Communicator communicator;
-    // communicator.init();
-    // communicator.startNewGame();
+    Communicator communicator;
+    communicator.init();
+    communicator.startNewGame();
 
     // ! ----- Temporary setting for communicator -----
-    // communicator.setDifficulty(Difficulty::HARD);
+    communicator.setDifficulty(Difficulty::HARD);
     // ! ----------------------------------------------
     // Handling SDL_events
     SDL_Event event;
@@ -248,7 +248,7 @@ int main(int argc, char *args[])
     Coordinate pickedPlace(-1, -1);
 
     board.setColor(modernPrimary, modernSecondary);
-    // board.setCommunicator(&communicator);
+    board.setCommunicator(&communicator);
 
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
@@ -639,7 +639,7 @@ int main(int argc, char *args[])
         {
             // * Computer's turn
             // std::cerr << currentMoveColor << "\n";
-            // currentMoveColor = board.getMoveColor();
+            currentMoveColor = board.getMoveColor();
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
@@ -647,7 +647,8 @@ int main(int argc, char *args[])
 
                 GameGUILoad();
                 board.renderFromFen();
-                currentMoveColor = board.getMoveColor();
+                // board.nextMoveColor();
+                // currentMoveColor = board.getMoveColor();
 
                 SDL_RenderPresent(renderer);
                 renderOnce = true;
@@ -662,6 +663,7 @@ int main(int argc, char *args[])
                 board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor));
 
                 // board.updateFen(board.boardToFen());
+                board.nextMoveColor();
                 currentMoveColor = board.getMoveColor();
                 GameGUILoad();
                 board.render();
@@ -813,6 +815,7 @@ int main(int argc, char *args[])
                             gameState.pushState(board.getFen());
                             if (!isUnderPromotion)
                             {
+                                board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor();
                             }
                         }

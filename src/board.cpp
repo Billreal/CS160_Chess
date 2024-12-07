@@ -1430,6 +1430,7 @@ void Board::setCommunicator(Communicator *communicator)
 
 void Board::nextMoveColor()
 {
+    std::cerr << "Next move initialized\n";
     nextPlayerTurn = !nextPlayerTurn;
 }
 

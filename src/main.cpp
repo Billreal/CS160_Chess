@@ -638,8 +638,8 @@ int main(int argc, char *args[])
         case GAME:
         {
             // * Computer's turn
-            // std::cerr << currentMoveColor << "\n";
-            currentMoveColor = board.getMoveColor();
+            // currentMoveColor = board.getMoveColor();
+            std::cerr << currentMoveColor << "\n";
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
@@ -647,8 +647,6 @@ int main(int argc, char *args[])
 
                 GameGUILoad();
                 board.renderFromFen();
-                // board.nextMoveColor();
-                // currentMoveColor = board.getMoveColor();
 
                 SDL_RenderPresent(renderer);
                 renderOnce = true;
@@ -664,7 +662,9 @@ int main(int argc, char *args[])
 
                 // board.updateFen(board.boardToFen());
                 board.nextMoveColor();
+                board.updateFen(board.boardToFen());
                 currentMoveColor = board.getMoveColor();
+                board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
                 GameGUILoad();
                 board.render();
                 board.present();
@@ -704,7 +704,7 @@ int main(int argc, char *args[])
                                 currentMoveColor = board.getMoveColor();
                                 // the current move color is switched, opposite of promoted piece
                                 board.updateFen(board.boardToFen());
-
+                                board.highlightKingStatus(isEnded, (chessColor) currentMoveColor);
                                 // Frame handling
                                 GameBoardRender();
 

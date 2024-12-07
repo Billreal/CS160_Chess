@@ -1019,8 +1019,8 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         halfmoves = 0;
     else
         halfmoves++;
-    nextMoveColor();
-    updateFen(boardToFen());
+    // nextMoveColor();
+    // updateFen(boardToFen());
     debugBoard();
 
     if (nextPlayerTurn)
@@ -1432,6 +1432,7 @@ void Board::nextMoveColor()
 {
     std::cerr << "Next move initialized\n";
     nextPlayerTurn = !nextPlayerTurn;
+    updateFen(boardToFen());
 }
 
 chessColor Board::getMoveColor()

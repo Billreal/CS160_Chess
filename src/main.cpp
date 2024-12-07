@@ -671,7 +671,13 @@ int main(int argc, char *args[])
         {
             // * Computer's turn
             // currentMoveColor = board.getMoveColor();
-            std::cerr << currentMoveColor << "\n";
+            if (isEnded) 
+            {
+                // std::cerr << "The game ended\n" << std::endl;
+                break;
+            }
+
+            // std::cerr << isEnded << "\n";
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
@@ -695,10 +701,10 @@ int main(int argc, char *args[])
                 board.setRenderCheck(COLOR_NONE);
                 board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor));
 
-                // board.updateFen(board.boardToFen());
-                // board.nextMoveColor();
-                board.updateFen(board.boardToFen());
+                board.nextMoveColor();
                 currentMoveColor = board.getMoveColor();
+                // board.updateFen(board.boardToFen());
+                // board.updateFen(board.boardToFen());
                 board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
                 GameGUILoad();
                 board.render();
@@ -735,10 +741,10 @@ int main(int argc, char *args[])
                                 gameState.pushState(board.getFen());
                                 isUnderPromotion = false;
 
-                                // board.nextMoveColor();
+                                board.nextMoveColor();
                                 currentMoveColor = board.getMoveColor();
                                 // the current move color is switched, opposite of promoted piece
-                                board.updateFen(board.boardToFen());
+                                // board.updateFen(board.boardToFen());
                                 board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
                                 // Frame handling
                                 GameBoardRender();
@@ -796,7 +802,7 @@ int main(int argc, char *args[])
                         break;
                     // Frame handling
                     GameBoardRender();
-                    
+
                     board.renderMove(possibleMoves, possibleCaptures);
                     board.renderPieceByCursor(pickedPiece, event.button.x, event.button.y);
                     GameGUILoad();
@@ -832,6 +838,7 @@ int main(int argc, char *args[])
                             GameTurnIndicatorLoad();
 
                             SDL_RenderPresent(renderer);
+                            break;
                         }
                         // * Case player did a legal move
                         else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
@@ -857,11 +864,6 @@ int main(int argc, char *args[])
                             GameBoardRender();
 
                             gameState.pushState(board.getFen());
-                            if (!isUnderPromotion)
-                            {
-                                // board.nextMoveColor();
-                                currentMoveColor = board.getMoveColor();
-                            }
 
                             GameTurnIndicatorLoad();
 
@@ -882,28 +884,30 @@ int main(int argc, char *args[])
 
                             SDL_RenderPresent(renderer);
                             std::cerr << "done rendering\n";
+                            break;
                         }
-                    }
-                    // * King status is checked after move and promotion have done
-                    if (!isUnderPromotion)
-                    {
-                        // std::cerr << "Highlighting " << currentMoveColor << "\n";
-                        if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
+                        // * King status is checked after move and promotion have done
+                        if (!isUnderPromotion)
                         {
-                            GameGUILoad();
-                            board.render();
-                            if (isToHighlightMove)
+                            // std::cerr << "Highlighting " << currentMoveColor << "\n";
+                            board.nextMoveColor();
+                            currentMoveColor = board.getMoveColor();
+                            if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
                             {
-                                isToHighlightMove = false;
-                                board.renderMove(possibleMoves, possibleCaptures);
+                                GameGUILoad();
+                                board.render();
+                                if (isToHighlightMove)
+                                {
+                                    isToHighlightMove = false;
+                                    board.renderMove(possibleMoves, possibleCaptures);
+                                }
+
+                                GameTurnIndicatorLoad();
+                                SDL_RenderPresent(renderer);
+                                // board.renderMove(possibleMoves, possibleCaptures);
                             }
-
-                            GameTurnIndicatorLoad();
-
-                            SDL_RenderPresent(renderer);
-                            // board.renderMove(possibleMoves, possibleCaptures);
+                            isToHighlightMove = false;
                         }
-                        isToHighlightMove = false;
                     }
                     break;
                 }

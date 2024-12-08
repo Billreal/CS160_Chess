@@ -32,7 +32,7 @@ void Communicator::init()
     writeCommand("setoption name Hash value 128");
     writeCommand("setoption name Threads value 1");
     writeCommand("isready");
-    writeCommand("setoption name UCI_LimitStrength value true");
+    // writeCommand("setoption name UCI_LimitStrength value true");
 }
 
 void Communicator::startNewGame()
@@ -91,21 +91,21 @@ void Communicator::setDifficulty(Difficulty difficulty)
 {
     if (difficulty == Difficulty::EASY)
     {
-        stockfishELO = 1320;
-        searchDepth = 2;
-        timeAllowed = 300;
+        stockfishLevel = 0;
+        searchDepth = 1;
+        timeAllowed = 100;
     }
     else if (difficulty == Difficulty::MEDIUM)
     {
-        stockfishELO = 2000;
-        searchDepth = 5;
-        timeAllowed = 500;
+        stockfishLevel = 3;
+        searchDepth = 3;
+        timeAllowed = 400;
     }
     else 
     {
-        stockfishELO = 3190;
+        stockfishLevel = 5;
         searchDepth = 10;
         timeAllowed = 1000;
     }
-    writeCommand("setoption name UCI_Elo value " + std::to_string(stockfishELO));
+    writeCommand("setoption name Skill level value " + std::to_string(stockfishLevel));
 }

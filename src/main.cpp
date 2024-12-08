@@ -727,11 +727,11 @@ int main(int argc, char *args[])
         {
             // * Computer's turn
             // currentMoveColor = board.getMoveColor();
-            if (isEnded) 
-            {
+            // if (isEnded) 
+            // {f
                 // std::cerr << "The game ended\n" << std::endl;
-                break;
-            }
+                // break;
+            // }
 
             // std::cerr << isEnded << "\n";
             if (!renderOnce)

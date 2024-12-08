@@ -20,7 +20,7 @@ class Communicator
     FILE *process = nullptr;
     bool isRunning;
     std::ifstream inputFile;
-    int stockfishELO;
+    int stockfishLevel;
     int searchDepth;
     int timeAllowed;
     std::string getBestMove(const std::string &fen); // maximumTime is in miliseconds

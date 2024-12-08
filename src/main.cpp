@@ -441,6 +441,7 @@ int main(int argc, char *args[])
             SDL_RenderCopy(renderer, notWhiteTurnIndicatorTexture, NULL, &notWhiteTurnIndicatorInfos);
         }
         SDL_RenderCopy(renderer, turnIndicatorLogoTexture, NULL, &turnIndicatorLogoInfos);
+        // SDL_RenderPresent(renderer);
     };
 
     auto GameGUILoad = [&]()
@@ -775,14 +776,16 @@ int main(int argc, char *args[])
                 // board.updateFen(board.boardToFen());
                 // board.updateFen(board.boardToFen());
                 board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
+                GameBoardRender();
                 GameGUILoad();
+                GameTurnIndicatorLoad();
                 board.render();
                 board.present();
                 break;
             }
 
             GameGUILoad();
-
+            GameTurnIndicatorLoad();
             // Check if the window is running or not
             while (SDL_PollEvent(&event) != 0)
             {
@@ -934,9 +937,6 @@ int main(int argc, char *args[])
                             GameBoardRender();
 
 
-                            GameTurnIndicatorLoad();
-
-                            SDL_RenderPresent(renderer);
                         }
                         // * Case player did a illegal move
                         else // invalid move
@@ -977,6 +977,9 @@ int main(int argc, char *args[])
                                 // board.renderMove(possibleMoves, possibleCaptures);
                             }
                             isToHighlightMove = false;
+                            GameTurnIndicatorLoad();
+
+                            SDL_RenderPresent(renderer);
                         }
                     }
                     break;

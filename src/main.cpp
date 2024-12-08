@@ -275,7 +275,7 @@ int main(int argc, char *args[])
     communicator.startNewGame();
 
     // ! ----- Temporary setting for communicator -----
-    communicator.setDifficulty(Difficulty::HARD);
+    communicator.setDifficulty(Difficulty::EASY);
     // ! ----------------------------------------------
     // Handling SDL_events
     SDL_Event event;
@@ -400,9 +400,10 @@ int main(int argc, char *args[])
     Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
     Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
     Button settingsBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Settings", loadMenuFont);
-    Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
-    Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
-    Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
+    Button retryBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Retry", loadMenuFont);
+    Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
+    Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
+    Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
                                    {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
@@ -452,6 +453,7 @@ int main(int argc, char *args[])
         saveBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         loadBtnInGame.renderSVG("./assets/game_button.svg", SVG_SCALE);
         settingsBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
+        retryBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         currentThemeButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
         undoBtn.renderPNG("./assets/undo.png");
         redoBtn.renderPNG("./assets/redo.png");
@@ -465,6 +467,7 @@ int main(int argc, char *args[])
         saveBtn.handleEvent(&event);
         loadBtnInGame.handleEvent(&event);
         settingsBtn.handleEvent(&event);
+        retryBtn.handleEvent(&event);
         undoBtn.handleEvent(&event);
         redoBtn.handleEvent(&event);
         beginBtn.handleEvent(&event);
@@ -490,6 +493,15 @@ int main(int argc, char *args[])
             SDL_Log("Settings clicked!");
             isOn = SETTINGS;
             settingsBtn.resetClicked(); // Reset button state
+        }
+        if (retryBtn.clicked())
+        {
+            SDL_Log("Retry clicked!");
+            board.startNewGame();
+            board.resetBoardState(isEnded);
+            resetGameState();
+            gameState.pushState(board.getFen());
+            retryBtn.resetClicked(); // Reset button state
         }
         if (currentThemeButton->clicked())
         {

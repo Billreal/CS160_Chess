@@ -80,3 +80,23 @@ bool GameStateManager::canRedo(bool isSinglePlayer)
 {
     return isSinglePlayer ? redoStack.size() >= 2 : redoStack.size() >= 1;
 }
+
+std::string GameStateManager::startState()
+{
+    while(undoStack.size() > 1)
+    {
+        redoStack.push(undoStack.top());
+        undoStack.pop();
+    }
+    return undoStack.top();
+}
+
+std::string GameStateManager::finalState()
+{
+    while(redoStack.size() > 0)
+    {
+        undoStack.push(redoStack.top());
+        redoStack.pop();
+    }
+    return undoStack.top();
+}

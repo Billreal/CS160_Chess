@@ -22,4 +22,7 @@ public:
     void getLen();
     bool canUndo(bool isSinglePlayer);
     bool canRedo(bool isSinglePlayer);
+    std::string startState();
+    std::string finalState();
+    
 };

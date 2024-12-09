@@ -138,7 +138,7 @@ void loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, C
         saveFile.close();
         return;
     }
-    
+
     bool tmp = 0;
     if (!saveFile.eof())
         saveFile >> tmp;
@@ -151,18 +151,18 @@ void loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, C
         saveFile >> difficulty;
         switch (difficulty)
         {
-            case 1:
-                communicator.setDifficulty(Difficulty::EASY);
+        case 1:
+            communicator.setDifficulty(Difficulty::EASY);
             break;
-        
-            case 2:
-                communicator.setDifficulty(Difficulty::MEDIUM);
+
+        case 2:
+            communicator.setDifficulty(Difficulty::MEDIUM);
             break;
-            case 3:
-                communicator.setDifficulty(Difficulty::HARD);
+        case 3:
+            communicator.setDifficulty(Difficulty::HARD);
             break;
-            default:
-                communicator.setDifficulty(Difficulty::EASY);
+        default:
+            communicator.setDifficulty(Difficulty::EASY);
             break;
         }
         std::cerr << "Set difficulty to " << (1 <= difficulty && difficulty <= 3) ? difficulty : 1;
@@ -561,17 +561,40 @@ int main(int argc, char *args[])
         }
         if (beginBtn.clicked())
         {
-            SDL_Log("Begin state!");
-            board.startNewGame();
+            SDL_Log("Start clicked!");
+            std::string nextFen = gameState.startState();
             board.resetBoardState(isEnded);
-            resetGameState();
-            gameState.pushState(board.getFen());
+            board.updateFen(nextFen);
+
+            currentMoveColor = board.getMoveColor();
+            if (currentMoveColor)
+                std::cerr << "Black\n";
+            else
+                std::cerr << "White\n";
+            std::cerr << nextFen << "\n";
+            board.setRenderCheck(COLOR_NONE);
+            board.highlightKingStatus(isEnded, BLACK);
+            board.highlightKingStatus(isEnded, WHITE);
+            renderOnce = false;
             beginBtn.resetClicked(); // Reset button state
         }
         if (endBtn.clicked())
         {
-            SDL_Log("Settings clicked!");
-            isOn = START;
+            SDL_Log("End clicked!");
+            std::string nextFen = gameState.finalState();
+            board.resetBoardState(isEnded);
+            board.updateFen(nextFen);
+
+            currentMoveColor = board.getMoveColor();
+            if (currentMoveColor)
+                std::cerr << "Black\n";
+            else
+                std::cerr << "White\n";
+            std::cerr << nextFen << "\n";
+            board.setRenderCheck(COLOR_NONE);
+            board.highlightKingStatus(isEnded, BLACK);
+            board.highlightKingStatus(isEnded, WHITE);
+            renderOnce = false;
             endBtn.resetClicked(); // Reset button state
         }
     };
@@ -740,10 +763,10 @@ int main(int argc, char *args[])
         {
             // * Computer's turn
             // currentMoveColor = board.getMoveColor();
-            // if (isEnded) 
+            // if (isEnded)
             // {f
-                // std::cerr << "The game ended\n" << std::endl;
-                // break;
+            // std::cerr << "The game ended\n" << std::endl;
+            // break;
             // }
 
             // std::cerr << isEnded << "\n";
@@ -935,8 +958,6 @@ int main(int argc, char *args[])
                             // Frame handling
                             // std::cerr << board.getFen() << "\n";
                             GameBoardRender();
-
-
                         }
                         // * Case player did a illegal move
                         else // invalid move

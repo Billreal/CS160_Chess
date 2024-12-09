@@ -64,6 +64,8 @@ communicator:
 gameStateManager:
 	g++ -c src/gameStateManager.cpp -o src/gameStateManager.o $(COMPILER_FLAG) $(LINKER_FLAGS)
 
+popup:
+	g++ -c src/popup.cpp -o src/popup.o $(COMPILER_FLAG) $(LINKER_FLAGS)
 # CXX = g++
 
 # CXXFLAGS = -Wall -F /Library/Frameworks

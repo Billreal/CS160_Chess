@@ -834,6 +834,7 @@ int main(int argc, char *args[])
                             if (board.handlePawnPromotion(&event))
                             {
                                 // gameState.pushState(board.getFen());
+                                // SDL_RenderPresent(renderer);
                                 isUnderPromotion = false;
 
                                 board.nextMoveColor();
@@ -958,6 +959,7 @@ int main(int argc, char *args[])
                             // Frame handling
                             // std::cerr << board.getFen() << "\n";
                             GameBoardRender();
+                            SDL_RenderPresent(renderer);
                         }
                         // * Case player did a illegal move
                         else // invalid move

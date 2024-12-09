@@ -848,6 +848,10 @@ int main(int argc, char *args[])
                         // * Not pressed inside of chessboard
 
                         if (isUnderPromotion)
+                        {
+                            // GameBoardRender();
+                            // GameTurnIndicatorLoad();
+                            // SDL_RenderPresent(renderer);
                             if (board.handlePawnPromotion(&event))
                             {
                                 // gameState.pushState(board.getFen());
@@ -867,6 +871,7 @@ int main(int argc, char *args[])
 
                                 SDL_RenderPresent(renderer);
                             }
+                        }
                         break;
                     }
 
@@ -954,7 +959,7 @@ int main(int argc, char *args[])
 
                             // // Frame handling
                             GameBoardRender();
-
+                            // GameTurnIndicatorLoad();
                             board.renderMove(possibleMoves, possibleCaptures);
 
                             isToHighlightMove = true;
@@ -986,6 +991,7 @@ int main(int argc, char *args[])
                             // Frame handling
                             // std::cerr << board.getFen() << "\n";
                             GameBoardRender();
+                            GameTurnIndicatorLoad();
                             SDL_RenderPresent(renderer);
                         }
                         // * Case player did a illegal move
@@ -1012,20 +1018,21 @@ int main(int argc, char *args[])
                             board.nextMoveColor();
                             currentMoveColor = board.getMoveColor();
                             gameState.pushState(board.getFen());
+                            // GameGUILoad();
+                            GameBoardRender();
                             if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
                             {
-                                GameGUILoad();
-                                board.render();
                                 if (isToHighlightMove)
                                 {
                                     isToHighlightMove = false;
                                     board.renderMove(possibleMoves, possibleCaptures);
                                 }
 
-                                GameTurnIndicatorLoad();
-                                SDL_RenderPresent(renderer);
+                                // GameTurnIndicatorLoad();
+                                // SDL_RenderPresent(renderer);
                                 // board.renderMove(possibleMoves, possibleCaptures);
                             }
+                            board.render();
                             isToHighlightMove = false;
                             GameTurnIndicatorLoad();
 

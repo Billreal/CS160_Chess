@@ -17,6 +17,7 @@
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 #include "./../include/gameStateManager.h"
+#include "./../include/popup.h"
 
 using std::cerr;
 using std::cout;

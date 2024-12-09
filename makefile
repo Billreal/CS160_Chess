@@ -34,7 +34,7 @@ clean:
 compile: 
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER_FLAGS)
 
-chess: main color board colorScheme coordinate pieces button communicator gameStateManager
+chess: main color board colorScheme coordinate pieces button communicator gameStateManager popup
 	
 # Individual compilation targets
 main: 
@@ -64,6 +64,8 @@ communicator:
 gameStateManager:
 	g++ -c src/gameStateManager.cpp -o src/gameStateManager.o $(COMPILER_FLAG) $(LINKER_FLAGS)
 
+popup:
+	g++ -c src/popup.cpp -o src/popup.o $(COMPILER_FLAG) $(LINKER_FLAGS)
 # CXX = g++
 
 # CXXFLAGS = -Wall -F /Library/Frameworks

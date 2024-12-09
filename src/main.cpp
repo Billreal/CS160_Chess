@@ -993,7 +993,6 @@ int main(int argc, char *args[])
                             gameState.pushState(board.getFen());
                             // GameGUILoad();
                             GameBoardRender();
-                            board.render();
                             if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
                             {
                                 if (isToHighlightMove)
@@ -1006,6 +1005,7 @@ int main(int argc, char *args[])
                                 // SDL_RenderPresent(renderer);
                                 // board.renderMove(possibleMoves, possibleCaptures);
                             }
+                            board.render();
                             isToHighlightMove = false;
                             GameTurnIndicatorLoad();
 

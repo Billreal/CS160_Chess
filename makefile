@@ -34,7 +34,7 @@ clean:
 compile: 
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER_FLAGS)
 
-chess: main color board colorScheme coordinate pieces button communicator gameStateManager popup
+chess: main color board colorScheme coordinate pieces button communicator gameStateManager
 	
 # Individual compilation targets
 main: 

@@ -1378,6 +1378,11 @@ bool Board::nextMove(int color)
 
 bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 {
+    if (!isKingSafe(color))
+    {
+        setRenderCheck(color);
+        return true;
+    }
     if (isCheckmate(color))
     {
         isEnded = true;
@@ -1386,16 +1391,12 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 
         return true;
     }
-    if (!isKingSafe(color))
-    {
-        setRenderCheck(color);
-        return true;
-    }
     if (isStalemate(color))
     {
         isEnded = true;
         setRenderStalemate(color);
         SDL_Log("End game: Stalemate");
+        
         return true;
     }
     return false;
@@ -1419,7 +1420,7 @@ bool Board::resetBoardState(bool &isEnded)
     stalemateCoordinate = nullCell;
     previousCoordinate = nullCell;
     currentCoordinate = nullCell;
-    communicator->startNewGame();
+    // communicator->startNewGame();
     return highlightKingStatus(isEnded, WHITE) || highlightKingStatus(isEnded, BLACK);
 }
 

@@ -17,6 +17,7 @@
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 #include "./../include/gameStateManager.h"
+#include "./../include/popup.h"
 
 using std::cerr;
 using std::cout;
@@ -216,6 +217,7 @@ int main(int argc, char *args[])
     GameStateManager gameState;
     renderer = NULL;
     window = NULL;
+    Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
 
     // Error handling for SDL_Init
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -270,12 +272,12 @@ int main(int argc, char *args[])
     }
 
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
-    Communicator communicator;
-    communicator.init();
-    communicator.startNewGame();
+    // Communicator communicator;
+    // communicator.init();
+    // communicator.startNewGame();
 
     // ! ----- Temporary setting for communicator -----
-    communicator.setDifficulty(Difficulty::EASY);
+    // communicator.setDifficulty(Difficulty::EASY);
     // ! ----------------------------------------------
     // Handling SDL_events
     SDL_Event event;
@@ -298,7 +300,7 @@ int main(int argc, char *args[])
     Coordinate pickedPlace(-1, -1);
 
     board.setColor(modernPrimary, modernSecondary);
-    board.setCommunicator(&communicator);
+    // board.setCommunicator(&communicator);
 
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
@@ -746,7 +748,10 @@ int main(int argc, char *args[])
                 if (loadFileBtns[i].clicked())
                 {
                     // std::cerr << "Button clicked!\n";
-                    loadGame(board, files[i], isSinglePlayer, communicator);
+                    if (!isSinglePlayer)
+                        loadGame(board, files[i]);
+                    // else
+                    // loadGame(board, files[i], isSinglePlayer, communicator);
                     resetGameState();
                     board.resetBoardState(isEnded);
                     gameState.clear();
@@ -765,12 +770,21 @@ int main(int argc, char *args[])
             // * Computer's turn
             // currentMoveColor = board.getMoveColor();
             // if (isEnded)
-            // {f
-            // std::cerr << "The game ended\n" << std::endl;
-            // break;
+            // {
+
+            //     SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
+            //     SDL_RenderClear(renderer);
+
+            //     GameGUILoad();
+            //     GameTurnIndicatorLoad();
+
+            //     std::cerr << "The game ended\n"
+            //               << std::endl;
+            //     SDL_RenderPresent(renderer);
+
+            //     // break;
             // }
 
-            // std::cerr << isEnded << "\n";
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
@@ -823,7 +837,10 @@ int main(int argc, char *args[])
                 case SDL_MOUSEBUTTONDOWN:
                 {
                     if (isEnded)
+                    {
+                        std::cerr << "Game ended\n";
                         break;
+                    }
                     if (event.button.button != SDL_BUTTON_LEFT)
                         break;
                     if (!board.testInbound(event.button))
@@ -901,6 +918,11 @@ int main(int argc, char *args[])
                 }
                 case SDL_MOUSEMOTION:
                 {
+                    if (isEnded)
+                    {
+                        std::cerr << "Game ended\n";
+                        break;
+                    }
                     if (isLeftMouseHolding == false) // Mouse hover
                         break;
                     // Frame handling
@@ -918,6 +940,11 @@ int main(int argc, char *args[])
                 }
                 case SDL_MOUSEBUTTONUP:
                 {
+                    if (isEnded)
+                    {
+                        std::cerr << "Game ended\n";
+                        break;
+                    }
                     if (event.button.button != SDL_BUTTON_LEFT)
                         break;
 

@@ -342,6 +342,7 @@ int main(int argc, char *args[])
     SDL_Rect loadMenuSeperateLine = {360, 240, 5, 600};
 
     Board demoBoard(renderer, modernPrimary, modernSecondary, bgColor);
+    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
     demoBoard.setBoardSize(50);
     demoBoard.setMargin(480, 240);
 

@@ -1,6 +1,5 @@
-#pragma once
 #include "./../include/coordinate.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 Coordinate::Coordinate()
 {
     x = 0;
@@ -48,4 +47,10 @@ bool Coordinate::operator<(Coordinate x)
     if (this -> x == x.x)
         return (bool)(this -> y < x.y);
     return (bool)(this -> x < x.x);
+}
+
+bool Coordinate::operator==(Coordinate coord)
+{
+    if (x == coord.x && y == coord.y) return true;
+    return false;
 }

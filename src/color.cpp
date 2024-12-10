@@ -1,6 +1,5 @@
-#pragma once
 #include "./../include/color.h"
-colorRGBA ::colorRGBA(int r, int g, int b, int a)
+colorRGBA ::colorRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
     this->r = r;
     this->g = g;
@@ -8,22 +7,22 @@ colorRGBA ::colorRGBA(int r, int g, int b, int a)
     this->a = a;
 }
 
-int colorRGBA::getR()
+unsigned char colorRGBA::getR()
 {
     return r;
 }
 
-int colorRGBA::getG()
+unsigned char colorRGBA::getG()
 {
     return g;
 }
 
-int colorRGBA::getB()
+unsigned char colorRGBA::getB()
 {
     return b;
 }
 
-int colorRGBA::getA()
+unsigned char colorRGBA::getA()
 {
     return a;
 }

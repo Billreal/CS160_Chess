@@ -1378,17 +1378,17 @@ bool Board::nextMove(int color)
 
 bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 {
-    if (!isKingSafe(color))
-    {
-        setRenderCheck(color);
-        return true;
-    }
     if (isCheckmate(color))
     {
         isEnded = true;
         setRenderCheckmate(color);
         SDL_Log("End game: Checkmate");
 
+        return true;
+    }
+    if (!isKingSafe(color))
+    {
+        setRenderCheck(color);
         return true;
     }
     if (isStalemate(color))

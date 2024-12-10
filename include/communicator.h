@@ -23,6 +23,9 @@ class Communicator
     int stockfishLevel;
     int searchDepth;
     int timeAllowed;
+    int PVValue;
+    int hashLimit;
+    int threadLimit;
     std::string getBestMove(const std::string &fen); // maximumTime is in miliseconds
 
 public:

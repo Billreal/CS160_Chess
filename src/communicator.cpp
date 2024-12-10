@@ -52,6 +52,7 @@ void Communicator::init()
     writeCommand("uci");
     writeCommand("setoption name Hash value 128");
     writeCommand("setoption name Threads value 1");
+    setDifficulty(Difficulty::EASY);
     writeCommand("isready");
     // writeCommand("setoption name UCI_LimitStrength value true");
 }
@@ -122,18 +123,30 @@ void Communicator::setDifficulty(Difficulty difficulty)
         stockfishLevel = 0;
         searchDepth = 1;
         timeAllowed = 100;
+        PVValue = 10;
+        hashLimit = 16;
+        threadLimit = 1;
     }
     else if (difficulty == Difficulty::MEDIUM)
     {
         stockfishLevel = 3;
         searchDepth = 3;
         timeAllowed = 400;
+        PVValue = 5;
+        hashLimit = 64;
+        threadLimit = 2;
     }
     else 
     {
         stockfishLevel = 5;
         searchDepth = 10;
         timeAllowed = 1000;
+        PVValue = 2;
+        hashLimit = 256;
+        threadLimit = 4;
     }
     writeCommand("setoption name Skill level value " + std::to_string(stockfishLevel));
+    writeCommand("setoption name Threads value " + std::to_string(threadLimit));
+    writeCommand("setoption name Hash level value " + std::to_string(hashLimit));
+    writeCommand("setoption name MultiPV level value " + std::to_string(PVValue));
 }

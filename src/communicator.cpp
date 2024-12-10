@@ -117,9 +117,10 @@ std::string Communicator::readResponse()
 void Communicator::setDifficulty(Difficulty difficulty)
 {
     if (!isRunning || !process) return;
-
+    std::cerr << "Set difficulty called";
     if (difficulty == Difficulty::EASY)
     {
+        std::cerr << "Switch to easy\n";
         stockfishLevel = 0;
         searchDepth = 1;
         timeAllowed = 100;
@@ -129,6 +130,7 @@ void Communicator::setDifficulty(Difficulty difficulty)
     }
     else if (difficulty == Difficulty::MEDIUM)
     {
+        std::cerr << "Switch to medium\n";
         stockfishLevel = 3;
         searchDepth = 3;
         timeAllowed = 400;
@@ -138,12 +140,13 @@ void Communicator::setDifficulty(Difficulty difficulty)
     }
     else 
     {
-        stockfishLevel = 5;
-        searchDepth = 10;
-        timeAllowed = 1000;
-        PVValue = 2;
-        hashLimit = 256;
-        threadLimit = 4;
+        std::cerr << "Switch to hard\n";
+        stockfishLevel = 20;
+        searchDepth = 20;
+        timeAllowed = 2000;
+        PVValue = 1;
+        hashLimit = 2058;
+        threadLimit = 8;
     }
     writeCommand("setoption name Skill level value " + std::to_string(stockfishLevel));
     writeCommand("setoption name Threads value " + std::to_string(threadLimit));

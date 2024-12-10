@@ -32,15 +32,19 @@ SDL_Texture *Popup::loadTexture(std::string filePath, int width, int height, dou
     return texture;
 }
 
-void Popup::renderText(std::string text)
+void Popup::renderText(std::string text, int prevHeight, int padding)
 {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(textFont, text.c_str(), white);
+    SDL_Surface *textSurface = TTF_RenderText_Blended_Wrapped(textFont, text.c_str(), white, POPUP_LENGTH - 80);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
     SDL_FreeSurface(textSurface);
 
-    SDL_Rect textRect = {popupInfos.x + (POPUP_LENGTH - textWidth) / 2, popupInfos.y + 40, textWidth, textHeight};
+    prevTextHeight = textHeight + padding;
+    SDL_Rect textRect = {popupInfos.x + (POPUP_LENGTH - textWidth) / 2, 
+                        popupInfos.y + prevHeight + padding, 
+                        textWidth, 
+                        textHeight};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_DestroyTexture(textTexture);
 }
@@ -64,10 +68,10 @@ Popup::~Popup()
     TTF_CloseFont(buttonFont);
 }
 
-void Popup::render(std::string text)
+void Popup::render(std::string textPrimary, std::string textSecondary, int padding)
 {
     SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
-    if(!popupTexture)
+    if (!popupTexture)
     {
         std::cerr << "Failed to load popup texture\n";
         return;
@@ -75,7 +79,23 @@ void Popup::render(std::string text)
     // std::cerr << popupInfos.h << " " << popupInfos.w << "\n";
     SDL_RenderCopy(renderer, popupTexture, NULL, &popupInfos);
     // SDL_DestroyTexture(popupTexture);
-    renderText(text);
+    renderText(textPrimary, 0, padding);
+    renderText(textSecondary, prevTextHeight, padding);
+    renderButtons();
+}
+
+void Popup::render(std::string text, int padding)
+{
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    if (!popupTexture)
+    {
+        std::cerr << "Failed to load popup texture\n";
+        return;
+    }
+    // std::cerr << popupInfos.h << " " << popupInfos.w << "\n";
+    SDL_RenderCopy(renderer, popupTexture, NULL, &popupInfos);
+    // SDL_DestroyTexture(popupTexture);
+    renderText(text, 0, padding);
     renderButtons();
 }
 

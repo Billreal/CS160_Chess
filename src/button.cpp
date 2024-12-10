@@ -129,7 +129,7 @@ void Button::renderSVG(std::string svgFilePath, double scale)
         std::cerr << "Text is empty\n";
         return;
     }
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
@@ -148,7 +148,7 @@ void Button::render()
     renderRect({rect.x, rect.y, 20, rect.h}, SDL_Color({238, 238, 210, 255}));
 
     // Render text
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;

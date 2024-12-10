@@ -23,6 +23,7 @@ private:
     POPUP_MODE mode;
     SDL_Rect popupInfos;
     std::string text;
+    int prevTextHeight = 0;
     TTF_Font* textFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 32);
     TTF_Font* buttonFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 24);
     SDL_Color buttonColor = {118, 150, 85, 255};
@@ -38,7 +39,7 @@ private:
     Confirmation confirmation = NONE;
 
     void renderBlurredBackground();
-    void renderText(std::string text);
+    void renderText(std::string text, int prevHeight, int padding);
     void renderButtons();
 
 public:
@@ -47,7 +48,8 @@ public:
 
     SDL_Texture *loadTexture(std::string filePath, int width, int height, double scale);
 
-    void render(std::string text);
+    void render(std::string text, int padding);
+    void render(std::string textPrimary, std::string textSecondary, int padding);
     void clear() const {SDL_RenderClear(renderer);};
     void handleButtonEvent(SDL_Event* e);
     void handleButtonClicked();

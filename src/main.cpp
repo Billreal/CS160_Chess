@@ -37,7 +37,7 @@ const int SIDE_LENGTH = 80;
 
 void renderText(SDL_Renderer *renderer, TTF_Font *font, const std::string &text, SDL_Color textColor, SDL_Rect rect)
 {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
@@ -803,7 +803,7 @@ int main(int argc, char *args[])
 
                     for (int k = 0; k < difficultyList.size(); k++)
                     {
-                        std:: cerr << "Seaching at: " << k << "\n";
+                        std::cerr << "Seaching at: " << k << "\n";
                         if (difficultyList[k].difficulty == communicator.getDifficulty())
                         {
                             std::cerr << "Found current difficulty at | " << k << " |" << "\n";
@@ -821,9 +821,9 @@ int main(int argc, char *args[])
         }
         case GAME:
         {
-            if(isEnded)
+            if (isEnded)
                 needPresent = true;
-            else 
+            else
                 needPresent = false;
             // * Computer's turn
             // currentMoveColor = board.getMoveColor();
@@ -1095,16 +1095,25 @@ int main(int argc, char *args[])
                 popup.handleButtonClicked();
 
             if (isEnded)
-            {   
+            {
                 // std::cerr << "The game ended\n";
-                popup.render((std::string) "White win");
+                popup.render((std::string) "White win", (std::string) "Do you want to restart?", 40);
 
-                if(popup.isConfirmed() == Confirmation::YES){
+                if (popup.isConfirmed() == Confirmation::YES)
+                {
                     popup.clearConfirmation();
+                    board.startNewGame();
+                    board.resetBoardState(isEnded);
+                    resetGameState();
+                    board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
+                    gameState.pushState(board.getFen());
                     std::cerr << "Popup confirmed\n";
                 }
-                else if(popup.isConfirmed() == Confirmation::NO){
+                else if (popup.isConfirmed() == Confirmation::NO)
+                {
                     popup.clearConfirmation();
+                    running = false;
+                    break;
                     std::cerr << "Popup denied\n";
                 }
             }

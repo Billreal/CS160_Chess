@@ -527,8 +527,8 @@ int main(int argc, char *args[])
             if (gameState.canUndo(isSinglePlayer))
             {
                 std::string prevFen = gameState.undo(isSinglePlayer);
-                board.resetBoardState(isEnded);
                 board.updateFen(prevFen);
+                board.resetBoardState(isEnded);
 
                 currentMoveColor = board.getMoveColor();
                 if (currentMoveColor)
@@ -536,9 +536,6 @@ int main(int argc, char *args[])
                 else
                     std::cerr << "White\n";
                 std::cerr << prevFen << "\n";
-                board.setRenderCheck(COLOR_NONE);
-                board.highlightKingStatus(isEnded, BLACK);
-                board.highlightKingStatus(isEnded, WHITE);
                 renderOnce = false;
             }
             undoBtn.resetClicked(); // Reset button state
@@ -549,8 +546,8 @@ int main(int argc, char *args[])
             if (gameState.canRedo(isSinglePlayer))
             {
                 std::string nextFen = gameState.redo(isSinglePlayer);
-                board.resetBoardState(isEnded);
                 board.updateFen(nextFen);
+                board.resetBoardState(isEnded);
 
                 currentMoveColor = board.getMoveColor();
                 if (currentMoveColor)
@@ -558,9 +555,6 @@ int main(int argc, char *args[])
                 else
                     std::cerr << "White\n";
                 std::cerr << nextFen << "\n";
-                board.setRenderCheck(COLOR_NONE);
-                board.highlightKingStatus(isEnded, BLACK);
-                board.highlightKingStatus(isEnded, WHITE);
                 renderOnce = false;
             }
             redoBtn.resetClicked(); // Reset button state
@@ -569,8 +563,8 @@ int main(int argc, char *args[])
         {
             SDL_Log("Start clicked!");
             std::string nextFen = gameState.startState();
-            board.resetBoardState(isEnded);
             board.updateFen(nextFen);
+            board.resetBoardState(isEnded);
 
             currentMoveColor = board.getMoveColor();
             if (currentMoveColor)
@@ -578,9 +572,6 @@ int main(int argc, char *args[])
             else
                 std::cerr << "White\n";
             std::cerr << nextFen << "\n";
-            board.setRenderCheck(COLOR_NONE);
-            board.highlightKingStatus(isEnded, BLACK);
-            board.highlightKingStatus(isEnded, WHITE);
             renderOnce = false;
             beginBtn.resetClicked(); // Reset button state
         }
@@ -588,8 +579,8 @@ int main(int argc, char *args[])
         {
             SDL_Log("End clicked!");
             std::string nextFen = gameState.finalState();
-            board.resetBoardState(isEnded);
             board.updateFen(nextFen);
+            board.resetBoardState(isEnded);
 
             currentMoveColor = board.getMoveColor();
             if (currentMoveColor)
@@ -597,9 +588,6 @@ int main(int argc, char *args[])
             else
                 std::cerr << "White\n";
             std::cerr << nextFen << "\n";
-            board.setRenderCheck(COLOR_NONE);
-            board.highlightKingStatus(isEnded, BLACK);
-            board.highlightKingStatus(isEnded, WHITE);
             renderOnce = false;
             endBtn.resetClicked(); // Reset button state
         }

@@ -271,13 +271,16 @@ int main(int argc, char *args[])
         return -1;
     }
 
+    // ! For disabling communicator
+    bool isCommunicatorEnabled = true;
+    // ! -----------------------------
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
-    // Communicator communicator;
-    // communicator.init();
-    // communicator.startNewGame();
+    Communicator communicator(isCommunicatorEnabled);
+    communicator.init();
+    communicator.startNewGame();
 
     // ! ----- Temporary setting for communicator -----
-    // communicator.setDifficulty(Difficulty::EASY);
+    communicator.setDifficulty(Difficulty::EASY);
     // ! ----------------------------------------------
     // Handling SDL_events
     SDL_Event event;
@@ -300,7 +303,7 @@ int main(int argc, char *args[])
     Coordinate pickedPlace(-1, -1);
 
     board.setColor(modernPrimary, modernSecondary);
-    // board.setCommunicator(&communicator);
+    board.setCommunicator(&communicator);
 
     vector<Coordinate> possibleMoves;
     vector<Coordinate> possibleCaptures;
@@ -748,10 +751,10 @@ int main(int argc, char *args[])
                 if (loadFileBtns[i].clicked())
                 {
                     // std::cerr << "Button clicked!\n";
-                    if (!isSinglePlayer)
-                        loadGame(board, files[i]);
+                    // if (!isSinglePlayer)
+                        // loadGame(board, files[i]);
                     // else
-                    // loadGame(board, files[i], isSinglePlayer, communicator);
+                    loadGame(board, files[i], isSinglePlayer, communicator);
                     resetGameState();
                     board.resetBoardState(isEnded);
                     gameState.clear();

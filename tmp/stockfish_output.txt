@@ -26,3 +26,39 @@ uciok
 info string Using 1 thread
 readyok
 readyok
+info string Available processors: 0-7
+info string Using 1 thread
+info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
+info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
+info depth 1 seldepth 2 multipv 1 score cp -13 nodes 76 nps 38000 hashfull 0 tbhits 0 time 2 pv e7e5
+bestmove c7c5
+info string Available processors: 0-7
+info string Using 1 thread
+info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
+info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
+info depth 1 seldepth 6 multipv 1 score cp 113 nodes 134 nps 67000 hashfull 0 tbhits 0 time 2 pv d8a5 b2b4 a5b4 b1d2 c5d4
+bestmove e7e6
+info string Available processors: 0-7
+info string Using 1 thread
+info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
+info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
+info depth 1 seldepth 6 multipv 1 score cp 65 nodes 146 nps 73000 hashfull 0 tbhits 0 time 2 pv d8a5 b2b4 a5b4 b1d2 c5d4
+bestmove d8a5 ponder b2b4
+info string Available processors: 0-7
+info string Using 1 thread
+info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
+info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
+info depth 1 seldepth 4 multipv 1 score cp -108 nodes 159 nps 53000 hashfull 0 tbhits 0 time 3 pv a5b6
+bestmove a5b6
+info string Available processors: 0-7
+info string Using 1 thread
+info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
+info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
+info depth 1 seldepth 4 multipv 1 score cp 125 nodes 181 nps 181000 hashfull 0 tbhits 0 time 1 pv b6b2
+bestmove b6b2
+info string Available processors: 0-7
+info string Using 1 thread
+info string NNUE evaluation using nn-1111cefa1111.nnue (133MiB, (22528, 3072, 15, 32, 1))
+info string NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, 32, 1))
+info depth 1 seldepth 10 multipv 1 score cp 786 nodes 216 nps 108000 hashfull 0 tbhits 0 time 2 pv b2a1 a3b1 a1b1 d2c1 b1c1 a4d1 c1d1 e1d1 c5d4
+bestmove b2a1 ponder a3b1

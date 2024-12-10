@@ -7,12 +7,30 @@ Communicator::Communicator()
     isRunning = true;
 }
 
+Communicator::Communicator(bool isRunning): isRunning(isRunning)
+{   
+    if (isRunning)
+    {
+        inputFile.open("tmp/stockfish_output.txt");
+        process = popen("stockfish.exe > tmp/stockfish_output.txt", "w");
+        std::cerr << "Communicator is enabled" << std::endl;
+    }
+    else
+        std::cerr << "Communicator is disabled" << std::endl;
+
+    if (process)
+        std::cerr << "Process started" << std::endl;
+    else std::cerr << "Process is not started" << std::endl;
+
+}
+
 Communicator::~Communicator()
 {
     stop();
 }
 void Communicator::stop()
 {
+    if (!isRunning || !process) return;
     pclose(process);
     isRunning = false;
 }
@@ -20,7 +38,8 @@ void Communicator::stop()
 void Communicator::writeCommand(const std::string &command)
 {
     // std::cerr << "written to stockfish: \n" << command << "\n";
-    if (!process) return;
+    if (!isRunning || !process) return;
+
     fprintf(process, (command + "\n").c_str());
     fflush(process);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -28,6 +47,8 @@ void Communicator::writeCommand(const std::string &command)
 
 void Communicator::init()
 {
+    if (!isRunning || !process) return;
+
     writeCommand("uci");
     writeCommand("setoption name Hash value 128");
     writeCommand("setoption name Threads value 1");
@@ -37,12 +58,14 @@ void Communicator::init()
 
 void Communicator::startNewGame()
 {
+    if (!isRunning || !process) return;
     writeCommand("ucinewgame");
     writeCommand("isready");
 }
 
 std::string Communicator::getLineStockfishOutput()
 {
+    if (!isRunning || !process) return "";
     std::string res;
     std::getline(inputFile, res);
     return res;
@@ -50,11 +73,13 @@ std::string Communicator::getLineStockfishOutput()
 
 std::string Communicator::getMove(const std::string &fen)
 {
+    if (!isRunning || !process) return "";
     return getBestMove(fen);
 }
 
 std::string Communicator::getBestMove(const std::string &fen)
 {
+    if (!isRunning || !process) return "";
     std::string fenSet = "position fen " + fen;
     std::string goCommand = "go depth " + std::to_string(searchDepth) + " movetime " + std::to_string(timeAllowed);
     writeCommand(fenSet);
@@ -76,6 +101,7 @@ std::string Communicator::getBestMove(const std::string &fen)
 
 std::string Communicator::readResponse()
 {
+    if (!isRunning || !process) return "";
     std::string line;
     std::string response;
     while (std::getline(inputFile, line))
@@ -89,6 +115,8 @@ std::string Communicator::readResponse()
 
 void Communicator::setDifficulty(Difficulty difficulty)
 {
+    if (!isRunning || !process) return;
+
     if (difficulty == Difficulty::EASY)
     {
         stockfishLevel = 0;

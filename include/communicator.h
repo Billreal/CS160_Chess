@@ -27,6 +27,7 @@ class Communicator
 
 public:
     Communicator();
+    Communicator(bool isRunning);
     void init();
     void startNewGame();
 

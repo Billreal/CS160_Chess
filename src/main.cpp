@@ -227,7 +227,6 @@ int main(int argc, char *args[])
     GameStateManager gameState;
     renderer = NULL;
     window = NULL;
-    Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
 
     // Error handling for SDL_Init
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -304,6 +303,7 @@ int main(int argc, char *args[])
     bool isSinglePlayer = false;
     int currentMoveColor = WHITE;
     bool renderOnce = false;
+    bool needPresent = false;
 
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
@@ -442,6 +442,9 @@ int main(int argc, char *args[])
     board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
     communicator.setDifficulty(difficultyList[currentDifficultyIndex].difficulty);
     bool isUnderPromotion = false;
+
+    //// Popup handling
+    Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
 
     //// Pseudo codes
     auto resetGameState = [&]()
@@ -818,24 +821,12 @@ int main(int argc, char *args[])
         }
         case GAME:
         {
+            if(isEnded)
+                needPresent = true;
+            else 
+                needPresent = false;
             // * Computer's turn
             // currentMoveColor = board.getMoveColor();
-            // if (isEnded)
-            // {
-
-            //     SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
-            //     SDL_RenderClear(renderer);
-
-            //     GameGUILoad();
-            //     GameTurnIndicatorLoad();
-
-            //     std::cerr << "The game ended\n"
-            //               << std::endl;
-            //     SDL_RenderPresent(renderer);
-
-            //     // break;
-            // }
-
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
@@ -866,10 +857,10 @@ int main(int argc, char *args[])
                 // board.updateFen(board.boardToFen());
                 board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
                 GameBoardRender();
-                GameGUILoad();
                 GameTurnIndicatorLoad();
-                board.render();
-                board.present();
+
+                // Update the screen
+                SDL_RenderPresent(renderer);
                 break;
             }
 
@@ -889,7 +880,7 @@ int main(int argc, char *args[])
                 {
                     if (isEnded)
                     {
-                        std::cerr << "Game ended\n";
+                        // std::cerr << "Game ended\n";
                         break;
                     }
                     if (event.button.button != SDL_BUTTON_LEFT)
@@ -921,7 +912,7 @@ int main(int argc, char *args[])
                                 gameState.pushState(board.getFen());
                                 GameTurnIndicatorLoad();
 
-                                SDL_RenderPresent(renderer);
+                                needPresent = true;
                             }
                         }
                         break;
@@ -962,7 +953,7 @@ int main(int argc, char *args[])
 
                     GameTurnIndicatorLoad();
 
-                    SDL_RenderPresent(renderer);
+                    needPresent = true;
 
                     board.deleteCell(pickedPlace);
                     break;
@@ -971,7 +962,7 @@ int main(int argc, char *args[])
                 {
                     if (isEnded)
                     {
-                        std::cerr << "Game ended\n";
+                        // std::cerr << "Game ended\n";
                         break;
                     }
                     if (isLeftMouseHolding == false) // Mouse hover
@@ -985,7 +976,7 @@ int main(int argc, char *args[])
 
                     GameTurnIndicatorLoad();
 
-                    SDL_RenderPresent(renderer);
+                    needPresent = true;
 
                     break;
                 }
@@ -993,7 +984,7 @@ int main(int argc, char *args[])
                 {
                     if (isEnded)
                     {
-                        std::cerr << "Game ended\n";
+                        // std::cerr << "Game ended\n";
                         break;
                     }
                     if (event.button.button != SDL_BUTTON_LEFT)
@@ -1018,7 +1009,7 @@ int main(int argc, char *args[])
 
                             GameTurnIndicatorLoad();
 
-                            SDL_RenderPresent(renderer);
+                            needPresent = true;
                             break;
                         }
                         // * Case player did a legal move
@@ -1044,7 +1035,7 @@ int main(int argc, char *args[])
                             // std::cerr << board.getFen() << "\n";
                             GameBoardRender();
                             GameTurnIndicatorLoad();
-                            SDL_RenderPresent(renderer);
+                            needPresent = true;
                         }
                         // * Case player did a illegal move
                         else // invalid move
@@ -1059,7 +1050,7 @@ int main(int argc, char *args[])
 
                             GameTurnIndicatorLoad();
 
-                            SDL_RenderPresent(renderer);
+                            needPresent = true;
                             std::cerr << "done rendering\n";
                             break;
                         }
@@ -1087,8 +1078,7 @@ int main(int argc, char *args[])
                             board.render();
                             isToHighlightMove = false;
                             GameTurnIndicatorLoad();
-
-                            SDL_RenderPresent(renderer);
+                            needPresent = true;
                         }
                     }
                     break;
@@ -1097,8 +1087,32 @@ int main(int argc, char *args[])
                     // board.present();
                 }
                 GameGUIButtonsHandling();
+                if (isEnded)
+                    popup.handleButtonEvent(&event);
             }
             GameGUIButtonsClicked();
+            if (isEnded)
+                popup.handleButtonClicked();
+
+            if (isEnded)
+            {   
+                // std::cerr << "The game ended\n";
+                popup.render((std::string) "White win");
+
+                if(popup.isConfirmed() == Confirmation::YES){
+                    popup.clearConfirmation();
+                    std::cerr << "Popup confirmed\n";
+                }
+                else if(popup.isConfirmed() == Confirmation::NO){
+                    popup.clearConfirmation();
+                    std::cerr << "Popup denied\n";
+                }
+            }
+
+            if (needPresent)
+            {
+                SDL_RenderPresent(renderer);
+            }
 
             break;
         }

@@ -3,9 +3,9 @@
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 
-SDL_Texture *Popup::loadTexture(const char *filePath, int width, int height, double scale)
+SDL_Texture *Popup::loadTexture(std::string filePath, int width, int height, double scale)
 {
-    struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
+    struct NSVGimage *image = nsvgParseFromFile(filePath.c_str(), "px", 96);
     if (!image)
     {
         printf("Failed to load SVG file.\n");
@@ -40,7 +40,7 @@ void Popup::renderText(std::string text)
     int textHeight = textSurface->h;
     SDL_FreeSurface(textSurface);
 
-    SDL_Rect textRect = {(POPUP_LENGTH - textWidth) / 2, 0, textWidth, textHeight};
+    SDL_Rect textRect = {popupInfos.x + (POPUP_LENGTH - textWidth) / 2, popupInfos.y + 40, textWidth, textHeight};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_DestroyTexture(textTexture);
 }
@@ -51,10 +51,11 @@ void Popup::renderButtons()
     noBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
 }
 
-Popup::Popup(SDL_Renderer *renderer, POPUP_MODE mode, int x, int y) : renderer(renderer), mode(mode), popupInfos({x, y, POPUP_LENGTH, POPUP_LENGTH})
+Popup::Popup(SDL_Renderer *renderer, POPUP_MODE mode, int x, int y) : renderer(renderer), mode(mode)
 {
+    popupInfos = {x, y, POPUP_LENGTH, POPUP_LENGTH};
     yesBtn = Button(renderer, popupInfos.x + 35, popupInfos.y + 260, 120, 50, buttonColor, white, "Yes", buttonFont);
-    noBtn = Button(renderer, popupInfos.x + 35 + 120 + 40, popupInfos.y + 260, 120, 50, buttonColor, white, "Yes", buttonFont);
+    noBtn = Button(renderer, popupInfos.x + 35 + 120 + 40, popupInfos.y + 260, 120, 50, buttonColor, white, "No", buttonFont);
 }
 
 Popup::~Popup()
@@ -63,47 +64,46 @@ Popup::~Popup()
     TTF_CloseFont(buttonFont);
 }
 
-bool Popup::render(std::string text)
+void Popup::render(std::string text)
 {
-    SDL_Texture *popupTexture = loadTexture("./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
-    if (!popupTexture)
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    if(!popupTexture)
     {
         std::cerr << "Failed to load popup texture\n";
-        return false;
+        return;
     }
+    // std::cerr << popupInfos.h << " " << popupInfos.w << "\n";
     SDL_RenderCopy(renderer, popupTexture, NULL, &popupInfos);
-    SDL_DestroyTexture(popupTexture);
+    // SDL_DestroyTexture(popupTexture);
     renderText(text);
     renderButtons();
+}
 
-    SDL_Event event;
-    while (SDL_PollEvent(&event) != 0)
-    {
-        if (event.type == SDL_QUIT)
-        {
-            return false;
-        }
-
-        handleButtonEvent(&event);
-    }
-
+void Popup::handleButtonClicked()
+{
     if (yesBtn.clicked())
     {
         // Handle yes button
+        confirmation = YES;
         yesBtn.resetClicked();
-        return true;
+        return;
     }
     if (noBtn.clicked())
     {
         // Handle no button
+        confirmation = NO;
         noBtn.resetClicked();
-        return false;
+        return;
     }
-    return false;
 }
 
 void Popup::handleButtonEvent(SDL_Event *e)
 {
     yesBtn.handleEvent(e);
     noBtn.handleEvent(e);
+}
+
+Confirmation Popup::isConfirmed()
+{
+    return confirmation;
 }

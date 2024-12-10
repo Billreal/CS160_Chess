@@ -1399,6 +1399,11 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
         
         return true;
     }
+    if (!isKingSafe(color))
+    {
+        setRenderCheck(color);
+        return true;
+    }
     return false;
     if (false)
         std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";
@@ -1420,7 +1425,7 @@ bool Board::resetBoardState(bool &isEnded)
     stalemateCoordinate = nullCell;
     previousCoordinate = nullCell;
     currentCoordinate = nullCell;
-    // communicator->startNewGame();
+    communicator->startNewGame();
     return highlightKingStatus(isEnded, WHITE) || highlightKingStatus(isEnded, BLACK);
 }
 

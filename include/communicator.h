@@ -27,6 +27,7 @@ class Communicator
     int hashLimit;
     int threadLimit;
     std::string getBestMove(const std::string &fen); // maximumTime is in miliseconds
+    Difficulty currentDifficulty;
 
 public:
     Communicator();
@@ -44,4 +45,5 @@ public:
     std::string getLineStockfishOutput();
     std::string readResponse();
     void setDifficulty(Difficulty difficulty);
+    Difficulty getDifficulty();
 };

@@ -118,6 +118,7 @@ void Communicator::setDifficulty(Difficulty difficulty)
 {
     if (!isRunning || !process) return;
     std::cerr << "Set difficulty called";
+    currentDifficulty = difficulty;
     if (difficulty == Difficulty::EASY)
     {
         std::cerr << "Switch to easy\n";
@@ -152,4 +153,9 @@ void Communicator::setDifficulty(Difficulty difficulty)
     writeCommand("setoption name Threads value " + std::to_string(threadLimit));
     writeCommand("setoption name Hash level value " + std::to_string(hashLimit));
     writeCommand("setoption name MultiPV level value " + std::to_string(PVValue));
+}
+
+Difficulty Communicator::getDifficulty()
+{
+    return currentDifficulty;
 }

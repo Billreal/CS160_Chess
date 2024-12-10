@@ -169,7 +169,11 @@ void loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, C
         std::cerr << "Set difficulty to " << (1 <= difficulty && difficulty <= 3) ? difficulty : 1;
     }
     else
+    {
         isSinglePlayer = false;
+        communicator.setDifficulty(Difficulty::EASY);
+        std::cerr << "For clarification, in multiplayer mode difficulty option has no effect\n";
+    }
     // std::cerr << FEN << "\n";
     board.updateFen(FEN);
 
@@ -285,9 +289,6 @@ int main(int argc, char *args[])
     communicator.init();
     communicator.startNewGame();
 
-    // ! ----- Temporary setting for communicator -----
-    communicator.setDifficulty(Difficulty::HARD);
-    // ! ----------------------------------------------
     // Handling SDL_events
     SDL_Event event;
 
@@ -353,7 +354,7 @@ int main(int argc, char *args[])
     SDL_Rect loadMenuSeperateLine = {360, 240, 5, 600};
 
     Board demoBoard(renderer, modernPrimary, modernSecondary, bgColor);
-    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+
     demoBoard.setBoardSize(50);
     demoBoard.setMargin(480, 240);
 
@@ -503,6 +504,15 @@ int main(int argc, char *args[])
         endBtn.handleEvent(&event);
     };
 
+    auto LoadMenuRefresh = [&]()
+    {
+        for (int i = 0; i < loadFileBtns.size(); i++)
+        {
+            loadFileBtns[i].resetHovered();
+            loadFileBtns[i].resetClicked();
+        }
+        demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+    };
     auto GameGUIButtonsClicked = [&]()
     {
         if (saveBtn.clicked())
@@ -516,6 +526,7 @@ int main(int argc, char *args[])
             SDL_Log("Load clicked!");
             isOn = LOAD;
             loadBtnInGame.resetClicked(); // Reset button state
+            LoadMenuRefresh();
         }
         if (settingsBtn.clicked())
         {
@@ -535,23 +546,23 @@ int main(int argc, char *args[])
         if (currentThemeButton->clicked())
         {
             SDL_Log("Theme clicked");
+            currentThemeButton->resetClicked(); // Reset button state
             // * To next color in circle
             currentThemeIndex = (currentThemeIndex + 1) % 3;
             currentThemeButton = &themeList[currentThemeIndex].button;
             board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
 
             renderOnce = false;
-            currentThemeButton->resetClicked(); // Reset button state
         }
 
         if (currentDifficultyButton->clicked())
         {
             SDL_Log("Difficulty Clicked");
+            currentDifficultyButton->resetClicked();
             currentDifficultyIndex = (currentDifficultyIndex + 1) % 3;
             currentDifficultyButton = &difficultyList[currentDifficultyIndex].button;
             communicator.setDifficulty(difficultyList[currentDifficultyIndex].difficulty);
             renderOnce = false;
-            currentDifficultyButton->resetClicked();
         }
         if (undoBtn.clicked())
         {
@@ -700,6 +711,7 @@ int main(int argc, char *args[])
                 SDL_Log("Button clicked!");
                 isOn = LOAD;
                 loadBtn.resetClicked(); // Reset button state
+                LoadMenuRefresh();
             }
             if (quitBtn.clicked())
             {
@@ -783,6 +795,22 @@ int main(int argc, char *args[])
                     board.highlightKingStatus(isEnded, BLACK);
                     isOn = GAME;
                     loadFileBtns[i].resetClicked();
+                    currentDifficultyButton->clear();
+                    currentDifficultyIndex = 0;
+
+                    for (int k = 0; k < difficultyList.size(); k++)
+                    {
+                        std:: cerr << "Seaching at: " << k << "\n";
+                        if (difficultyList[k].difficulty == communicator.getDifficulty())
+                        {
+                            std::cerr << "Found current difficulty at | " << k << " |" << "\n";
+                            currentDifficultyIndex = k;
+                            break;
+                        }
+                    }
+                    currentDifficultyButton = &difficultyList[currentDifficultyIndex].button;
+                    GameGUILoad();
+                    break;
                 }
             }
             // SDL_Delay(1000);

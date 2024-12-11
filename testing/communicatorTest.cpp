@@ -163,13 +163,11 @@ int main(int argc, char **argv)
     try
     {
         AudioManager audioManager;
-        Sound sound("path/to/sound.wav");
-        Music music("path/to/music.mp3");
+        Music music("assets/fallen.mp3");
 
-        sound.play();
         music.play();
 
-        SDL_Delay(5000); // Wait for 5 seconds to hear the sound
+        SDL_Delay(100000); // Wait for 5 seconds to hear the sound
     }
     catch (const std::exception &e)
     {

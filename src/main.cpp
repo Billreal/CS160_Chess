@@ -19,7 +19,7 @@
 #include "./../include/nanosvgrast.h"
 #include "./../include/gameStateManager.h"
 #include "./../include/popup.h"
-
+#include "./../include/sound.h"
 using std::cerr;
 using std::cout;
 
@@ -281,11 +281,20 @@ int main(int argc, char *args[])
         return -1;
     }
 
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
+        return -1;
+    }
+
+    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 4096);
     // ! For disabling communicator
     bool isCommunicatorEnabled = true;
     // ! -----------------------------
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
     Communicator communicator(isCommunicatorEnabled);
+    Music backgroundMusic("assets/fallen.mp3");
+    backgroundMusic.play();
     communicator.init();
     communicator.startNewGame();
 
@@ -487,7 +496,8 @@ int main(int argc, char *args[])
         homeBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         retryBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         currentThemeButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
-        if (isSinglePlayer) currentDifficultyButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
+        if (isSinglePlayer)
+            currentDifficultyButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
         undoBtn.renderPNG("./assets/undo.png");
         redoBtn.renderPNG("./assets/redo.png");
         beginBtn.renderPNG("./assets/begin.png");
@@ -497,7 +507,8 @@ int main(int argc, char *args[])
     auto GameGUIButtonsHandling = [&]()
     {
         currentThemeButton->handleEvent(&event);
-        if (isSinglePlayer) currentDifficultyButton->handleEvent(&event);
+        if (isSinglePlayer)
+            currentDifficultyButton->handleEvent(&event);
         saveBtn.handleEvent(&event);
         loadBtnInGame.handleEvent(&event);
         homeBtn.handleEvent(&event);
@@ -599,7 +610,7 @@ int main(int argc, char *args[])
 
                 currentMoveColor = board.getMoveColor();
                 if (currentMoveColor)
-                    std::cerr << "Black\n"; 
+                    std::cerr << "Black\n";
                 else
                     std::cerr << "White\n";
                 std::cerr << prevFen << "\n";
@@ -1168,6 +1179,7 @@ int main(int argc, char *args[])
     TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    backgroundMusic.stop();
     TTF_Quit();
     SDL_Quit();
 

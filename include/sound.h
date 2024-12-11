@@ -1,10 +1,20 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <memory>
+#include <stdexcept>
 
 
-class SoundHandler
+class Music
 {
-    SoundHandler();
+public:
+    Music(const std::string &file);
+    ~Music();
 
-    void init();
+    void play(int loops = -1);
+    void pause();
+    void resume();
+    void stop();
+
+private:
+    std::unique_ptr<Mix_Music, void (*)(Mix_Music *)> music;
 };

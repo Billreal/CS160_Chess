@@ -412,7 +412,7 @@ int main(int argc, char *args[])
     // Inintialize game buttons
     Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
     Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
-    Button settingsBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Settings", loadMenuFont);
+    Button homeBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Home", loadMenuFont);
     Button retryBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Retry", loadMenuFont);
     Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
     Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
@@ -483,7 +483,7 @@ int main(int argc, char *args[])
         // Render Buttons
         saveBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         loadBtnInGame.renderSVG("./assets/game_button.svg", SVG_SCALE);
-        settingsBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
+        homeBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         retryBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         currentThemeButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
         if (isSinglePlayer) currentDifficultyButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
@@ -499,7 +499,7 @@ int main(int argc, char *args[])
         if (isSinglePlayer) currentDifficultyButton->handleEvent(&event);
         saveBtn.handleEvent(&event);
         loadBtnInGame.handleEvent(&event);
-        settingsBtn.handleEvent(&event);
+        homeBtn.handleEvent(&event);
         retryBtn.handleEvent(&event);
         undoBtn.handleEvent(&event);
         redoBtn.handleEvent(&event);
@@ -507,6 +507,23 @@ int main(int argc, char *args[])
         endBtn.handleEvent(&event);
     };
 
+    auto ResetColor = [&]()
+    {
+        currentThemeIndex = 0;
+        currentThemeButton->resetClicked();
+        currentThemeButton = &themeList[currentThemeIndex].button;
+        board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+        std::cerr << "Done resetting color\n";
+    };
+
+    auto ResetDifficulty = [&]()
+    {
+        currentDifficultyIndex = 0;
+        currentDifficultyButton->resetClicked();
+        currentDifficultyButton = &difficultyList[currentDifficultyIndex].button;
+        communicator.setDifficulty(difficultyList[currentDifficultyIndex].difficulty);
+        std::cerr << "Done reseting difficulty\n";
+    };
     auto LoadMenuRefresh = [&]()
     {
         for (int i = 0; i < loadFileBtns.size(); i++)
@@ -531,11 +548,14 @@ int main(int argc, char *args[])
             loadBtnInGame.resetClicked(); // Reset button state
             LoadMenuRefresh();
         }
-        if (settingsBtn.clicked())
+        if (homeBtn.clicked())
         {
-            SDL_Log("Settings clicked!");
-            isOn = SETTINGS;
-            settingsBtn.resetClicked(); // Reset button state
+            homeBtn.resetClicked(); // Reset button state
+            SDL_Log("Home clicked!");
+            isOn = GUI_State::START;
+            ResetColor();
+            ResetDifficulty();
+            renderOnce = false;
         }
         if (retryBtn.clicked())
         {
@@ -694,6 +714,7 @@ int main(int argc, char *args[])
                 resetGameState();
                 gameState.pushState(board.getFen());
                 isOn = GAME;
+                isSinglePlayer = false;
                 startBtn2P.resetClicked(); // Reset button state
                 break;
             }

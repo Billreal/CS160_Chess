@@ -117,7 +117,7 @@ std::string Communicator::readResponse()
 void Communicator::setDifficulty(Difficulty difficulty)
 {
     if (!isRunning || !process) return;
-    std::cerr << "Set difficulty called";
+    std::cerr << "Set difficulty called\n";
     currentDifficulty = difficulty;
     if (difficulty == Difficulty::EASY)
     {

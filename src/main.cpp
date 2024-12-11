@@ -418,9 +418,9 @@ int main(int argc, char *args[])
     Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
     Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
 
-    Button ingameDifficultySwitchEasy(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Easy", loadMenuFont);
-    Button ingameDifficultySwitchMedium(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
-    Button ingameDifficultySwitchHard(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Hard", loadMenuFont);
+    Button ingameDifficultySwitchEasy(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Easy", loadMenuFont);
+    Button ingameDifficultySwitchMedium(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
+    Button ingameDifficultySwitchHard(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Hard", loadMenuFont);
 
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
@@ -483,7 +483,7 @@ int main(int argc, char *args[])
         settingsBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         retryBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
         currentThemeButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
-        currentDifficultyButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
+        if (isSinglePlayer) currentDifficultyButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
         undoBtn.renderPNG("./assets/undo.png");
         redoBtn.renderPNG("./assets/redo.png");
         beginBtn.renderPNG("./assets/begin.png");
@@ -493,7 +493,7 @@ int main(int argc, char *args[])
     auto GameGUIButtonsHandling = [&]()
     {
         currentThemeButton->handleEvent(&event);
-        currentDifficultyButton->handleEvent(&event);
+        if (isSinglePlayer) currentDifficultyButton->handleEvent(&event);
         saveBtn.handleEvent(&event);
         loadBtnInGame.handleEvent(&event);
         settingsBtn.handleEvent(&event);
@@ -555,7 +555,7 @@ int main(int argc, char *args[])
             renderOnce = false;
         }
 
-        if (currentDifficultyButton->clicked())
+        if (currentDifficultyButton->clicked() && isSinglePlayer)
         {
             SDL_Log("Difficulty Clicked");
             currentDifficultyButton->resetClicked();
@@ -575,7 +575,7 @@ int main(int argc, char *args[])
 
                 currentMoveColor = board.getMoveColor();
                 if (currentMoveColor)
-                    std::cerr << "Black\n";
+                    std::cerr << "Black\n"; 
                 else
                     std::cerr << "White\n";
                 std::cerr << prevFen << "\n";

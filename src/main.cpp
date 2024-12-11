@@ -1132,7 +1132,7 @@ int main(int argc, char *args[])
                     // default:
                     // board.present();
                 }
-                if (isEnded)
+                if (isEnded && !popup.isClosed())
                     popup.handleButtonEvent(&event);
                 else
                     GameGUIButtonsHandling();

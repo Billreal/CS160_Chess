@@ -28,11 +28,13 @@ info string Using 1 thread
 readyok
 readyok
 info string Using 1 thread
-info string Using 8 threads
+info string Using 1 thread
 readyok
 readyok
-info string Using 1 thread
-info string Using 1 thread
+readyok
+readyok
+readyok
+readyok
 readyok
 readyok
 info string Using 1 thread

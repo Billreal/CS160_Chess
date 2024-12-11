@@ -3,9 +3,9 @@
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 
-SDL_Texture *Popup::loadTexture(const char *filePath, int width, int height, double scale)
+SDL_Texture *Popup::loadTexture(std::string filePath, int width, int height, double scale)
 {
-    struct NSVGimage *image = nsvgParseFromFile(filePath, "px", 96);
+    struct NSVGimage *image = nsvgParseFromFile(filePath.c_str(), "px", 96);
     if (!image)
     {
         printf("Failed to load SVG file.\n");
@@ -32,15 +32,19 @@ SDL_Texture *Popup::loadTexture(const char *filePath, int width, int height, dou
     return texture;
 }
 
-void Popup::renderText(std::string text)
+void Popup::renderText(std::string text, int prevHeight, int padding)
 {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(textFont, text.c_str(), white);
+    SDL_Surface *textSurface = TTF_RenderText_Blended_Wrapped(textFont, text.c_str(), white, POPUP_LENGTH - 80);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
     SDL_FreeSurface(textSurface);
 
-    SDL_Rect textRect = {(POPUP_LENGTH - textWidth) / 2, 0, textWidth, textHeight};
+    prevTextHeight = textHeight + padding;
+    SDL_Rect textRect = {popupInfos.x + (POPUP_LENGTH - textWidth) / 2, 
+                        popupInfos.y + prevHeight + padding, 
+                        textWidth, 
+                        textHeight};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_DestroyTexture(textTexture);
 }
@@ -51,10 +55,11 @@ void Popup::renderButtons()
     noBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
 }
 
-Popup::Popup(SDL_Renderer *renderer, POPUP_MODE mode, int x, int y) : renderer(renderer), mode(mode), popupInfos({x, y, POPUP_LENGTH, POPUP_LENGTH})
+Popup::Popup(SDL_Renderer *renderer, POPUP_MODE mode, int x, int y) : renderer(renderer), mode(mode)
 {
+    popupInfos = {x, y, POPUP_LENGTH, POPUP_LENGTH};
     yesBtn = Button(renderer, popupInfos.x + 35, popupInfos.y + 260, 120, 50, buttonColor, white, "Yes", buttonFont);
-    noBtn = Button(renderer, popupInfos.x + 35 + 120 + 40, popupInfos.y + 260, 120, 50, buttonColor, white, "Yes", buttonFont);
+    noBtn = Button(renderer, popupInfos.x + 35 + 120 + 40, popupInfos.y + 260, 120, 50, buttonColor, white, "No", buttonFont);
 }
 
 Popup::~Popup()
@@ -63,47 +68,62 @@ Popup::~Popup()
     TTF_CloseFont(buttonFont);
 }
 
-bool Popup::render(std::string text)
+void Popup::render(std::string textPrimary, std::string textSecondary, int padding)
 {
-    SDL_Texture *popupTexture = loadTexture("./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
     if (!popupTexture)
     {
         std::cerr << "Failed to load popup texture\n";
-        return false;
+        return;
     }
+    // std::cerr << popupInfos.h << " " << popupInfos.w << "\n";
     SDL_RenderCopy(renderer, popupTexture, NULL, &popupInfos);
-    SDL_DestroyTexture(popupTexture);
-    renderText(text);
+    // SDL_DestroyTexture(popupTexture);
+    renderText(textPrimary, 0, padding);
+    renderText(textSecondary, prevTextHeight, padding);
     renderButtons();
+}
 
-    SDL_Event event;
-    while (SDL_PollEvent(&event) != 0)
+void Popup::render(std::string text, int padding)
+{
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    if (!popupTexture)
     {
-        if (event.type == SDL_QUIT)
-        {
-            return false;
-        }
-
-        handleButtonEvent(&event);
+        std::cerr << "Failed to load popup texture\n";
+        return;
     }
+    // std::cerr << popupInfos.h << " " << popupInfos.w << "\n";
+    SDL_RenderCopy(renderer, popupTexture, NULL, &popupInfos);
+    // SDL_DestroyTexture(popupTexture);
+    renderText(text, 0, padding);
+    renderButtons();
+}
 
+void Popup::handleButtonClicked()
+{
     if (yesBtn.clicked())
     {
         // Handle yes button
+        confirmation = YES;
         yesBtn.resetClicked();
-        return true;
+        return;
     }
     if (noBtn.clicked())
     {
         // Handle no button
+        confirmation = NO;
         noBtn.resetClicked();
-        return false;
+        return;
     }
-    return false;
 }
 
 void Popup::handleButtonEvent(SDL_Event *e)
 {
     yesBtn.handleEvent(e);
     noBtn.handleEvent(e);
+}
+
+Confirmation Popup::isConfirmed()
+{
+    return confirmation;
 }

@@ -216,8 +216,6 @@ struct DifficultyList
     Difficulty difficulty;
 };
 
-
-
 int main(int argc, char *args[])
 {
     // ! Temporary variable, will change in later version
@@ -860,7 +858,14 @@ int main(int argc, char *args[])
             if (isEnded)
                 needPresent = true;
             else
+            {
+                if (popup.isClosed())
+                {
+                    popup.resetClose();
+                }
+
                 needPresent = false;
+            }
             // * Computer's turn
             currentMoveColor = board.getMoveColor();
             if (!renderOnce)
@@ -1127,16 +1132,20 @@ int main(int argc, char *args[])
                     // default:
                     // board.present();
                 }
-                GameGUIButtonsHandling();
                 if (isEnded)
                     popup.handleButtonEvent(&event);
+                else
+                    GameGUIButtonsHandling();
             }
             GameGUIButtonsClicked();
-            if (isEnded)
-                popup.handleButtonClicked();
 
             if (isEnded)
             {
+                if(popup.isClosed()){
+                    renderOnce = false;
+                    break;
+                }
+                popup.handleButtonClicked();
                 // std::cerr << "The game ended\n";
                 popup.render((std::string) "White win", (std::string) "Do you want to restart?", 40);
 

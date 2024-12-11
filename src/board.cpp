@@ -536,6 +536,7 @@ vector<Coordinate> Board::getPossibleMoves(char piece, int coordX, int coordY)
     int color = getPieceColor(piece);
     vector<vector<Coordinate>> allMoves = chessPiece.listAllMove(pieceName, color, coordX, coordY);
     vector<Coordinate> res;
+    // std::cerr << "Checking: " << piece << "\n";
     // Processing of ordinary move, take king's check status in consider
     for (vector<Coordinate> direction : allMoves)
         for (Coordinate cell : direction)
@@ -895,10 +896,7 @@ bool Board::canBlackCastlingQueen()
 
         board[0][col] = 'k';
         if (!isKingSafe(BLACK))
-        {
             res = false;
-            continue;
-        }
         board[0][col] = '0';
     }
     board[0][4] = 'k';
@@ -1396,7 +1394,7 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
         isEnded = true;
         setRenderStalemate(color);
         SDL_Log("End game: Stalemate");
-        
+
         return true;
     }
     if (!isKingSafe(color))

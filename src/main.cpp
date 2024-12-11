@@ -216,6 +216,8 @@ struct DifficultyList
     Difficulty difficulty;
 };
 
+
+
 int main(int argc, char *args[])
 {
     // ! Temporary variable, will change in later version
@@ -439,6 +441,7 @@ int main(int argc, char *args[])
     vector<DifficultyList> difficultyList = {{ingameDifficultySwitchEasy, Difficulty::EASY},
                                              {ingameDifficultySwitchMedium, Difficulty::MEDIUM},
                                              {ingameDifficultySwitchHard, Difficulty::HARD}};
+
     Button undoBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 - 34 - 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
     Button redoBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 + 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
     Button beginBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 - 5 - 34 - 10 - 59, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
@@ -859,7 +862,7 @@ int main(int argc, char *args[])
             else
                 needPresent = false;
             // * Computer's turn
-            // currentMoveColor = board.getMoveColor();
+            currentMoveColor = board.getMoveColor();
             if (!renderOnce)
             {
                 SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // background color
@@ -972,14 +975,19 @@ int main(int argc, char *args[])
                     // Legal movement
                     if (pickedPiece == '0')
                         break;
-
+                    std::cerr << "Before getting possible moves: \n";
+                    board.debugBoard();
                     isLeftMouseHolding = true;
 
                     // * Getting possible moves
                     possibleMoves.clear();
                     possibleCaptures.clear();
                     possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                    std::cerr << "After getting possible moves: \n";
+                    board.debugBoard();
                     possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
+                    std::cerr << "After getting possible captures: \n";
+                    board.debugBoard();
 
                     // Frame handling
                     GameBoardRender();

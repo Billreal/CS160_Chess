@@ -151,8 +151,8 @@ void Communicator::setDifficulty(Difficulty difficulty)
     }
     writeCommand("setoption name Skill level value " + std::to_string(stockfishLevel));
     writeCommand("setoption name Threads value " + std::to_string(threadLimit));
-    writeCommand("setoption name Hash level value " + std::to_string(hashLimit));
-    writeCommand("setoption name MultiPV level value " + std::to_string(PVValue));
+    writeCommand("setoption name Hash value " + std::to_string(hashLimit));
+    writeCommand("setoption name MultiPV value " + std::to_string(PVValue));
 }
 
 Difficulty Communicator::getDifficulty()

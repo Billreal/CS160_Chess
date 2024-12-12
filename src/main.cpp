@@ -975,19 +975,19 @@ int main(int argc, char *args[])
                     // Legal movement
                     if (pickedPiece == '0')
                         break;
-                    std::cerr << "Before getting possible moves: \n";
-                    board.debugBoard();
+                    // std::cerr << "Before getting possible moves: \n";
+                    // board.debugBoard();
                     isLeftMouseHolding = true;
 
                     // * Getting possible moves
                     possibleMoves.clear();
                     possibleCaptures.clear();
                     possibleMoves = board.getPossibleMoves(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    std::cerr << "After getting possible moves: \n";
-                    board.debugBoard();
+                    // std::cerr << "After getting possible moves: \n";
+                    // board.debugBoard();
                     possibleCaptures = board.getPossibleCaptures(pickedPiece, prevCoordinate.getX(), prevCoordinate.getY());
-                    std::cerr << "After getting possible captures: \n";
-                    board.debugBoard();
+                    // std::cerr << "After getting possible captures: \n";
+                    // board.debugBoard();
 
                     // Frame handling
                     GameBoardRender();
@@ -1092,7 +1092,6 @@ int main(int argc, char *args[])
                             GameTurnIndicatorLoad();
 
                             needPresent = true;
-                            std::cerr << "done rendering\n";
                             break;
                         }
                         // * King status is checked after move and promotion have done

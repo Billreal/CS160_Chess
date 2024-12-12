@@ -30,8 +30,8 @@ sorting=none]{biblatex}
 % Authors should be listed in the order in which they will appear in the published version if the manuscript is accepted. 
 % Use an asterisk (*) to identify the corresponding author, and be sure to include that person’s e-mail address. Use symbols (in this order: †, ‡, §, ||, ¶, #, ††, ‡‡, etc.) for author notes, such as present addresses, “These authors contributed equally to this work” notations, and similar information.
 \begin{otherlanguage}{vietnam}
-    \author{Nguyễn Hoàng Thuận Phát, Huỳnh Tấn Phúc}    
-    \date{Submission day: \selectlanguage{english}\today}
+\author{Nguyễn Hoàng Thuận Phát, Huỳnh Tấn Phúc}    
+\date{Submission day: \selectlanguage{english}\today}
 \end{otherlanguage}
 %%%%%% Affiliations %%%%%%
 
@@ -50,7 +50,7 @@ sorting=none]{biblatex}
 \renewcommand{\abstractname}{Overview}
 %%%%%% Abstract %%%%%%
 \begin{abstract}
-    The project aims to develop a chess game that is smooth, lightweight in size and performance while providing decent experience to player.
+  The project aims to develop a chess game that is smooth, lightweight in size and performance while providing decent experience to player.
 \end{abstract}
 
 %%%%%% Main Text %%%%%%
@@ -66,89 +66,109 @@ sorting=none]{biblatex}
 %%%%% Citations in the text %%%%%%
 \section{Game modes}
 \begin{itemize}
-    \item 2-player mode
-          \begin{itemize}
-              \item 2 players can play against each other on the same instance
-              \item Player's turn is managed automatically, alternating between player 1 (white) and player 2 (black)
-          \end{itemize}
-    \item Versus AI mode: Player as white pieces plays against black pieces controlled by Stockfish chess engine, with three level of difficulty
-          \begin{itemize}
-              \item Easy mode: Stockfish is ran with depth
-              \item Medium mode: Stockfish is ran with depth
-              \item Hard mode: Stockfish is ran with depth
-          \end{itemize}
+  \item 2-player mode
+        \begin{itemize}
+          \item 2 players can play against each other on the same instance
+          \item Player's turn is managed automatically, alternating between player 1 (white) and player 2 (black)
+        \end{itemize}
+  \item Versus AI mode: Player as white pieces plays against black pieces controlled by Stockfish chess engine, with three level of difficulty
+        \begin{itemize}
+          \item Easy mode: Stockfish is ran with high variation and low evaluation level. It searches for next move to depth 1 in 100 milisecods, and has limited computing resource.
+          \item Medium mode: Stockfish is ran with moderate variation and moderate evaluation level.Stockfish searches for next move to depth 3 in 400 miliseconds and more computing resource are allocated
+          \item Hard mode. Stockfish are given the most computing resource. It plays perfectly without variation, searches to depth 20 in 2000 miliseconds
+        \end{itemize}
+        The game is delayed for 500 miliseconds in addition to Stockfish's search time to avoid error.
 \end{itemize}
 %%%%%% Equations %%%%%%
 
 \section{User Interface(UI)}
-User interface and its elements is created with SDL2 graphic libraries and \href{https://github.com/memononen/nanosvg}{nanoSVG} for SVG image file conversion
 \begin{itemize}
-    \item A chessboard with movable pieces
-    \item Chessboard's colors can be chosen from different color palettes.
+  \item A chessboard with movable pieces
 
-    \item Menu before the game is started
-          \begin{itemize}
-              \item Start button that start the game.
-              \item Load button to load saved board and gameplay from storage
-              \item Quit button to exit the game.
-          \end{itemize}
-    \item Menu during gameplay is render to the right of the board.
-          \begin{itemize}
-              \item Promotion of player's pawn is shown above or under that pawn, which displays four possible promotion to queen, knight, rook and bishop.
-              \item Buttons to reset the board to new game state, undo last moves, redo last undo operations, save the current game and load a game from external storage.
-              \item Customization
-                    \begin{itemize}
-                        \item Button to cycle between modern, futuristic and classic board theme
-                        \item Button to go backward to the original board state, that is, the board state right after loading from save file or right after starting new game.
-                        \item Button to go forward to the latest made move.
-                    \end{itemize}
-              \item Quit game button
-          \end{itemize}
+  \item Menu before the game is started
+        \begin{itemize}
+          \item Start buttons that start the game in two-player mode and single player mode.
+          \item Load button to load saved board from storage
+          \item Quit button to exit the game.
+        \end{itemize}
+  \item Menu during gameplay is render to the right and the bottom of the board.
+        \begin{itemize}
+          \item Promotion menu is rendered to the top or bottom of pawn under promotion, with four buttons to promote to queen, bishop, kngiht or rook.
+          \item Right menu bar
+
+                \begin{itemize}
+                  \item Button to save and load current board configuration, including board state, game mode and AI diffculty if there is.
+                  \item Button to reset current game.
+                  \item Button to go back to main menu.
+                  \item Button to access setting menu
+                \end{itemize}
+
+          \item Bottom menu bar
+                \begin{itemize}
+                  \item Button to undo the latest move and undo to the initial board state.
+                  \item Button to redo the latest undo and redo to the final board state.
+                \end{itemize}
+        \end{itemize}
+    \item Load menu display buttons to load saved games, each of which shows previews of board when hovered and load the actual game when clicked. 
 \end{itemize}
 \section{Chess board representation}
 \begin{itemize}
-    \item Chessboard is drawn using SDL2 graphic libraries.
-    \item Pieces are first parsed to bitmap using \href{https://github.com/memononen/nanosvg}{nanoSVG} library's function, then rendered by SDL2
-    \item Pieces are moved by drag-dropping with mouse.
-    \item Legal moves are highlighted with cell-centered dots for moves and hollow circles for captures. The rendering of legal moves are triggered when player click on a piece or drop a piece to its original cell.
-    \item Illegal moves (including movement to cells that are not highlighted, movement out of board's bound, etc) will return the piece to its original cell and does not count as a move.
-    \item Moves are managed automatically, alternating between two colors after each move.
-    \item King piece's cell is highlighted with different colors for its check, checkmate and stalemate statuses.
-          \begin{itemize}
-              \item To highlight chess piece's movement, color of initial and ending cells of that piece is mixed with a yellowish color.
-              \item To highlight check status of king piece, color of its cell is mixed with a redish color.
-              \item To highlight checkmate status of king piece, color of its cell is replaced with a bright red color.
-              \item To highlight stalemate status of king piece, color of its cell is replaced with a cyan color.
-          \end{itemize}
+  \item Chessboard is drawn using SDL2 graphic libraries.
+  \item Pieces are first parsed to bitmap using \href{https://github.com/memononen/nanosvg}{nanoSVG} library's function, then rendered by SDL2
+  \item Pieces are moved by drag-dropping with mouse.
+  \item Legal moves are highlighted with cell-centered dots for moves and hollow circles for captures. The rendering of legal moves are triggered when player click on a piece or drop a piece to its original cell.
+  \item Illegal moves (including movement to cells that are not highlighted, movement out of board's bound, etc) will return the piece to its original cell and does not count as a move.
+  \item Moves are managed automatically, alternating between two colors after each move.
+  \item King piece's cell is highlighted with different colors for its check, checkmate and stalemate statuses.
+        \begin{itemize}
+          \item To highlight chess piece's movement, color of initial and ending cells of that piece is mixed with a yellowish color.
+          \item To highlight check status of king piece, color of its cell is mixed with a redish color.
+          \item To highlight checkmate status of king piece, color of its cell is replaced with a bright red color.
+          \item To highlight stalemate status of king piece, color of its cell is replaced with a cyan color.
+        \end{itemize}
 \end{itemize}
 \section{Game Logic}
 \begin{itemize}
-    \item Pieces' movement
-          \begin{itemize}
-              \item Chess pieces' moves are generated on selection based on their position, then get processed to create list of moves and capture in each direction.
-              \item Special moves' condition are reviewed after each move, based on their condition they will get added to suitable pieces in the next move.
-              \item Status of king is examined during moves generating and after all special moves.
-          \end{itemize}
-    \item Selected cell's ending cell is compared in its legal moves and captures list. Each move is simulated while creating the list to ensure that move does not put the king in check.
-    \item In case of stalemate or checkmate, any chess piece cannot be moved. In such case, (need addition for this)
+  \item Pieces' movement
+        \begin{itemize}
+          \item Chess pieces' moves are generated on selection based on their position, then get processed to create list of moves and capture in each direction.
+          \item Special moves' condition are reviewed after each move, based on their condition they will get added to suitable pieces in the next move.
+          \item Status of king is examined during moves generating and after all special moves.
+        \end{itemize}
+  \item Selected cell's ending cell is compared in its legal moves and captures list. Each move is simulated while creating the list to ensure that move does not put the king in check.
+  \item In case of stalemate or checkmate, any chess piece cannot be moved. In such case, a pop-up menu is displayed to ask if user want to continue another game. If yes button is clicked, the game reset to starting configration with the current game mode. If no button is clicked, the game quits. If the menu is turned off, the game still function as normal, yet the board cannot be interacted with.
 \end{itemize}
 \section{AI Opponent}
 Stockfish is initialized before running with
 \begin{verbatim}
-    uci
-    setoption name Hash value 128
-    setoption name Threads value 1
-    isready
-    setoption name UCI_LimitStrength value true
-    \end{verbatim}
+uci
+setoption name Hash value 128
+setoption name Threads value 1
+isready
+\end{verbatim}
 
 For each time the game is started from new board or from save file, command \texttt{ucinewgame} is sent to Stockfish
 
 There are three modes of AI opponent lining up with three difficulty: Easy, Medium and Hard.
 \begin{itemize}
-    \item Easy difficulty: Stockfish is configured with \texttt{setoption name UCI\_Elo value 1320} and execute \texttt{go depth 2 movetime 300} after setting FEN notation for board state.
-    \item Medium difficulty: Stockfish is configured with \texttt{setoption name UCI\_Elo value 2000} and execute \texttt{go depth 5 movetime 500} after setting FEN notation for board state.
-    \item Hard difficulty: Stockfish is configured with \texttt{setoption name UCI\_Elo value 3190} and execute \texttt{go depth 10 movetime 1000} after setting FEN notation for board state.
+  \item Easy difficulty: Stockfish is configured with \begin{verbatim}
+setoption name Skill level value 0
+setoption name Threads value 1     
+setoption name Hash value 16      
+setoption name MultiPV value 10    
+\end{verbatim} and execute \texttt{go depth 2 movetime 300} after setting FEN notation for board state.
+  \item Medium difficulty: Stockfish is configured with \begin{verbatim}
+setoption name Skill level value 3
+setoption name Threads value 2     
+setoption name Hash value 64      
+setoption name MultiPV value 5    
+\end{verbatim} and execute \texttt{go depth 3 movetime 400} after setting FEN notation for board state.
+  \item Hard difficulty: Stockfish is configured with \begin{verbatim}
+setoption name Skill level value 20
+setoption name Threads value 8     
+setoption name Hash value 2048      
+setoption name MultiPV value 1    
+\end{verbatim} and execute \texttt{go depth 20 movetime 2000} after setting FEN notation for board state.
 \end{itemize}
 After letting Stockfish executing commands, the communicator wait for 500 miliseconds before reading the result from \texttt{tmp/stockfish\_output.txt}
 \section{Game state management}
@@ -162,28 +182,27 @@ There are separate menu dedicated for loading. In that menu, available save file
 \section{Optional features}
 While being dragged, selected chess piece follows the mouse's cursor smoothly.
 \section{Technology stack}
-The game's logic, game state management and GUI(graphic user interface) is written in C and C++, using SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, which can be decoded to get the complete information of board state stored.
-
+The game's logic, game state management and GUI(graphic user interface) is written in C and C++, using SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, followed by numbers indicating current game mode and difficulty of AI opponent. They can be decoded on load.
 \chapter{Design document}
 To be written after finished
 \chapter{Implementation Details}
 \section{Organization}
-The code is organized by header - implementation files. General logic is handled in main file, while detailed logic is handled within each class. 
+The code is organized by header - implementation files. General logic is handled in main file, while detailed logic is handled within each class.
 \section{Libraries}
-The program used SDL2 and NanoSVG libraries to handle the graphic interface. To execute algorithms of finding suitable move of computer, Stockfish engine along with its detailed configurations are used
+The program used SDL2 and NanoSVG libraries to handle the graphic interface. Stockfish is used to find the next move for AI opponent.
 \section{Major component}
-There are three major component: General logic, board, and communicator. 
+There are three major component: General logic, board, and communicator.
 \begin{itemize}
-    \item General logic is responsible for handling interactions between user and game window. It is also responsible for displaying chess board and other components of the game.
-    \item Board component is responsible for handling interactions between pieces and interactions between user and chess pieces. It also send necessary information back to general logic component.
-    \item Communicator component is responsible for communicating between the game and Stockfish in order to find appropriate move in AI's turn.
+  \item General logic is responsible for handling interactions between user and game window. It is also responsible for displaying chess board and other components of the game.
+  \item Board component is responsible for handling interactions between pieces and interactions between user and chess pieces. It also send necessary information back to general logic component.
+  \item Communicator component is responsible for communicating between the game and Stockfish in order to find appropriate move in AI's turn.
 \end{itemize}
 \chapter{Testing}
 
 The project is tested by playtesting, in which simple games are played and all interaction that player might do is performed in order to detect bugs and ensure good experience.
 \chapter{Future Improvements}
 \begin{enumerate}
-    \item Implementation of board rotation for better user experience.
-    \item Fix the inconsistency between x-axis, y-axis of screen and row, column of 2D array representation. The inconsistency made board's methods seems confusing to use.
+  \item Implementation of board rotation for better user experience.
+  \item Fix the inconsistency between x-axis, y-axis of screen and row, column of 2D array representation. The inconsistency made board's methods seems confusing to use.
 \end{enumerate}
 \end{document}

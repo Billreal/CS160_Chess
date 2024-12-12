@@ -146,7 +146,7 @@ void Communicator::setDifficulty(Difficulty difficulty)
         searchDepth = 20;
         timeAllowed = 2000;
         PVValue = 1;
-        hashLimit = 2058;
+        hashLimit = 2048;
         threadLimit = 8;
     }
     writeCommand("setoption name Skill level value " + std::to_string(stockfishLevel));

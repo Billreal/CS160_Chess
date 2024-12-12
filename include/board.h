@@ -140,11 +140,11 @@ public:
     std::string getMoves()
     {
         std::string moveCount = "";
-
-        while (totalmoves > 0)
+        int curr = totalmoves;
+        while (curr > 0)
         {
             moveCount += std::to_string(totalmoves % 10);
-            totalmoves /= 10;
+            curr /= 10;
         }
         std::reverse(moveCount.begin(), moveCount.end());
         return moveCount;

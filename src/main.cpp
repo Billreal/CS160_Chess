@@ -36,6 +36,8 @@ const int BOTOTM_MARGIN = 80;
 const int SIDE_MARGIN = 80;
 const int SIDE_LENGTH = 80;
 
+int demoGameMode = 0;
+int demoGameDifficulty = 0;
 void renderText(SDL_Renderer *renderer, TTF_Font *font, const std::string &text, SDL_Color textColor, SDL_Rect rect)
 {
     SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
@@ -121,6 +123,11 @@ void loadGame(Board &board, const std::string &filename)
         saveFile.close();
         return;
     }
+    demoGameMode = 0;
+    demoGameDifficulty = 1;
+    saveFile >> demoGameMode;
+    if (demoGameMode)
+        saveFile >> demoGameDifficulty;
     board.updateFen(FEN);
     saveFile.close();
 }
@@ -784,8 +791,30 @@ int main(int argc, char *args[])
             // ? Handle success
             // Render demo board and infos
             demoBoard.renderFromFen();
-            renderText(renderer, font, "Turn: " + demoBoard.getTurn(), white, {480, 700, 135, 30});
-            renderText(renderer, font, "Move: " + demoBoard.getMoves(), white, {780, 700, 100, 30});
+            // std::cerr << demoBoard.getMoves() << "\n";
+            if (demoBoard.getMoves() != "")
+            {
+
+                renderText(renderer, font, "Turn: " + demoBoard.getTurn(), white, {480, 700, 135, 30});
+                renderText(renderer, font, "Move: " + demoBoard.getMoves(), white, {780, 700, 100, 30});
+
+                if (demoGameMode)
+                {
+                    std::string difficultyLevel;
+                    if (demoGameDifficulty == 1)
+                        difficultyLevel = "Easy";
+                    else if (demoGameDifficulty == 2)
+                        difficultyLevel = "Medium";
+                    else if (demoGameDifficulty == 3)
+                        difficultyLevel = "Hard";
+                    renderText(renderer, font, "Versus AI", white, {480, 780, 135, 30});
+                    renderText(renderer, font, "Difficulty: " + difficultyLevel, white, {780, 780, 100, 30});
+                }
+                else
+                {
+                    renderText(renderer, font, "2-Player", white, {490, 780, 135, 30});
+                }
+            }
             // Render logo
             SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
             SDL_SetRenderDrawColor(renderer, 238, 238, 210, 255);
@@ -1140,7 +1169,8 @@ int main(int argc, char *args[])
 
             if (isEnded)
             {
-                if(popup.isClosed()){
+                if (popup.isClosed())
+                {
                     renderOnce = false;
                     break;
                 }

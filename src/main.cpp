@@ -29,7 +29,7 @@ SDL_Surface *winSurface;
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 1000;
-const int SVG_SCALE = 1;
+const double SVG_SCALE = 1;
 const int FONT_SIZE = 32;
 const int TOP_MARGIN = 160;
 const int BOTOTM_MARGIN = 80;
@@ -225,6 +225,25 @@ std::vector<std::string> getSaveFiles(const std::string &directory)
     return files;
 }
 
+void initSaveFiles()
+{
+    std::ifstream testOpen;
+    std::ofstream file;
+    for (int i = 1; i <= 6; i++)
+    {
+        std::string path = "./saves/save_0" + std::to_string(i) + ".txt";
+        testOpen.open(path);
+        if (!testOpen)
+        {
+            testOpen.close();
+            file.open(path);
+            file.close();
+        }
+        else
+            testOpen.close();
+    }
+
+}
 enum GUI_State
 {
     START,
@@ -320,6 +339,8 @@ int main(int argc, char *args[])
     }
 
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 4096);
+
+    initSaveFiles();
     // ! For disabling communicator
     bool isCommunicatorEnabled = true;
     // ! -----------------------------
@@ -404,6 +425,7 @@ int main(int argc, char *args[])
     std::vector<std::string> files = getSaveFiles("./saves");
     std::vector<Button> loadFileBtns;
     std::vector<Button> saveFileBtns;
+    std::vector<Button> deleteSaveFileBtns;
     for (int i = 0; i < files.size(); i++)
     {
         std::cerr << files[i] << "\n";
@@ -419,6 +441,7 @@ int main(int argc, char *args[])
         }
         loadFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
         saveFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
+        deleteSaveFileBtns.push_back(Button(renderer, 350, 240 + i * 90, 60, 60, loadMenuBtnColor, white, " ", loadMenuFont));
     }
 
     //// Initialize game GUI
@@ -1258,6 +1281,10 @@ int main(int argc, char *args[])
                         button.handleEvent(&event);
                         // std::cerr << "Done handle " << i << "\n";
                     }
+                    for (Button &button : deleteSaveFileBtns)
+                    {
+                        button.handleEvent(&event);
+                    }
                 }
             }
             // ? Handle success
@@ -1289,12 +1316,16 @@ int main(int argc, char *args[])
             // Render logo
             SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
             SDL_SetRenderDrawColor(renderer, 238, 238, 210, 255);
-            SDL_RenderFillRect(renderer, &loadMenuSeperateLine);
+            // SDL_RenderFillRect(renderer, &loadMenuSeperateLine);
 
             // Render Buttons
             for (Button btn : saveFileBtns)
             {
                 btn.render();
+            }
+            for (Button btn : deleteSaveFileBtns)
+            {
+                btn.renderSVG("./assets/x_circle.svg", SVG_SCALE * 1.25);
             }
 
             // Update screen

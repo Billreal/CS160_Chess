@@ -148,6 +148,7 @@ void Button::render()
     renderRect({rect.x, rect.y, 20, rect.h}, SDL_Color({238, 238, 210, 255}));
 
     // Render text
+    if (text == "") return;
     SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;

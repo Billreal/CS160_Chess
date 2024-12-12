@@ -28,15 +28,19 @@ private:
     TTF_Font* buttonFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 24);
     SDL_Color buttonColor = {118, 150, 85, 255};
     SDL_Color white = {255, 255, 255, 255};
+    SDL_Color popupBg = {bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA()};
     SDL_Texture* textTexture;
     SDL_Texture* agreeButtonTexture;
     SDL_Texture* dontButtonTexture;
 
     const double SVG_SCALE = 1;
     const int POPUP_LENGTH = 350;
+    const int CLOSE_BUTTON_LENGTH = 24;
     Button yesBtn;
     Button noBtn;
+    Button closeBtn;
     Confirmation confirmation = NONE;
+    bool isClose = false;
 
     void renderBlurredBackground();
     void renderText(std::string text, int prevHeight, int padding);
@@ -54,5 +58,7 @@ public:
     void handleButtonEvent(SDL_Event* e);
     void handleButtonClicked();
     Confirmation isConfirmed();
+    bool isClosed() {return isClose;};
+    void resetClose() {isClose = false;};
     void clearConfirmation() {confirmation = NONE;};
 };

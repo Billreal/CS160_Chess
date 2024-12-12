@@ -3,6 +3,20 @@
 #include "./../include/nanosvg.h"
 #include "./../include/nanosvgrast.h"
 
+Popup::Popup(SDL_Renderer *renderer, POPUP_MODE mode, int x, int y) : renderer(renderer), mode(mode)
+{
+    popupInfos = {x, y, POPUP_LENGTH, POPUP_LENGTH};
+    closeBtn = Button(renderer, popupInfos.x + POPUP_LENGTH - CLOSE_BUTTON_LENGTH - 40, popupInfos.y + 40, CLOSE_BUTTON_LENGTH, CLOSE_BUTTON_LENGTH, buttonColor, popupBg, ".s", buttonFont);
+    yesBtn = Button(renderer, popupInfos.x + 35, popupInfos.y + 260, 120, 50, buttonColor, white, "Yes", buttonFont);
+    noBtn = Button(renderer, popupInfos.x + 35 + 120 + 40, popupInfos.y + 260, 120, 50, buttonColor, white, "No", buttonFont);
+}
+
+Popup::~Popup()
+{
+    TTF_CloseFont(textFont);
+    TTF_CloseFont(buttonFont);
+}
+
 SDL_Texture *Popup::loadTexture(std::string filePath, int width, int height, double scale)
 {
     struct NSVGimage *image = nsvgParseFromFile(filePath.c_str(), "px", 96);
@@ -51,21 +65,9 @@ void Popup::renderText(std::string text, int prevHeight, int padding)
 
 void Popup::renderButtons()
 {
+    closeBtn.renderSVG("./assets/close_button.svg", SVG_SCALE);
     yesBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
     noBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
-}
-
-Popup::Popup(SDL_Renderer *renderer, POPUP_MODE mode, int x, int y) : renderer(renderer), mode(mode)
-{
-    popupInfos = {x, y, POPUP_LENGTH, POPUP_LENGTH};
-    yesBtn = Button(renderer, popupInfos.x + 35, popupInfos.y + 260, 120, 50, buttonColor, white, "Yes", buttonFont);
-    noBtn = Button(renderer, popupInfos.x + 35 + 120 + 40, popupInfos.y + 260, 120, 50, buttonColor, white, "No", buttonFont);
-}
-
-Popup::~Popup()
-{
-    TTF_CloseFont(textFont);
-    TTF_CloseFont(buttonFont);
 }
 
 void Popup::render(std::string textPrimary, std::string textSecondary, int padding)
@@ -101,6 +103,12 @@ void Popup::render(std::string text, int padding)
 
 void Popup::handleButtonClicked()
 {
+    if(closeBtn.clicked())
+    {
+        isClose = true;
+        closeBtn.resetClicked();
+        return;
+    }
     if (yesBtn.clicked())
     {
         // Handle yes button
@@ -119,6 +127,7 @@ void Popup::handleButtonClicked()
 
 void Popup::handleButtonEvent(SDL_Event *e)
 {
+    closeBtn.handleEvent(e);
     yesBtn.handleEvent(e);
     noBtn.handleEvent(e);
 }

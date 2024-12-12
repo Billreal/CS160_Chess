@@ -11,6 +11,7 @@
 % \usepackage{lineno}
 \usepackage[hidelinks]{hyperref}
 \usepackage{mlmodern}
+\usepackage{svg}
 % \linenumbers
 \selectlanguage{english}
 %%%%%% Bibliography %%%%%%
@@ -124,7 +125,7 @@ sorting=none]{biblatex}
           \item To highlight chess piece's movement, color of initial and ending cells of that piece is mixed with a yellowish color.
           \item To highlight check status of king piece, color of its cell is mixed with a redish color.
           \item To highlight checkmate status of king piece, color of its cell is replaced with a bright red color.
-          \item To highlight stalemate status of king piece, color of its cell is replaced with a cyan color.
+          \item To highlight stalemate status of king piece, color of its cell is mixed with a cyan color.
         \end{itemize}
 \end{itemize}
 \section{Game Logic}
@@ -172,7 +173,9 @@ setoption name MultiPV value 1
 \end{itemize}
 After letting Stockfish executing commands, the communicator wait for 500 miliseconds before reading the result from \texttt{tmp/stockfish\_output.txt}
 \section{Game state management}
-The game is managed using the combination of 2D array board representation and FEN notation, the latter stores information needed to reconstruct the board from nothing. Turn management is done right after a legal move had been made. After each legal move, both array representation and FEN notation is updated. For undo and redo features, deque of FEN notation is used to maintain the maximum execution of each function. FEN notation of initial state is also saved as a constant string for creation of new game.
+The game is managed using the combination of 2D array board representation and FEN notation, the latter stores information needed to reconstruct the board from nothing. Turn management is done right after a legal move had been made. After each legal move, both array representation and FEN notation is updated. 
+
+For undo and redo features, stack of FEN notation is used to store information for those operation, with the top of undo stack is the current board state. FEN notation of initial state is also saved as a constant string for creation of new game.
 
 \section{Save and Load Functionality}
 \subsection{Save}
@@ -182,9 +185,13 @@ There are separate menu dedicated for loading. In that menu, available save file
 \section{Optional features}
 While being dragged, selected chess piece follows the mouse's cursor smoothly.
 \section{Technology stack}
-The game's logic, game state management and GUI(graphic user interface) is written in C and C++, using SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, followed by numbers indicating current game mode and difficulty of AI opponent. They can be decoded on load.
+The game's logic, game state management and GUI(graphic user interface) is written in C and C++, using SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, followed by numbers indicating current game mode and difficulty of AI opponent. 
 \chapter{Design document}
-To be written after finished
+\section{Interraction if single player mode}
+
+
+
+
 \chapter{Implementation Details}
 \section{Organization}
 The code is organized by header - implementation files. General logic is handled in main file, while detailed logic is handled within each class.
@@ -200,6 +207,9 @@ There are three major component: General logic, board, and communicator.
 \chapter{Testing}
 
 The project is tested by playtesting, in which simple games are played and all interaction that player might do is performed in order to detect bugs and ensure good experience.
+
+While testing, we find that at any given moment, the game only run single task, that is, while the AI is evaluating best move any input is blocked. Also, the game does not have any feature of checking pawn that is eligible for promotion on loading saved game.
+
 \chapter{Future Improvements}
 \begin{enumerate}
   \item Implementation of board rotation for better user experience.

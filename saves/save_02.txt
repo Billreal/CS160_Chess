@@ -1,3 +1,1 @@
-r1bqkb1r/ppp2ppp/2n2n2/3pp3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq e6 0 7
-1
-3
+rnbqkbnr/pppp1ppp/8/4p3/5P2/8/PPPPP1PP/RNBQKBNR w KQkq e4 0 2 

@@ -188,6 +188,30 @@ void loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, C
     saveFile.close();
 }
 
+void saveGame(Board &board, int id, bool &isSinglePlayer, Communicator &communicator)
+{
+    std::string saveId = std::to_string(id);
+    while (saveId.length() < 2)
+        saveId = '0' + saveId;
+    std::string savePath = "saves/save_" + saveId + ".txt";
+    std::ofstream saveFile;
+    saveFile.open(savePath);
+    std::string FEN = board.boardToFen();
+    saveFile << FEN << std::endl;
+    if (isSinglePlayer)
+    {
+        int difficulty = 1;
+        if (communicator.getDifficulty() == Difficulty::MEDIUM)
+            difficulty = 2;
+        if (communicator.getDifficulty() == Difficulty::HARD)
+            difficulty = 3;
+        saveFile << isSinglePlayer << std::endl
+                 << difficulty << std::endl;
+    }
+    std::cerr << "Saved file to " << savePath << std::endl;
+    saveFile.close();
+    // std::cerr << "Closing finished\n";
+}
 std::vector<std::string> getSaveFiles(const std::string &directory)
 {
     std::vector<std::string> files;
@@ -208,6 +232,7 @@ enum GUI_State
     LOAD,
     GAME,
     SETTINGS,
+    MENU,
 };
 
 struct ThemeList
@@ -378,6 +403,7 @@ int main(int argc, char *args[])
     bool hoverLoading = false;
     std::vector<std::string> files = getSaveFiles("./saves");
     std::vector<Button> loadFileBtns;
+    std::vector<Button> saveFileBtns;
     for (int i = 0; i < files.size(); i++)
     {
         std::cerr << files[i] << "\n";
@@ -392,6 +418,7 @@ int main(int argc, char *args[])
             }
         }
         loadFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
+        saveFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
     }
 
     //// Initialize game GUI
@@ -431,9 +458,10 @@ int main(int argc, char *args[])
     Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
     Button homeBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Home", loadMenuFont);
     Button retryBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Retry", loadMenuFont);
-    Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
-    Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
-    Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
+    Button settingBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Setting", loadMenuFont);
+    Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
+    Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
+    Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
 
     Button ingameDifficultySwitchEasy(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Easy", loadMenuFont);
     Button ingameDifficultySwitchMedium(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
@@ -463,6 +491,8 @@ int main(int argc, char *args[])
 
     //// Popup handling
     Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
+    bool isToRenderPopup = false;
+    int saveFileId;
 
     //// Pseudo codes
     auto resetGameState = [&]()
@@ -1206,9 +1236,135 @@ int main(int argc, char *args[])
         }
         case SAVE:
         {
-            renderOnce = false;
-            isOn = START;
-            std::cerr << "Currently in Save ";
+
+            SDL_SetRenderDrawColor(renderer, 49, 46, 43, 1); // Black background
+            SDL_RenderClear(renderer);
+
+            while (SDL_PollEvent(&event) != 0)
+            {
+                if (event.type == SDL_QUIT)
+                {
+                    running = false;
+                    break;
+                }
+                if (isToRenderPopup)
+                {
+                    popup.handleButtonEvent(&event);
+                }
+                else
+                {
+                    for (Button &button : saveFileBtns)
+                    {
+                        button.handleEvent(&event);
+                        // std::cerr << "Done handle " << i << "\n";
+                    }
+                }
+            }
+            // ? Handle success
+            // Render demo board and infos
+            demoBoard.renderFromFen();
+            // std::cerr << demoBoard.getMoves() << "\n";
+            if (demoBoard.getMoves() != "")
+            {
+                renderText(renderer, font, "Turn: " + demoBoard.getTurn(), white, {480, 700, 135, 30});
+                renderText(renderer, font, "Move: " + demoBoard.getMoves(), white, {780, 700, 100, 30});
+
+                if (demoGameMode)
+                {
+                    std::string difficultyLevel;
+                    if (demoGameDifficulty == 1)
+                        difficultyLevel = "Easy";
+                    else if (demoGameDifficulty == 2)
+                        difficultyLevel = "Medium";
+                    else if (demoGameDifficulty == 3)
+                        difficultyLevel = "Hard";
+                    renderText(renderer, font, "Versus AI", white, {480, 780, 135, 30});
+                    renderText(renderer, font, "Difficulty: " + difficultyLevel, white, {780, 780, 100, 30});
+                }
+                else
+                {
+                    renderText(renderer, font, "2-Player", white, {490, 780, 135, 30});
+                }
+            }
+            // Render logo
+            SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
+            SDL_SetRenderDrawColor(renderer, 238, 238, 210, 255);
+            SDL_RenderFillRect(renderer, &loadMenuSeperateLine);
+
+            // Render Buttons
+            for (Button btn : saveFileBtns)
+            {
+                btn.render();
+            }
+
+            // Update screen
+            if (isToRenderPopup)
+            {
+                popup.render("Do you want to overwrite this file?", 40);
+                SDL_RenderPresent(renderer);
+                popup.handleButtonClicked();
+                if (popup.isConfirmed() == Confirmation::YES)
+                {
+                    std::cerr << "Yes pressed" << std::endl;
+                    saveGame(board, saveFileId + 1, isSinglePlayer, communicator);
+                    std::cerr << "Done saving\n";
+                    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+                    demoBoard.renderFromFen();
+                    saveFileBtns[saveFileId].resetHovered();
+                    renderOnce = false;
+                    isOn = GUI_State::GAME;
+                    isToRenderPopup = false;
+                    saveFileId = -1;
+                }
+                else if (popup.isConfirmed() == Confirmation::NO || popup.isClosed())
+                {
+                    demoBoard.renderFromFen();
+                    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+                    saveFileBtns[saveFileId].resetHovered();
+                    saveFileBtns[saveFileId].updateColor(loadMenuBtnColor);
+                    saveFileBtns[saveFileId].render();
+                    SDL_RenderPresent(renderer);
+
+                    isToRenderPopup = false;
+                    saveFileId = -1;
+                }
+                popup.resetClose();
+                popup.clearConfirmation();
+                // * Get
+                // * Render popup, disable clicking at background
+            }
+            else // * Allow interaction with elements
+            {
+                SDL_RenderPresent(renderer);
+                hoverLoading = false;
+                for (int i = 0; i < saveFileBtns.size(); i++)
+                {
+                    if (saveFileBtns[i].hover())
+                    {
+                        // saveFileBtns[i].resetHovered();
+                        loadGame(demoBoard, files[i]);
+                        hoverLoading = true;
+                        saveFileBtns[i].updateColor(startMenuBtnColor);
+                    }
+                    else
+                        saveFileBtns[i].updateColor(loadMenuBtnColor);
+                }
+                if (!hoverLoading)
+                    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+
+                // Handle button click
+                for (int i = 0; i < saveFileBtns.size(); i++)
+                {
+                    if (saveFileBtns[i].clicked())
+                    {
+                        saveFileBtns[i].resetClicked();
+                        saveFileBtns[i].updateColor(loadMenuBtnColor);
+                        isToRenderPopup = true;
+                        saveFileId = i;
+                    }
+                }
+            }
+            // SDL_Delay(1000);
             break;
         }
         case SETTINGS:
@@ -1222,10 +1378,10 @@ int main(int argc, char *args[])
     }
 
     // system("pause");
+    backgroundMusic.stop();
     TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    backgroundMusic.stop();
     TTF_Quit();
     SDL_Quit();
 

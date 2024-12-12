@@ -143,7 +143,7 @@ public:
         int curr = totalmoves;
         while (curr > 0)
         {
-            moveCount += std::to_string(totalmoves % 10);
+            moveCount += std::to_string(curr % 10);
             curr /= 10;
         }
         std::reverse(moveCount.begin(), moveCount.end());

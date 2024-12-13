@@ -355,6 +355,7 @@ int main(int argc, char *args[])
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
     Communicator communicator(isCommunicatorEnabled);
     Music backgroundMusic("assets/fallen.mp3");
+    // Music backgroundMusic("assets/itsgoingdownnow.mp3");
     backgroundMusic.play();
     communicator.init();
     communicator.startNewGame();
@@ -403,10 +404,10 @@ int main(int argc, char *args[])
     SDL_Color startMenuBtnColor = {118, 150, 85, 255};
     SDL_Color loadMenuBtnColor = {38, 37, 33, 1};
     SDL_Color white = {255, 255, 255, 255};
-    Button startBtn2P(renderer, (SCREEN_WIDTH - 500) / 2, 350, 240, startMenuBtnHeight, startMenuBtnColor, white, "2 Player", font);
-    Button startBtnAI(renderer, SCREEN_WIDTH / 2 + 10, 350, 240, startMenuBtnHeight, startMenuBtnColor, white, "vs AI", font);
-    Button loadBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 500, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Load", font);
-    Button quitBtn(renderer, (SCREEN_WIDTH - startMenuBtnWidth) / 2, 650, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Quit", font);
+    Button startBtn2P(renderer, 240, startMenuBtnHeight, startMenuBtnColor, white, "2 Player", font);
+    Button startBtnAI(renderer, 240, startMenuBtnHeight, startMenuBtnColor, white, "vs AI", font);
+    Button loadBtn(renderer, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Load", font);
+    Button quitBtn(renderer, startMenuBtnWidth, startMenuBtnHeight, startMenuBtnColor, white, "Quit", font);
 
     //// Initialize load menu
     SDL_Rect loadInfos = {60, 80, 900, 850};
@@ -447,12 +448,12 @@ int main(int argc, char *args[])
                 break;
             }
         }
-        loadFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
-        saveFileBtns.push_back(Button(renderer, 60, 240 + i * 90, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
-        deleteSaveFileBtns.push_back(Button(renderer, 350, 240 + i * 90, 60, 60, loadMenuBtnColor, white, " ", loadMenuFont));
+        loadFileBtns.push_back(Button(renderer, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
+        saveFileBtns.push_back(Button(renderer, 250, 60, loadMenuBtnColor, white, name, loadMenuFont));
+        deleteSaveFileBtns.push_back(Button(renderer, 60, 60, loadMenuBtnColor, white, " ", loadMenuFont));
     }
 
-    Button backBtn(renderer, 120, 800, 120, 50, startMenuBtnColor, white, "Back", loadMenuFont);
+    Button backBtn(renderer, 120, 50, startMenuBtnColor, white, "Back", loadMenuFont);
     GUI_State previousState;
     //// Initialize game GUI
 
@@ -487,19 +488,17 @@ int main(int argc, char *args[])
     SDL_Texture *notBlackTurnIndicatorTexture = loadTexture("./assets/not_black_turn.png");
 
     // Inintialize game buttons
-    Button saveBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
-    Button loadBtnInGame(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
-    Button homeBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, 120, 50, startMenuBtnColor, white, "Home", loadMenuFont);
-    Button retryBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, 120, 50, startMenuBtnColor, white, "Retry", loadMenuFont);
-    Button settingBtn(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, 120, 50, startMenuBtnColor, white, "Setting", loadMenuFont);
-    Button ingameColorSwitchModern(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
-    Button ingameColorSwitchFuturistic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
-    Button ingameColorSwitchClassic(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
-
-    Button ingameDifficultySwitchEasy(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Easy", loadMenuFont);
-    Button ingameDifficultySwitchMedium(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
-    Button ingameDifficultySwitchHard(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Hard", loadMenuFont);
-
+    Button saveBtn(renderer, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
+    Button loadBtnInGame(renderer, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
+    Button homeBtn(renderer, 120, 50, startMenuBtnColor, white, "Home", loadMenuFont);
+    Button retryBtn(renderer, 120, 50, startMenuBtnColor, white, "Retry", loadMenuFont);
+    Button settingBtn(renderer, 120, 50, startMenuBtnColor, white, "Setting", loadMenuFont);
+    Button ingameColorSwitchModern(renderer, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
+    Button ingameColorSwitchFuturistic(renderer, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
+    Button ingameColorSwitchClassic(renderer, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
+    Button ingameDifficultySwitchEasy(renderer, 120, 50, startMenuBtnColor, white, "Easy", loadMenuFont);
+    Button ingameDifficultySwitchMedium(renderer, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
+    Button ingameDifficultySwitchHard(renderer, 120, 50, startMenuBtnColor, white, "Hard", loadMenuFont);
 
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
@@ -509,10 +508,10 @@ int main(int argc, char *args[])
                                              {ingameDifficultySwitchMedium, Difficulty::MEDIUM},
                                              {ingameDifficultySwitchHard, Difficulty::HARD}};
 
-    Button undoBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 - 34 - 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
-    Button redoBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 + 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
-    Button beginBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 - 5 - 34 - 10 - 59, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
-    Button endBtn(renderer, SIDE_MARGIN + bottomPanelWidth / 2 + 5 + 34 + 10, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button undoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button redoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button beginBtn(renderer, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button endBtn(renderer, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
 
     int currentThemeIndex = 0;
     int currentDifficultyIndex = 0;
@@ -523,6 +522,11 @@ int main(int argc, char *args[])
     communicator.setDifficulty(difficultyList[currentDifficultyIndex].difficulty);
     bool isUnderPromotion = false;
 
+    //// Initialize settings menu
+    Button settingMuteMusic(renderer, 250, 50, startMenuBtnColor, white, "Mute Music", loadMenuFont);
+    Button settingUnmuteMusic(renderer, 250, 50, startMenuBtnColor, white, "Unmute Music", loadMenuFont);
+
+    Button *currentMusicState = &settingMuteMusic;
     //// Popup handling
     Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
     bool isToRenderPopupSave = false;
@@ -564,28 +568,30 @@ int main(int argc, char *args[])
         SDL_RenderCopy(renderer, bottomPanelTexture, NULL, &bottomPanelInfos);
 
         // Render Buttons
-        saveBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
-        loadBtnInGame.renderSVG("./assets/game_button.svg", SVG_SCALE);
-        homeBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
-        retryBtn.renderSVG("./assets/game_button.svg", SVG_SCALE);
-        currentThemeButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
+        saveBtn.renderSVG("./assets/game_button.svg", SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 40, SVG_SCALE);
+        loadBtnInGame.renderSVG("./assets/game_button.svg", SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 120, SVG_SCALE);
+        homeBtn.renderSVG("./assets/game_button.svg", SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 200, SVG_SCALE);
+        retryBtn.renderSVG("./assets/game_button.svg", SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 280, SVG_SCALE);
+        settingBtn.renderSVG("./assets/game_button.svg", SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 360, SVG_SCALE);
         if (isSinglePlayer)
-            currentDifficultyButton->renderSVG("./assets/game_button.svg", SVG_SCALE);
-        undoBtn.renderPNG("./assets/undo.png");
-        redoBtn.renderPNG("./assets/redo.png");
-        beginBtn.renderPNG("./assets/begin.png");
-        endBtn.renderPNG("./assets/end.png");
+            currentDifficultyButton->renderSVG("./assets/game_button.svg", SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, SVG_SCALE);
+
+        undoBtn.renderPNG("./assets/undo.png", SIDE_MARGIN + bottomPanelWidth / 2 - 34 - 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
+        redoBtn.renderPNG("./assets/redo.png", SIDE_MARGIN + bottomPanelWidth / 2 + 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
+        beginBtn.renderPNG("./assets/begin.png", SIDE_MARGIN + bottomPanelWidth / 2 - 5 - 34 - 10 - 59, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
+        endBtn.renderPNG("./assets/end.png", SIDE_MARGIN + bottomPanelWidth / 2 + 5 + 34 + 10, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
     };
 
     auto GameGUIButtonsHandling = [&]()
     {
-        currentThemeButton->handleEvent(&event);
+        // currentThemeButton->handleEvent(&event);
         if (isSinglePlayer)
             currentDifficultyButton->handleEvent(&event);
         saveBtn.handleEvent(&event);
         loadBtnInGame.handleEvent(&event);
         homeBtn.handleEvent(&event);
         retryBtn.handleEvent(&event);
+        settingBtn.handleEvent(&event);
         undoBtn.handleEvent(&event);
         redoBtn.handleEvent(&event);
         beginBtn.handleEvent(&event);
@@ -653,18 +659,17 @@ int main(int argc, char *args[])
             gameState.pushState(board.getFen());
             retryBtn.resetClicked(); // Reset button state
         }
-        if (currentThemeButton->clicked())
-        {
-            SDL_Log("Theme clicked");
-            currentThemeButton->resetClicked(); // Reset button state
-            // * To next color in circle
-            currentThemeIndex = (currentThemeIndex + 1) % 3;
-            currentThemeButton = &themeList[currentThemeIndex].button;
-            board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+        // if (currentThemeButton->clicked())
+        // {
+        //     SDL_Log("Theme clicked");
+        //     currentThemeButton->resetClicked(); // Reset button state
+        //     // * To next color in circle
+        //     currentThemeIndex = (currentThemeIndex + 1) % 3;
+        //     currentThemeButton = &themeList[currentThemeIndex].button;
+        //     board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
 
-            renderOnce = false;
-        }
-
+        //     renderOnce = false;
+        // }
         if (currentDifficultyButton->clicked() && isSinglePlayer)
         {
             SDL_Log("Difficulty Clicked");
@@ -673,6 +678,19 @@ int main(int argc, char *args[])
             currentDifficultyButton = &difficultyList[currentDifficultyIndex].button;
             communicator.setDifficulty(difficultyList[currentDifficultyIndex].difficulty);
             renderOnce = false;
+        }
+        if (settingBtn.clicked())
+        {
+            SDL_Log("Setting clicked!");
+            isOn = SETTINGS;
+            previousState = GUI_State::GAME;
+            for (auto &theme : themeList)
+            {
+                // std::cerr << theme.button.getWidth() << " " << theme.button.getHeight() << "\n";
+                theme.button.setSize(250, 50);
+            }
+
+            settingBtn.resetClicked(); // Reset button state
         }
         if (undoBtn.clicked())
         {
@@ -784,10 +802,10 @@ int main(int argc, char *args[])
             SDL_RenderCopy(renderer, logoTexture, NULL, &logoInfos);
 
             // Render button
-            startBtn2P.renderSVG("./assets/start_button_small.svg", SVG_SCALE);
-            startBtnAI.renderSVG("./assets/start_button_small.svg", SVG_SCALE);
-            loadBtn.renderSVG("./assets/start_button.svg", SVG_SCALE);
-            quitBtn.renderSVG("./assets/start_button.svg", SVG_SCALE);
+            startBtn2P.renderSVG("./assets/start_button_small.svg", (SCREEN_WIDTH - 500) / 2, 350, SVG_SCALE);
+            startBtnAI.renderSVG("./assets/start_button_small.svg", SCREEN_WIDTH / 2 + 10, 350, SVG_SCALE);
+            loadBtn.renderSVG("./assets/start_button.svg", (SCREEN_WIDTH - startMenuBtnWidth) / 2, 500, SVG_SCALE);
+            quitBtn.renderSVG("./assets/start_button.svg", (SCREEN_WIDTH - startMenuBtnWidth) / 2, 650, SVG_SCALE);
 
             // Update screen
             SDL_RenderPresent(renderer);
@@ -858,7 +876,6 @@ int main(int argc, char *args[])
                 backBtn.handleEvent(&event);
             }
 
-
             // ? Handle success
             // Render demo board and infos
             demoBoard.renderFromFen();
@@ -892,11 +909,11 @@ int main(int argc, char *args[])
             SDL_RenderFillRect(renderer, &loadMenuSeperateLine);
 
             // Render Buttons
-            for (Button btn : loadFileBtns)
+            for (int i = 0; i < loadFileBtns.size(); i++)
             {
-                btn.render();
+                loadFileBtns[i].render(60, 240 + i * 90);
             }
-            backBtn.renderSVG("assets/game_button.svg", SVG_SCALE);
+            backBtn.renderSVG("assets/game_button.svg", 800, 120, SVG_SCALE);
             SDL_RenderPresent(renderer);
 
             // Update screen
@@ -1346,15 +1363,16 @@ int main(int argc, char *args[])
             // SDL_RenderFillRect(renderer, &loadMenuSeperateLine);
 
             // Render Buttons
-            for (Button btn : saveFileBtns)
+
+            for (int i = 0; i < saveFileBtns.size(); i++)
             {
-                btn.render();
+                saveFileBtns[i].render(60, 240 + i * 90);
             }
-            for (Button btn : deleteSaveFileBtns)
+            for (int i = 0; i < deleteSaveFileBtns.size(); i++)
             {
-                btn.renderSVG("./assets/x_circle.svg", SVG_SCALE * 1.25);
+                deleteSaveFileBtns[i].renderSVG("./assets/x_circle.svg", 350, 240 + i * 90, SVG_SCALE * 1.25);
             }
-            backBtn.renderSVG("assets/game_button.svg", SVG_SCALE);
+            backBtn.renderSVG("assets/game_button.svg", 120, 800, SVG_SCALE);
 
             // Update screen
             if (isToRenderPopupSave)
@@ -1381,7 +1399,7 @@ int main(int argc, char *args[])
                     demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
                     saveFileBtns[saveFileId].resetHovered();
                     saveFileBtns[saveFileId].updateColor(loadMenuBtnColor);
-                    saveFileBtns[saveFileId].render();
+                    saveFileBtns[saveFileId].render(60, 240 + saveFileId * 90);
                     SDL_RenderPresent(renderer);
 
                     isToRenderPopupSave = false;
@@ -1465,9 +1483,72 @@ int main(int argc, char *args[])
         }
         case SETTINGS:
         {
-            renderOnce = false;
-            isOn = START;
-            std::cerr << "Currently in Settings ";
+            SDL_SetRenderDrawColor(renderer, bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA()); // Black background
+            SDL_RenderClear(renderer);
+
+            backBtn.renderSVG("assets/game_button.svg", 50, 50, SVG_SCALE);
+
+            currentThemeButton->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 120) / 2, TOP_MARGIN, SVG_SCALE);
+            currentMusicState->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 120) / 2, TOP_MARGIN + 100, SVG_SCALE);
+
+            while (SDL_PollEvent(&event) != 0)
+            {
+                if (event.type == SDL_QUIT)
+                {
+                    running = false;
+                    break;
+                }
+                currentThemeButton->handleEvent(&event);
+                backBtn.handleEvent(&event);
+                currentMusicState->handleEvent(&event);
+            }
+
+            if (currentThemeButton->clicked())
+            {
+                SDL_Log("Theme clicked");
+                currentThemeButton->resetClicked(); // Reset button state
+                // * To next color in circle
+                currentThemeIndex = (currentThemeIndex + 1) % 3;
+                currentThemeButton = &themeList[currentThemeIndex].button;
+                board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+
+                renderOnce = false;
+            }
+
+            if (backBtn.clicked())
+            {
+                backBtn.resetClicked();
+                isOn = previousState;
+                renderOnce = false;
+
+                for (auto &theme : themeList)
+                {
+                    theme.button.setSize(120, 50);
+                }
+
+                break;
+            }
+
+            if (currentMusicState->clicked())
+            {
+                currentMusicState->resetClicked();
+                if (!backgroundMusic.isPaused())
+                {
+                    std::cerr << "Music paused\n";
+                    backgroundMusic.pause();
+                    currentMusicState = &settingUnmuteMusic;
+                }
+                else
+                {
+                    std::cerr << "Music resumed\n";
+                    backgroundMusic.resume();
+                    currentMusicState = &settingMuteMusic;
+                }
+            }
+
+            // Update screen
+            SDL_RenderPresent(renderer);
+
             break;
         }
         }

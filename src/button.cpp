@@ -5,6 +5,12 @@
 
 Button::Button(SDL_Renderer *renderer) : renderer(renderer) {}
 
+Button::Button(SDL_Renderer *renderer, int w, int h, SDL_Color color, SDL_Color textColor, std::string text, TTF_Font *font)
+    : renderer(renderer), color(color), textColor(textColor), text(text), font(font), isClicked(false)
+{
+    rect = {-1, -1, w, h};
+}
+
 Button::Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, std::string text, TTF_Font *font)
     : renderer(renderer), color(color), textColor(textColor), text(text), font(font), isClicked(false)
 {
@@ -32,10 +38,15 @@ void Button::renderRect(SDL_Rect rect, colorRGBA color)
     renderRect(rect, newColor);
 }
 
-// Function to render PNG
-
 void Button::renderPNG(std::string pngFilePath)
 {
+    renderPNG(pngFilePath, rect.x, rect.y);
+}
+
+// Function to render PNG
+void Button::renderPNG(std::string pngFilePath, int x, int y)
+{
+    rect = {x, y, rect.w, rect.h};
     // Load the PNG image
     SDL_Surface *surface = IMG_Load(pngFilePath.c_str());
     if (!surface)
@@ -60,11 +71,17 @@ void Button::renderPNG(std::string pngFilePath)
     SDL_DestroyTexture(texture);
 }
 
-// Function to render SVG with text in the middle
 void Button::renderSVG(std::string svgFilePath, double scale)
+{
+    renderSVG(svgFilePath, rect.x, rect.y, scale);
+}
+
+// Function to render SVG with text in the middle
+void Button::renderSVG(std::string svgFilePath, int x, int y, double scale)
 {
     const int width = rect.w;
     const int height = rect.h;
+    rect = {x, y, rect.w, rect.h};
     // std::cerr<< "Width: " << width << " Height: "<< height << "\n";
     if (!width || !height)
     {
@@ -141,6 +158,12 @@ void Button::renderSVG(std::string svgFilePath, double scale)
 
 void Button::render()
 {
+    render(rect.x, rect.y);
+}
+
+void Button::render(int x, int y)
+{
+    rect = {x, y, rect.w, rect.h};
     // Render button rect
     renderRect(rect, color);
 
@@ -148,7 +171,8 @@ void Button::render()
     renderRect({rect.x, rect.y, 20, rect.h}, SDL_Color({238, 238, 210, 255}));
 
     // Render text
-    if (text == "") return;
+    if (text == "")
+        return;
     SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     int textWidth = textSurface->w;
@@ -223,6 +247,12 @@ void Button::resetClicked()
 void Button::resetHovered()
 {
     isHovered = false;
+}
+
+void Button::setSize(int w, int h)
+{
+    rect.w = w;
+    rect.h = h;
 }
 
 void Button::setColor(colorRGBA color)

@@ -10,6 +10,7 @@ public:
     Music(const std::string &file);
     ~Music();
 
+    bool isPaused() const { return Mix_PausedMusic(); }
     void play(int loops = -1);
     void pause();
     void resume();

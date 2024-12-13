@@ -3,3 +3,5 @@ src/.cph/.main.cpp_46030e81bdb3bde79016e0e29fefd0ab.prob
 *.o
 chess.exe
 .DS_Store
+saves/*.txt
+src/stockfishInput.txt

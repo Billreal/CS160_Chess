@@ -26,11 +26,15 @@ private:
 public:
     Button(SDL_Renderer *renderer);
     Button();
+    Button(SDL_Renderer *renderer, int w, int h, SDL_Color color, SDL_Color textColor, std::string text, TTF_Font *font);
     Button(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Color color, SDL_Color textColor, std::string text, TTF_Font *font);
     void updateColor(SDL_Color);
 
+    void render(int x, int y);
     void render();
+    void renderSVG(std::string svgFilePath, int x, int y, double scale);
     void renderSVG(std::string svgFilePath, double scale);
+    void renderPNG(std::string pngFilePath, int x, int y);
     void renderPNG(std::string pngFilePath);
 
     // Clear renderer
@@ -45,6 +49,7 @@ public:
     void resetClicked();
     void resetHovered();
 
+    void setSize(int w, int h);
     void setColor(colorRGBA color);
     void setColor(SDL_Color color);
 
@@ -57,6 +62,12 @@ public:
     }
     std::string getText() {
         return text;
+    }
+    int getWidth() {
+        return rect.w;
+    }
+    int getHeight() {
+        return rect.h;
     }
 
 };

@@ -693,6 +693,7 @@ int main(int argc, char *args[])
                 // std::cerr << theme.button.getWidth() << " " << theme.button.getHeight() << "\n";
                 theme.button.setSize(250, 50);
             }
+            quitBtn.setSize(250, 50);
 
             settingBtn.resetClicked(); // Reset button state
         }
@@ -1497,9 +1498,7 @@ int main(int argc, char *args[])
             settingIncreaseMusicVolume.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 200, SVG_SCALE);
             settingDecreaseMusicVolume.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 300, SVG_SCALE);
             renderText(renderer, font, "Music Volume: " + std::to_string(backgroundMusic.getVolume()), white, {SCREEN_WIDTH / 2 - 50, TOP_MARGIN + 370, 100, 30});
-
             int volume = backgroundMusic.getVolume();
-
             for (int i = 0; i < volumeRect.size(); i++)
             {
                 volumeRect[i] = {SCREEN_WIDTH / 2 - 150 + 19 * i, TOP_MARGIN + 400, 15, 20};
@@ -1515,6 +1514,7 @@ int main(int argc, char *args[])
                     SDL_RenderFillRect(renderer, &volumeRect[i]);
                 }
             }
+            quitBtn.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 450, SVG_SCALE);
 
             while (SDL_PollEvent(&event) != 0)
             {
@@ -1528,6 +1528,7 @@ int main(int argc, char *args[])
                 currentMusicState->handleEvent(&event);
                 settingIncreaseMusicVolume.handleEvent(&event);
                 settingDecreaseMusicVolume.handleEvent(&event);
+                quitBtn.handleEvent(&event);
             }
 
             if (currentThemeButton->clicked())
@@ -1552,6 +1553,7 @@ int main(int argc, char *args[])
                 {
                     theme.button.setSize(120, 50);
                 }
+                quitBtn.setSize(120, 50);
 
                 break;
             }
@@ -1585,6 +1587,14 @@ int main(int argc, char *args[])
                 std::cerr << "Decrease music volume\n";
                 settingDecreaseMusicVolume.resetClicked();
                 backgroundMusic.decreaseVolume();
+            }
+
+            if (quitBtn.clicked())
+            {
+                std::cerr << "Quit\n";
+                quitBtn.resetClicked();
+                running = false;
+                break;
             }
 
             // Update screen

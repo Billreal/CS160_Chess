@@ -7,6 +7,7 @@ Music::Music(const std::string &file)
     {
         throw std::runtime_error("Failed to load music: " + file + " - " + Mix_GetError());
     }
+    Mix_VolumeMusic(currentVolume);
 }
 
 Music::~Music()
@@ -20,6 +21,28 @@ void Music::play(int loops)
     {
         throw std::runtime_error("Failed to play music: " + std::string(Mix_GetError()));
     }
+}
+
+void Music::increaseVolume()
+{
+    currentVolume += volumeIncrement;
+    if(currentVolume > MIX_MAX_VOLUME)
+    {
+        currentVolume = MIX_MAX_VOLUME;
+    }
+
+    Mix_VolumeMusic(currentVolume);
+}
+
+void Music::decreaseVolume()
+{
+    currentVolume -= volumeIncrement;
+    if(currentVolume < 0)
+    {
+        currentVolume = 0;
+    }
+
+    Mix_VolumeMusic(currentVolume);
 }
 
 void Music::pause()

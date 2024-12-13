@@ -452,6 +452,8 @@ int main(int argc, char *args[])
         deleteSaveFileBtns.push_back(Button(renderer, 350, 240 + i * 90, 60, 60, loadMenuBtnColor, white, " ", loadMenuFont));
     }
 
+    Button backBtn(renderer, 120, 800, 120, 50, startMenuBtnColor, white, "Back", loadMenuFont);
+    GUI_State previousState;
     //// Initialize game GUI
 
     // Initialize right panel
@@ -497,6 +499,7 @@ int main(int argc, char *args[])
     Button ingameDifficultySwitchEasy(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Easy", loadMenuFont);
     Button ingameDifficultySwitchMedium(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
     Button ingameDifficultySwitchHard(renderer, SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 520, 120, 50, startMenuBtnColor, white, "Hard", loadMenuFont);
+
 
     vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
                                    {ingameColorSwitchClassic, classicPrimary, classicSecondary},
@@ -620,12 +623,14 @@ int main(int argc, char *args[])
         if (saveBtn.clicked())
         {
             SDL_Log("Save clicked!");
+            previousState = isOn;
             isOn = SAVE;
             saveBtn.resetClicked(); // Reset button state
         }
         if (loadBtnInGame.clicked())
         {
             SDL_Log("Load clicked!");
+            previousState = isOn;
             isOn = LOAD;
             loadBtnInGame.resetClicked(); // Reset button state
             LoadMenuRefresh();
@@ -815,6 +820,7 @@ int main(int argc, char *args[])
             if (loadBtn.clicked())
             {
                 SDL_Log("Button clicked!");
+                previousState = isOn;
                 isOn = LOAD;
                 loadBtn.resetClicked(); // Reset button state
                 LoadMenuRefresh();
@@ -849,7 +855,10 @@ int main(int argc, char *args[])
                     loadFileBtns[i].handleEvent(&event);
                     // std::cerr << "Done handle " << i << "\n";
                 }
+                backBtn.handleEvent(&event);
             }
+
+
             // ? Handle success
             // Render demo board and infos
             demoBoard.renderFromFen();
@@ -887,6 +896,7 @@ int main(int argc, char *args[])
             {
                 btn.render();
             }
+            backBtn.renderSVG("assets/game_button.svg", SVG_SCALE);
             SDL_RenderPresent(renderer);
 
             // Update screen
@@ -906,6 +916,13 @@ int main(int argc, char *args[])
                 demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
 
             // Handle button click
+            if (backBtn.clicked())
+            {
+                backBtn.resetClicked();
+                isOn = previousState;
+                renderOnce = false;
+                break;
+            }
             for (int i = 0; i < loadFileBtns.size(); i++)
             {
                 if (loadFileBtns[i].clicked())
@@ -1294,6 +1311,7 @@ int main(int argc, char *args[])
                     {
                         button.handleEvent(&event);
                     }
+                    backBtn.handleEvent(&event);
                 }
             }
             // ? Handle success
@@ -1336,6 +1354,7 @@ int main(int argc, char *args[])
             {
                 btn.renderSVG("./assets/x_circle.svg", SVG_SCALE * 1.25);
             }
+            backBtn.renderSVG("assets/game_button.svg", SVG_SCALE);
 
             // Update screen
             if (isToRenderPopupSave)
@@ -1399,6 +1418,13 @@ int main(int argc, char *args[])
 
             SDL_RenderPresent(renderer);
             hoverLoading = false;
+            if (backBtn.clicked())
+            {
+                backBtn.resetClicked();
+                isOn = previousState;
+                renderOnce = false;
+                break;
+            }
             for (int i = 0; i < saveFileBtns.size(); i++)
             {
                 if (saveFileBtns[i].hover())

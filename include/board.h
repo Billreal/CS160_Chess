@@ -134,7 +134,7 @@ public:
         {
             return "";
         }
-        return nextPlayerTurn == 1 ? "White" : "Black";
+        return nextPlayerTurn == 0 ? "White" : "Black";
     }
 
     std::string getMoves()

@@ -93,13 +93,22 @@ SDL_Texture *loadSVGTexture(std::string filePath, int width, int height, double 
     return texture;
 }
 
+void deleteSave(int id)
+{
+    std::string saveFilePath = "saves/save_0" + std::to_string(id) + ".txt";
+    std::ofstream saveFile;
+    saveFile.open(saveFilePath);
+    saveFile << "";
+    std::cerr << "Deleted save file: " << saveFilePath << "\n";
+    saveFile.close();
+}
 void saveGame(Board &board, const std::string &filename)
 {
     std::ofstream saveFile;
     saveFile.open(filename);
     if (!saveFile)
     {
-        cerr << "Failed to open file for saving: " << filename << "\n";
+        // cerr << "Failed to open file for saving: " << filename << "\n";
         return;
     }
     saveFile << board.getFen();
@@ -113,13 +122,13 @@ void loadGame(Board &board, const std::string &filename)
     std::string FEN;
     if (!saveFile)
     {
-        cerr << "Failed to open file for loading: " << filename << "\n";
+        // cerr << "Failed to open file for loading: " << filename << "\n";
         return;
     }
 
     if (!std::getline(saveFile, FEN))
     {
-        cerr << "Failed to read from file: " << filename << "\n";
+        // cerr << "Failed to read from file: " << filename << "\n";
         saveFile.close();
         return;
     }
@@ -242,7 +251,6 @@ void initSaveFiles()
         else
             testOpen.close();
     }
-
 }
 enum GUI_State
 {
@@ -514,8 +522,9 @@ int main(int argc, char *args[])
 
     //// Popup handling
     Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
-    bool isToRenderPopup = false;
-    int saveFileId;
+    bool isToRenderPopupSave = false;
+    bool isToRenderPopupDelete = false;
+    int saveFileId, deleteSaveFileId;
 
     //// Pseudo codes
     auto resetGameState = [&]()
@@ -1270,7 +1279,7 @@ int main(int argc, char *args[])
                     running = false;
                     break;
                 }
-                if (isToRenderPopup)
+                if (isToRenderPopupSave || isToRenderPopupDelete)
                 {
                     popup.handleButtonEvent(&event);
                 }
@@ -1329,7 +1338,7 @@ int main(int argc, char *args[])
             }
 
             // Update screen
-            if (isToRenderPopup)
+            if (isToRenderPopupSave)
             {
                 popup.render("Do you want to overwrite this file?", 40);
                 SDL_RenderPresent(renderer);
@@ -1344,7 +1353,7 @@ int main(int argc, char *args[])
                     saveFileBtns[saveFileId].resetHovered();
                     renderOnce = false;
                     isOn = GUI_State::GAME;
-                    isToRenderPopup = false;
+                    isToRenderPopupSave = false;
                     saveFileId = -1;
                 }
                 else if (popup.isConfirmed() == Confirmation::NO || popup.isClosed())
@@ -1356,43 +1365,73 @@ int main(int argc, char *args[])
                     saveFileBtns[saveFileId].render();
                     SDL_RenderPresent(renderer);
 
-                    isToRenderPopup = false;
+                    isToRenderPopupSave = false;
                     saveFileId = -1;
                 }
                 popup.resetClose();
                 popup.clearConfirmation();
                 // * Get
                 // * Render popup, disable clicking at background
+                break;
             }
-            else // * Allow interaction with elements
+            if (isToRenderPopupDelete)
             {
+                popup.render("Do you want to delete this file?", 40);
                 SDL_RenderPresent(renderer);
-                hoverLoading = false;
-                for (int i = 0; i < saveFileBtns.size(); i++)
+                popup.handleButtonClicked();
+                if (popup.isConfirmed() == Confirmation::YES)
                 {
-                    if (saveFileBtns[i].hover())
-                    {
-                        // saveFileBtns[i].resetHovered();
-                        loadGame(demoBoard, files[i]);
-                        hoverLoading = true;
-                        saveFileBtns[i].updateColor(startMenuBtnColor);
-                    }
-                    else
-                        saveFileBtns[i].updateColor(loadMenuBtnColor);
+                    std::cerr << "Yes pressed" << std::endl;
+                    std::cerr << "saveFileId is: " << deleteSaveFileId + 1 << "\n";
+                    deleteSave(deleteSaveFileId + 1);
+                    saveFileId = -1;
+                    isToRenderPopupDelete = false;
                 }
-                if (!hoverLoading)
-                    demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
-
-                // Handle button click
-                for (int i = 0; i < saveFileBtns.size(); i++)
+                else if (popup.isConfirmed() == Confirmation::NO || popup.isClosed())
                 {
-                    if (saveFileBtns[i].clicked())
-                    {
-                        saveFileBtns[i].resetClicked();
-                        saveFileBtns[i].updateColor(loadMenuBtnColor);
-                        isToRenderPopup = true;
-                        saveFileId = i;
-                    }
+                    saveFileId = -1;
+                    isToRenderPopupDelete = false;
+                }
+                popup.resetClose();
+                popup.clearConfirmation();
+                break;
+            }
+
+            SDL_RenderPresent(renderer);
+            hoverLoading = false;
+            for (int i = 0; i < saveFileBtns.size(); i++)
+            {
+                if (saveFileBtns[i].hover())
+                {
+                    // saveFileBtns[i].resetHovered();
+                    loadGame(demoBoard, files[i]);
+                    hoverLoading = true;
+                    saveFileBtns[i].updateColor(startMenuBtnColor);
+                }
+                else
+                    saveFileBtns[i].updateColor(loadMenuBtnColor);
+            }
+            if (!hoverLoading)
+                demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
+
+            // Handle button click
+            for (int i = 0; i < saveFileBtns.size(); i++)
+            {
+                if (saveFileBtns[i].clicked())
+                {
+                    saveFileBtns[i].resetClicked();
+                    saveFileBtns[i].updateColor(loadMenuBtnColor);
+                    isToRenderPopupSave = true;
+                    saveFileId = i;
+                }
+            }
+            for (int i = 0; i < saveFileBtns.size(); i++)
+            {
+                if (deleteSaveFileBtns[i].clicked())
+                {
+                    deleteSaveFileBtns[i].resetClicked();
+                    isToRenderPopupDelete = true;
+                    deleteSaveFileId = i;
                 }
             }
             // SDL_Delay(1000);

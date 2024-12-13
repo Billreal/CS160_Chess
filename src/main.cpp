@@ -38,6 +38,7 @@ const int SIDE_LENGTH = 80;
 
 int demoGameMode = 0;
 int demoGameDifficulty = 0;
+
 void renderText(SDL_Renderer *renderer, TTF_Font *font, const std::string &text, SDL_Color textColor, SDL_Rect rect)
 {
     SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
@@ -528,6 +529,7 @@ int main(int argc, char *args[])
     Button settingIncreaseMusicVolume(renderer, 250, 50, startMenuBtnColor, white, "Increase Volume", loadMenuFont);
     Button settingDecreaseMusicVolume(renderer, 250, 50, startMenuBtnColor, white, "Decrease Volume", loadMenuFont);
 
+    vector<SDL_Rect> volumeRect(16, {-1, -1, -1, -1});
     Button *currentMusicState = &settingMuteMusic;
     //// Popup handling
     Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
@@ -1490,10 +1492,29 @@ int main(int argc, char *args[])
 
             backBtn.renderSVG("assets/game_button.svg", 50, 50, SVG_SCALE);
 
-            currentThemeButton->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 120) / 2, TOP_MARGIN, SVG_SCALE);
-            currentMusicState->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 120) / 2, TOP_MARGIN + 100, SVG_SCALE);
-            settingIncreaseMusicVolume.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 120) / 2, TOP_MARGIN + 200, SVG_SCALE);
-            settingDecreaseMusicVolume.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 120) / 2, TOP_MARGIN + 300, SVG_SCALE);
+            currentThemeButton->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN, SVG_SCALE);
+            currentMusicState->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 100, SVG_SCALE);
+            settingIncreaseMusicVolume.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 200, SVG_SCALE);
+            settingDecreaseMusicVolume.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 300, SVG_SCALE);
+            renderText(renderer, font, "Music Volume: " + std::to_string(backgroundMusic.getVolume()), white, {SCREEN_WIDTH / 2 - 50, TOP_MARGIN + 370, 100, 30});
+
+            int volume = backgroundMusic.getVolume();
+
+            for (int i = 0; i < volumeRect.size(); i++)
+            {
+                volumeRect[i] = {SCREEN_WIDTH / 2 - 150 + 19 * i, TOP_MARGIN + 400, 15, 20};
+                if (volume)
+                {
+                    SDL_SetRenderDrawColor(renderer, modernPrimary.getR(), modernPrimary.getG(), modernPrimary.getB(), modernPrimary.getA());
+                    SDL_RenderFillRect(renderer, &volumeRect[i]);
+                    volume--;
+                }
+                else
+                {
+                    SDL_SetRenderDrawColor(renderer, semiDark.getR(), semiDark.getG(), semiDark.getB(), semiDark.getA());
+                    SDL_RenderFillRect(renderer, &volumeRect[i]);
+                }
+            }
 
             while (SDL_PollEvent(&event) != 0)
             {

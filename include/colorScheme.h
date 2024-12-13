@@ -4,6 +4,8 @@ extern colorRGBA modernPrimary;
 extern colorRGBA modernSecondary;
 extern colorRGBA bgColor;
 extern colorRGBA black;
+extern colorRGBA semiDark;
+extern colorRGBA white;
 // extern colorRGBA moveIndicator;
 extern colorRGBA futuristicPrimary;
 extern colorRGBA futuristicSecondary;

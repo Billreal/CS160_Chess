@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL_mixer.h>
 #include <memory>
@@ -11,7 +12,10 @@ public:
     ~Music();
 
     bool isPaused() const { return Mix_PausedMusic(); }
-    int getVolume() const { return currentVolume; }
+    int getVolume() const { 
+        // std::cerr << "Current volume: " << currentVolume << std::endl;
+        return currentVolume / volumeIncrement; 
+    }
     void play(int loops = -1);
     void pause();
     void resume();
@@ -22,5 +26,5 @@ public:
 private:
     std::unique_ptr<Mix_Music, void (*)(Mix_Music *)> music;
     int currentVolume = MIX_MAX_VOLUME / 4;
-    int volumeIncrement = MIX_MAX_VOLUME / 20;
+    int volumeIncrement = MIX_MAX_VOLUME / 16;
 };

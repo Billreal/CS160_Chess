@@ -1037,6 +1037,8 @@ int main(int argc, char *args[])
                 int postBlackPawnCount = board.getBlackPawnCount();
                 int postWhitePieceCount = board.getWhitePieceCount();
                 board.setRenderCheck(COLOR_NONE);
+                board.nextMoveColor();
+                currentMoveColor = board.getMoveColor();
                 if (board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor)))
                 {
                     if (isEnded) soundboard.playSound(SoundEffect::GAMEOVER);
@@ -1052,8 +1054,6 @@ int main(int argc, char *args[])
                             
                 }
 
-                board.nextMoveColor();
-                currentMoveColor = board.getMoveColor();
                 gameState.pushState(board.getFen());
                 // board.updateFen(board.boardToFen());
                 // board.updateFen(board.boardToFen());

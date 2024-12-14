@@ -362,8 +362,8 @@ int main(int argc, char *args[])
     std::cerr << "Done setting volume\n";
     std::cerr << "Done setting volume\n";
     soundboard.loadSoundEffect(SoundEffect::PICKUP, "assets/effects/notify.mp3");
-    soundboard.loadSoundEffect(SoundEffect::MOVE, "assets/effects/capture.mp3");
-    soundboard.loadSoundEffect(SoundEffect::CAPTURE, "assets/effects/move-self.mp3");
+    soundboard.loadSoundEffect(SoundEffect::CAPTURE, "assets/effects/capture.mp3");
+    soundboard.loadSoundEffect(SoundEffect::MOVE, "assets/effects/move-self.mp3");
     soundboard.loadSoundEffect(SoundEffect::GAMEOVER, "assets/effects/game-end.mp3");
     soundboard.loadSoundEffect(SoundEffect::ILLEGAL, "assets/effects/illegal.mp3");
     soundboard.loadSoundEffect(SoundEffect::PROMOTION, "assets/effects/promote.mp3");
@@ -1030,10 +1030,27 @@ int main(int argc, char *args[])
 
             if (isSinglePlayer && currentMoveColor == BLACK)
             {
+                int prevBlackPawnCount = board.getBlackPawnCount();
+                int prevWhitePieceCount = board.getWhitePieceCount();
                 board.nextMove(currentMoveColor);
 
+                int postBlackPawnCount = board.getBlackPawnCount();
+                int postWhitePieceCount = board.getWhitePieceCount();
                 board.setRenderCheck(COLOR_NONE);
-                board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor));
+                if (board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor)))
+                {
+                    if (isEnded) soundboard.playSound(SoundEffect::GAMEOVER);
+                    else soundboard.playSound(SoundEffect::CHECK);
+                }
+                else
+                {
+                    if (prevBlackPawnCount != postBlackPawnCount)
+                        soundboard.playSound(SoundEffect::PROMOTION);
+                    else if (prevWhitePieceCount != postWhitePieceCount)
+                        soundboard.playSound(SoundEffect::CAPTURE);
+                    else soundboard.playSound(SoundEffect::MOVE);
+                            
+                }
 
                 board.nextMoveColor();
                 currentMoveColor = board.getMoveColor();
@@ -1116,7 +1133,6 @@ int main(int argc, char *args[])
                     Coordinate pickedPlace = board.getPieceCoord(event.button);
                     pickedPiece = board.getPiece(pickedPlace);
                     int pickedColor = board.getPieceColor(pickedPiece);
-
                     // Correct color
                     if (pickedColor != currentMoveColor)
                         break;
@@ -1132,6 +1148,7 @@ int main(int argc, char *args[])
                     // std::cerr << "Before getting possible moves: \n";
                     // board.debugBoard();
                     isLeftMouseHolding = true;
+                    soundboard.playSound(SoundEffect::PICKUP);
 
                     // * Getting possible moves
                     possibleMoves.clear();
@@ -1210,7 +1227,7 @@ int main(int argc, char *args[])
                         // * Case player did a legal move
                         else
                         {
-                            int prevPieceCount = board.getPieceCount();
+                            int prevPieceCount = board.getPieceCount() + 1;
                             if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                             {
                                 // Check if there is any pawn under promotion

@@ -1447,11 +1447,54 @@ chessColor Board::getMoveColor()
 
 int Board::getPieceCount()
 {
+    return getBlackPieceCount() + getWhitePieceCount();
+}
+
+int Board::getPawnCount()
+{
+    return getBlackPawnCount() + getWhitePawnCount();
+}
+
+int Board::getBlackPieceCount()
+{
     int res = 0;
     for (int row = 0; row < BOARD_SIZE; row++)
         for (int col = 0; col < BOARD_SIZE; col++)
         {
-            if (board[row][col] != '0')
+            if ('a' <= board[row][col] && board[row][col] <= 'z')
+                res++;
+        }
+    return res;
+}
+int Board::getWhitePieceCount()
+{
+    int res = 0;
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+        {
+            if ('A' <= board[row][col] && board[row][col] <= 'Z')
+                res++;
+        }
+    return res;
+}
+int Board::getBlackPawnCount()
+{
+    int res = 0;
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+        {
+            if (board[row][col] == 'p')
+                res++;
+        }
+    return res;
+}
+int Board::getWhitePawnCount()
+{
+    int res = 0;
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+        {
+            if (board[row][col] == 'P')
                 res++;
         }
     return res;

@@ -289,4 +289,10 @@ public:
     chessColor getMoveColor();
 
     int getPieceCount();
+    int getPawnCount();
+
+    int getBlackPieceCount();
+    int getWhitePieceCount();
+    int getBlackPawnCount();
+    int getWhitePawnCount();
 };

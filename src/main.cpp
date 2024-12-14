@@ -359,6 +359,8 @@ int main(int argc, char *args[])
     Communicator communicator(isCommunicatorEnabled);
     Music backgroundMusic("assets/effects/fallen.mp3");
     Sound soundboard;
+    std::cerr << "Done setting volume\n";
+    std::cerr << "Done setting volume\n";
     soundboard.loadSoundEffect(SoundEffect::PICKUP, "assets/effects/notify.mp3");
     soundboard.loadSoundEffect(SoundEffect::MOVE, "assets/effects/capture.mp3");
     soundboard.loadSoundEffect(SoundEffect::CAPTURE, "assets/effects/move-self.mp3");
@@ -366,11 +368,13 @@ int main(int argc, char *args[])
     soundboard.loadSoundEffect(SoundEffect::ILLEGAL, "assets/effects/illegal.mp3");
     soundboard.loadSoundEffect(SoundEffect::PROMOTION, "assets/effects/promote.mp3");
     soundboard.loadSoundEffect(SoundEffect::CHECK, "assets/effects/move-check.mp3");
+    soundboard.setVolume(backgroundMusic.getVolume());
+    std::cerr << "Done starting soundeffect and music" << std::endl;
     // Music backgroundMusic("assets/itsgoingdownnow.mp3");
     backgroundMusic.play();
     communicator.init();
     communicator.startNewGame();
-
+    std::cerr << "Done initializing communicator\n";
     // Handling SDL_events
     SDL_Event event;
 
@@ -1615,12 +1619,14 @@ int main(int argc, char *args[])
                 {
                     std::cerr << "Music paused\n";
                     backgroundMusic.pause();
+                    soundboard.mute();
                     currentMusicState = &settingUnmuteMusic;
                 }
                 else
                 {
                     std::cerr << "Music resumed\n";
                     backgroundMusic.resume();
+                    soundboard.unmute();
                     currentMusicState = &settingMuteMusic;
                 }
             }
@@ -1630,6 +1636,7 @@ int main(int argc, char *args[])
                 std::cerr << "Increase music volume\n";
                 settingIncreaseMusicVolume.resetClicked();
                 backgroundMusic.increaseVolume();
+                soundboard.setVolume(backgroundMusic.getVolume());
             }
 
             if (settingDecreaseMusicVolume.clicked())
@@ -1637,6 +1644,7 @@ int main(int argc, char *args[])
                 std::cerr << "Decrease music volume\n";
                 settingDecreaseMusicVolume.resetClicked();
                 backgroundMusic.decreaseVolume();
+                soundboard.setVolume(backgroundMusic.getVolume());
             }
 
             if (quitBtn.clicked())

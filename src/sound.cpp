@@ -1,61 +1,22 @@
 #include "./../include/sound.h"
 
-Music::Music(const std::string &file)
-    : music(Mix_LoadMUS(file.c_str()), Mix_FreeMusic)
+Sound::Sound()
 {
-    if (!music)
-    {
-        throw std::runtime_error("Failed to load music: " + file + " - " + Mix_GetError());
-    }
-    Mix_VolumeMusic(currentVolume);
+
 }
 
-Music::~Music()
+Sound::~Sound()
 {
-    // Mix_FreeMusic is called automatically by unique_ptr
+    for (int i = 0; i < 8; i++)
+        Mix_FreeChunk(chunk[i]);
 }
 
-void Music::play(int loops)
+void Sound::loadSoundEffect(SoundEffect soundEffect, const std::string musicDirectory)
 {
-    if (Mix_PlayMusic(music.get(), loops) == -1)
-    {
-        throw std::runtime_error("Failed to play music: " + std::string(Mix_GetError()));
-    }
+    chunk[int(soundEffect)] = Mix_LoadWAV(musicDirectory.c_str());
 }
 
-void Music::increaseVolume()
+void Sound::playSound(SoundEffect soundEffect, int times)
 {
-    currentVolume += volumeIncrement;
-    if(currentVolume > MIX_MAX_VOLUME)
-    {
-        currentVolume = MIX_MAX_VOLUME;
-    }
-
-    Mix_VolumeMusic(currentVolume);
-}
-
-void Music::decreaseVolume()
-{
-    currentVolume -= volumeIncrement;
-    if(currentVolume < 0)
-    {
-        currentVolume = 0;
-    }
-
-    Mix_VolumeMusic(currentVolume);
-}
-
-void Music::pause()
-{
-    Mix_PauseMusic();
-}
-
-void Music::resume()
-{
-    Mix_ResumeMusic();
-}
-
-void Music::stop()
-{
-    Mix_HaltMusic();
+    Mix_PlayChannel(-1, chunk[(int)soundEffect], times);
 }

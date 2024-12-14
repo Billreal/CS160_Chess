@@ -20,6 +20,7 @@
 #include "./../include/gameStateManager.h"
 #include "./../include/popup.h"
 #include "./../include/sound.h"
+#include "./../include/music.h"
 using std::cerr;
 using std::cout;
 
@@ -352,10 +353,19 @@ int main(int argc, char *args[])
     initSaveFiles();
     // ! For disabling communicator
     bool isCommunicatorEnabled = true;
+    bool isEndgameSoundPlayed = false;
     // ! -----------------------------
     Board board(renderer, modernPrimary, modernSecondary, bgColor);
     Communicator communicator(isCommunicatorEnabled);
-    Music backgroundMusic("assets/fallen.mp3");
+    Music backgroundMusic("assets/effects/fallen.mp3");
+    Sound soundboard;
+    soundboard.loadSoundEffect(SoundEffect::PICKUP, "assets/effects/notify.mp3");
+    soundboard.loadSoundEffect(SoundEffect::MOVE, "assets/effects/capture.mp3");
+    soundboard.loadSoundEffect(SoundEffect::CAPTURE, "assets/effects/move-self.mp3");
+    soundboard.loadSoundEffect(SoundEffect::GAMEOVER, "assets/effects/game-end.mp3");
+    soundboard.loadSoundEffect(SoundEffect::ILLEGAL, "assets/effects/illegal.mp3");
+    soundboard.loadSoundEffect(SoundEffect::PROMOTION, "assets/effects/promote.mp3");
+    soundboard.loadSoundEffect(SoundEffect::CHECK, "assets/effects/move-check.mp3");
     // Music backgroundMusic("assets/itsgoingdownnow.mp3");
     backgroundMusic.play();
     communicator.init();
@@ -1076,7 +1086,12 @@ int main(int argc, char *args[])
                                 currentMoveColor = board.getMoveColor();
                                 // the current move color is switched, opposite of promoted piece
                                 // board.updateFen(board.boardToFen());
-                                board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
+                                if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
+                                {
+                                    if (isEnded) soundboard.playSound(SoundEffect::GAMEOVER);
+                                    else soundboard.playSound(SoundEffect::CHECK);
+                                }
+                                else soundboard.playSound(SoundEffect::PROMOTION);
                                 // Frame handling
                                 GameBoardRender();
 
@@ -1189,45 +1204,73 @@ int main(int argc, char *args[])
                             break;
                         }
                         // * Case player did a legal move
-                        else if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
+                        else
                         {
-                            // Check if there is any pawn under promotion
-                            if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
+                            int prevPieceCount = board.getPieceCount();
+                            if (board.makeMove(prevCoordinate, droppedPlace, pickedPiece, possibleMoves, possibleCaptures))
                             {
-                                isUnderPromotion = true;
-                                board.enablePawnPromotion(droppedPlace.getX(), droppedPlace.getY());
+                                // Check if there is any pawn under promotion
+                                int postPieceCount = board.getPieceCount();
+                                if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
+                                {
+                                    isUnderPromotion = true;
+                                    board.enablePawnPromotion(droppedPlace.getX(), droppedPlace.getY());
+                                    if (postPieceCount != prevPieceCount)
+                                        soundboard.playSound(SoundEffect::CAPTURE);
+                                    else
+                                        soundboard.playSound(SoundEffect::MOVE);
+                                }
+                                else
+                                {
+                                    if (board.highlightKingStatus(isEnded, chessColor(1 - (int)currentMoveColor)))
+                                    {
+                                        if (isEnded)
+                                            soundboard.playSound(SoundEffect::GAMEOVER);
+                                        else
+                                            soundboard.playSound(SoundEffect::CHECK);
+                                    }
+                                    else
+                                    {
+                                        if (postPieceCount != prevPieceCount)
+                                            soundboard.playSound(SoundEffect::CAPTURE);
+                                        else
+                                            soundboard.playSound(SoundEffect::MOVE);
+                                    }
+                                }
+
+                                // Check if there is any king being checked
+                                board.setRenderCheck(COLOR_NONE);
+
+                                // Update Castling informations
+                                board.updateCastlingStatus();
+
+                                prevCoordinate = Coordinate(-1, -1);
+                                pickedPiece = ' ';
+
+                                // Frame handling
+                                // std::cerr << board.getFen() << "\n";
+                                GameBoardRender();
+                                GameTurnIndicatorLoad();
+                                needPresent = true;
                             }
 
-                            // Check if there is any king being checked
-                            board.setRenderCheck(COLOR_NONE);
+                            // * Case player did a illegal move
+                            else // invalid move
+                            {
+                                // break;
+                                board.writeCell(prevCoordinate, pickedPiece);
+                                std::cerr.flush();
+                                std::cerr << "Done putting back to original\n";
+                                board.debugBoard();
+                                // Frame handling
+                                GameBoardRender();
 
-                            // Update Castling informations
-                            board.updateCastlingStatus();
+                                GameTurnIndicatorLoad();
 
-                            prevCoordinate = Coordinate(-1, -1);
-                            pickedPiece = ' ';
-
-                            // Frame handling
-                            // std::cerr << board.getFen() << "\n";
-                            GameBoardRender();
-                            GameTurnIndicatorLoad();
-                            needPresent = true;
-                        }
-                        // * Case player did a illegal move
-                        else // invalid move
-                        {
-                            // break;
-                            board.writeCell(prevCoordinate, pickedPiece);
-                            std::cerr.flush();
-                            std::cerr << "Done putting back to original\n";
-                            board.debugBoard();
-                            // Frame handling
-                            GameBoardRender();
-
-                            GameTurnIndicatorLoad();
-
-                            needPresent = true;
-                            break;
+                                needPresent = true;
+                                soundboard.playSound(SoundEffect::ILLEGAL);
+                                break;
+                            }
                         }
                         // * King status is checked after move and promotion have done
                         if (!isUnderPromotion)
@@ -1270,6 +1313,11 @@ int main(int argc, char *args[])
 
             if (isEnded)
             {
+                if (!isEndgameSoundPlayed)
+                {
+                    isEndgameSoundPlayed = true;
+                    soundboard.playSound(SoundEffect::GAMEOVER);
+                }
                 if (popup.isClosed())
                 {
                     renderOnce = false;
@@ -1297,6 +1345,8 @@ int main(int argc, char *args[])
                     std::cerr << "Popup denied\n";
                 }
             }
+            else
+                isEndgameSoundPlayed = false;
 
             if (needPresent)
             {

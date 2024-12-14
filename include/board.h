@@ -287,4 +287,6 @@ public:
     void setCommunicator(Communicator* communicator);
     void nextMoveColor();
     chessColor getMoveColor();
+
+    int getPieceCount();
 };

@@ -34,7 +34,7 @@ clean:
 compile: 
 	g++ -o chess $(wildcard src/*.o) $(COMPILER_FLAG) $(LINKER_FLAGS)
 
-chess: main color board colorScheme coordinate pieces button communicator gameStateManager popup sound
+chess: main color board colorScheme coordinate pieces button communicator gameStateManager popup sound music
 	
 # Individual compilation targets
 main: 
@@ -69,6 +69,9 @@ popup:
 
 sound:
 	g++ -c src/sound.cpp -o src/sound.o $(COMPILER_FLAG) $(LINKER_FLAGS)
+
+music:
+	g++ -c src/music.cpp -o src/music.o $(COMPILER_FLAG) $(LINKER_FLAGS)
 
 test:
 	g++ -c testing/communicatorTest.cpp -o testing/communicatorTest.o $(COMPILER_FLAG) $(LINKER_FLAGS)

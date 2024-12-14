@@ -1,30 +1,25 @@
-#include <iostream>
-#include <SDL2/SDL.h>
 #include <SDL_mixer.h>
-#include <memory>
-#include <stdexcept>
+#include <string>
 
-
-class Music
+enum SoundEffect
 {
+    PICKUP = 0,
+    MOVE = 1,
+    CAPTURE = 2,
+    GAMEOVER = 3,
+    PROMOTION = 4,
+    ILLEGAL = 5,
+    CHECK = 6,
+};
+
+class Sound
+{
+private: 
+    Mix_Chunk* chunk[8];
 public:
-    Music(const std::string &file);
-    ~Music();
+    Sound();
+    ~Sound();
 
-    bool isPaused() const { return Mix_PausedMusic(); }
-    int getVolume() const { 
-        // std::cerr << "Current volume: " << currentVolume << std::endl;
-        return currentVolume / volumeIncrement; 
-    }
-    void play(int loops = -1);
-    void pause();
-    void resume();
-    void stop();
-    void increaseVolume();
-    void decreaseVolume();
-
-private:
-    std::unique_ptr<Mix_Music, void (*)(Mix_Music *)> music;
-    int currentVolume = MIX_MAX_VOLUME / 4;
-    int volumeIncrement = MIX_MAX_VOLUME / 16;
+    void loadSoundEffect(SoundEffect channel, const std::string musicDirectory);
+    void playSound(SoundEffect channel, int times = 0);
 };

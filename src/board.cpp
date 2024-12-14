@@ -960,7 +960,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
     if (!testMovesKingSafety(src, dest, piece))
         return false;
     Coordinate displacement = dest - src;
-    int prevTotalPiece = 0;
+    int prevTotalPiece = 1;
     // * Counting total piece before
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
@@ -1013,6 +1013,7 @@ bool Board::makeMove(Coordinate src, Coordinate dest, char piece, const vector<C
         for (int j = 0; j < 8; j++)
             if (board[i][j] != '0')
                 prevTotalPiece--;
+    std::cerr << prevTotalPiece << " " << (bool)(getPieceName(piece) == PAWN) << "\n";
     if (prevTotalPiece != 0 || getPieceName(piece) == PAWN)
         halfmoves = 0;
     else
@@ -1442,4 +1443,16 @@ void Board::nextMoveColor()
 chessColor Board::getMoveColor()
 {
     return (chessColor)(nextPlayerTurn);
+}
+
+int Board::getPieceCount()
+{
+    int res = 0;
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (int col = 0; col < BOARD_SIZE; col++)
+        {
+            if (board[row][col] != '0')
+                res++;
+        }
+    return res;
 }

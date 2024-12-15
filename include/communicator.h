@@ -11,6 +11,7 @@
 
 enum class Difficulty
 {
+    NONE = -1,
     EASY,
     MEDIUM,
     HARD

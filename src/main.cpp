@@ -405,11 +405,13 @@ int main(int argc, char *args[])
     bool isEnded = false;
 
     //// Initialize start menu
+    bool isToRenderChooseDifficulty = false;
     // Initizalize logo
     const int logoWidth = 500;
     const int logoHeight = 177;
     SDL_Rect logoInfos = {(SCREEN_WIDTH - logoWidth) / 2, 120, logoWidth, logoHeight};
     SDL_Texture *logoTexture = loadTexture("./assets/logo.png");
+    Popup difficultyChoose(renderer, 300, 300);
 
     // Initialize buttons
     const int X_COLUMN_BUTTON[2] = {700, 1000};
@@ -546,7 +548,7 @@ int main(int argc, char *args[])
     vector<SDL_Rect> volumeRect(16, {-1, -1, -1, -1});
     Button *currentMusicState = &settingMuteMusic;
     //// Popup handling
-    Popup popup(renderer, POPUP_MODE::CONFIRM, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
+    Popup popup(renderer, (SCREEN_WIDTH - 350) / 2, (SCREEN_HEIGHT - 350) / 2);
     bool isToRenderPopupSave = false;
     bool isToRenderPopupDelete = false;
     int saveFileId, deleteSaveFileId;
@@ -815,6 +817,8 @@ int main(int argc, char *args[])
                 startBtnAI.handleEvent(&event);
                 loadBtn.handleEvent(&event);
                 quitBtn.handleEvent(&event);
+                if (!difficultyChoose.isClosed())
+                    difficultyChoose.handleDiffultyEvent(&event);
             }
 
             // Render logo
@@ -825,6 +829,9 @@ int main(int argc, char *args[])
             startBtnAI.renderSVG("./assets/start_button_small.svg", SCREEN_WIDTH / 2 + 10, 350, SVG_SCALE);
             loadBtn.renderSVG("./assets/start_button.svg", (SCREEN_WIDTH - startMenuBtnWidth) / 2, 500, SVG_SCALE);
             quitBtn.renderSVG("./assets/start_button.svg", (SCREEN_WIDTH - startMenuBtnWidth) / 2, 650, SVG_SCALE);
+
+            if (!difficultyChoose.isClosed())
+                difficultyChoose.renderDifficulty("Difficulty", 35);
 
             // Update screen
             SDL_RenderPresent(renderer);
@@ -845,12 +852,8 @@ int main(int argc, char *args[])
             if (startBtnAI.clicked())
             {
                 SDL_Log("Start game with AI");
-                board.startNewGame();
-                board.resetBoardState(isEnded);
-                resetGameState();
-                gameState.pushState(board.getFen());
-                isOn = GAME;
-                isSinglePlayer = true;
+                isToRenderChooseDifficulty = true;
+                difficultyChoose.open();
                 startBtnAI.resetClicked(); // Reset button state
                 break;
             }
@@ -868,11 +871,23 @@ int main(int argc, char *args[])
                 running = false;
                 quitBtn.resetClicked(); // Reset button state
             }
+            if (isToRenderChooseDifficulty && !difficultyChoose.isClosed())
+            {
+                difficultyChoose.handleDifficultyClicked();
+                if (difficultyChoose.getDifficulty() != Difficulty::NONE)
+                {
+                    communicator.setDifficulty(difficultyChoose.getDifficulty());
+                    board.startNewGame();
+                    board.resetBoardState(isEnded);
+                    resetGameState();
+                    gameState.pushState(board.getFen());
+                    isOn = GAME;
+                    isSinglePlayer = true;
+                    difficultyChoose.clearDifficulty();
+                    difficultyChoose.close();
+                }
+            }
 
-            startBtn2P.clear();
-            startBtnAI.clear();
-            loadBtn.clear();
-            quitBtn.clear();
             break;
         }
         case LOAD:
@@ -1003,9 +1018,9 @@ int main(int argc, char *args[])
                 needPresent = true;
             else
             {
-                if (popup.isClosed())
+                if (!popup.isClosed())
                 {
-                    popup.resetClose();
+                    popup.close();
                 }
 
                 needPresent = false;
@@ -1041,8 +1056,10 @@ int main(int argc, char *args[])
                 currentMoveColor = board.getMoveColor();
                 if (board.highlightKingStatus(isEnded, (chessColor)(currentMoveColor)))
                 {
-                    if (isEnded) soundboard.playSound(SoundEffect::GAMEOVER);
-                    else soundboard.playSound(SoundEffect::CHECK);
+                    if (isEnded)
+                        soundboard.playSound(SoundEffect::GAMEOVER);
+                    else
+                        soundboard.playSound(SoundEffect::CHECK);
                 }
                 else
                 {
@@ -1050,8 +1067,8 @@ int main(int argc, char *args[])
                         soundboard.playSound(SoundEffect::PROMOTION);
                     else if (prevWhitePieceCount != postWhitePieceCount)
                         soundboard.playSound(SoundEffect::CAPTURE);
-                    else soundboard.playSound(SoundEffect::MOVE);
-                            
+                    else
+                        soundboard.playSound(SoundEffect::MOVE);
                 }
 
                 gameState.pushState(board.getFen());
@@ -1109,10 +1126,13 @@ int main(int argc, char *args[])
                                 // board.updateFen(board.boardToFen());
                                 if (board.highlightKingStatus(isEnded, (chessColor)currentMoveColor))
                                 {
-                                    if (isEnded) soundboard.playSound(SoundEffect::GAMEOVER);
-                                    else soundboard.playSound(SoundEffect::CHECK);
+                                    if (isEnded)
+                                        soundboard.playSound(SoundEffect::GAMEOVER);
+                                    else
+                                        soundboard.playSound(SoundEffect::CHECK);
                                 }
-                                else soundboard.playSound(SoundEffect::PROMOTION);
+                                else
+                                    soundboard.playSound(SoundEffect::PROMOTION);
                                 // Frame handling
                                 GameBoardRender();
 
@@ -1456,6 +1476,7 @@ int main(int argc, char *args[])
                 popup.render("Do you want to overwrite this file?", 40);
                 SDL_RenderPresent(renderer);
                 popup.handleButtonClicked();
+
                 if (popup.isConfirmed() == Confirmation::YES)
                 {
                     std::cerr << "Yes pressed" << std::endl;
@@ -1481,7 +1502,6 @@ int main(int argc, char *args[])
                     isToRenderPopupSave = false;
                     saveFileId = -1;
                 }
-                popup.resetClose();
                 popup.clearConfirmation();
                 // * Get
                 // * Render popup, disable clicking at background
@@ -1505,7 +1525,6 @@ int main(int argc, char *args[])
                     saveFileId = -1;
                     isToRenderPopupDelete = false;
                 }
-                popup.resetClose();
                 popup.clearConfirmation();
                 break;
             }

@@ -24,7 +24,7 @@ private:
     TTF_Font *buttonFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 24);
     SDL_Color buttonColor = {118, 150, 85, 255};
     SDL_Color white = {255, 255, 255, 255};
-    SDL_Color popupBg = {bgColor.getR(), bgColor.getG(), bgColor.getB(), bgColor.getA()};
+    colorRGBA popupBg = bgColor;
     SDL_Texture *textTexture;
     SDL_Texture *agreeButtonTexture;
     SDL_Texture *dontButtonTexture;
@@ -43,7 +43,6 @@ private:
     Button DifficultyHard;
     Difficulty difficulty = Difficulty::NONE; 
 
-    void renderBlurredBackground();
     void renderText(std::string text, int prevHeight, int padding);
     void renderButtons();
     void renderDifficultyButtons();
@@ -54,6 +53,8 @@ public:
     bool isClosed() { return isClose; };
     void open() { isClose = false; };
     void close() { isClose = true; };
+    // void setPopupBackground(colorRGBA color) { popupBg = color; };
+    // void resetPopupBackground() { popupBg = bgColor; };
 
     SDL_Texture *loadTexture(std::string filePath, int width, int height, double scale);
 

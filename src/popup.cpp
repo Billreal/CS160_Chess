@@ -6,7 +6,7 @@
 Popup::Popup(SDL_Renderer *renderer, int x, int y) : renderer(renderer)
 {
     popupInfos = {x, y, POPUP_LENGTH, POPUP_LENGTH};
-    closeBtn = Button(renderer, CLOSE_BUTTON_LENGTH, CLOSE_BUTTON_LENGTH, buttonColor, popupBg, ".s", buttonFont);
+    closeBtn = Button(renderer, CLOSE_BUTTON_LENGTH, CLOSE_BUTTON_LENGTH, buttonColor, {popupBg.getR(), popupBg.getG(), popupBg.getB(), popupBg.getA()}, ".s", buttonFont);
     yesBtn = Button(renderer, 120, 50, buttonColor, white, "Yes", buttonFont);
     noBtn = Button(renderer, 120, 50, buttonColor, white, "No", buttonFont);
     DifficultyEasy = Button(renderer, 150, 50, buttonColor, white, "Easy", buttonFont);
@@ -83,7 +83,10 @@ void Popup::renderDifficultyButtons()
 
 void Popup::render(std::string textPrimary, std::string textSecondary, int padding)
 {
-    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    // SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    // if (popupBg == semiDark)
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup_semidark.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+
     if (!popupTexture)
     {
         std::cerr << "Failed to load popup texture\n";
@@ -99,7 +102,10 @@ void Popup::render(std::string textPrimary, std::string textSecondary, int paddi
 
 void Popup::render(std::string text, int padding)
 {
-    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    // SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    // if (popupBg == semiDark)
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup_semidark.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+
     if (!popupTexture)
     {
         std::cerr << "Failed to load popup texture\n";
@@ -107,7 +113,7 @@ void Popup::render(std::string text, int padding)
     }
     // std::cerr << popupInfos.h << " " << popupInfos.w << "\n";
     SDL_RenderCopy(renderer, popupTexture, NULL, &popupInfos);
-    // SDL_DestroyTexture(popupTexture);
+    SDL_DestroyTexture(popupTexture);
     renderText(text, 0, padding);
     renderButtons();
 }
@@ -165,7 +171,8 @@ void Popup::handleDiffultyEvent(SDL_Event *e)
     DifficultyMedium.handleEvent(e);
     DifficultyHard.handleEvent(e);
 }
-void Popup::handleDifficultyClicked(){
+void Popup::handleDifficultyClicked()
+{
     if (closeBtn.clicked())
     {
         close();

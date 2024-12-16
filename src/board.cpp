@@ -1385,8 +1385,8 @@ bool Board::nextMove(int color)
 
 bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 {
-    std::cerr << "Beginning of highlight King Status: \n";
-    debugBoard();
+    // std::cerr << "Beginning of highlight King Status: \n";
+    // debugBoard();
     if (isCheckmate(color))
     {
         isEnded = true;
@@ -1399,15 +1399,15 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 
         return true;
     }
-    std::cerr << "After checking checkmate\n";
-    debugBoard();
+    // std::cerr << "After checking checkmate\n";
+    // debugBoard();
     if (!isKingSafe(color))
     {
         setRenderCheck(color);
         return true;
     }
-    std::cerr << "After checking safety\n";
-    debugBoard();
+    // std::cerr << "After checking safety\n";
+    // debugBoard();
     if (isStalemate(color) || halfmoves >= 50)
     {
         isEnded = true;
@@ -1418,8 +1418,8 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 
         return true;
     }
-    std::cerr << "After checking stalemate\n";
-    debugBoard();
+    // std::cerr << "After checking stalemate\n";
+    // debugBoard();
     return false;
     if (false)
         std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";

@@ -70,7 +70,7 @@ private:
     SDL_Color queenPromotionCellColor, knightPromotionCellColor, rookPromotionCellColor, bishopPromotionCellColor;
     chessColor promotionColor;
     bool isUnderPromotion = false;
-    std::string winner; 
+    std::string endingMessage; 
     Coordinate promotionCoord;
     TTF_Font *font = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 20);
     Communicator *communicator;
@@ -296,5 +296,5 @@ public:
     int getWhitePieceCount();
     int getBlackPawnCount();
     int getWhitePawnCount();
-    std::string getWinner();
+    std::string getEndingMessage();
 };

@@ -1382,9 +1382,9 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
         isEnded = true;
         setRenderCheckmate(color);
         if (color == WHITE)
-            winner = "Black";
+            endingMessage = "Black win";
         else
-            winner = "White";
+            endingMessage = "White win";
         SDL_Log("End game: Checkmate");
 
         return true;
@@ -1394,14 +1394,11 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
         setRenderCheck(color);
         return true;
     }
-    if (isStalemate(color))
+    if (isStalemate(color) || halfmoves >= 50)
     {
         isEnded = true;
         setRenderStalemate(color);
-        if (color == WHITE)
-            winner = "Black";
-        else
-            winner = "White";
+        endingMessage = "Stalemate";
         SDL_Log("End game: Stalemate");
 
         return true;
@@ -1508,7 +1505,7 @@ int Board::getWhitePawnCount()
     return res;
 }
 
-std::string Board::getWinner()
+std::string Board::getEndingMessage()
 {
-    return winner;
+    return endingMessage;
 }

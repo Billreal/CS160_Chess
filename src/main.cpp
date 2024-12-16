@@ -1380,7 +1380,7 @@ int main(int argc, char *args[])
                 }
                 confirmationPopup.handleButtonClicked();
                 // std::cerr << "The game ended\n";
-                confirmationPopup.render(board.getWinner() + (std::string) " win", (std::string) "Do you want to restart?", 40);
+                confirmationPopup.render(board.getEndingMessage(), (std::string) "Do you want to restart?", 40);
 
                 if (confirmationPopup.isConfirmed() == Confirmation::YES)
                 {

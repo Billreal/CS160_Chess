@@ -811,6 +811,8 @@ bool Board::canWhiteCastlingKing()
 {
     if (!whiteKingSide)
         return false;
+    if (board[BOARD_SIZE - 1][BOARD_SIZE - 1] != 'R')
+        return false;
     bool res = true;
     board[BOARD_SIZE - 1][4] = '0';
     board[BOARD_SIZE - 1][BOARD_SIZE - 1] = '0';
@@ -833,6 +835,8 @@ bool Board::canWhiteCastlingKing()
 bool Board::canWhiteCastlingQueen()
 {
     if (!whiteQueenSide)
+        return false;
+    if (board[BOARD_SIZE - 1][0] != 'R')
         return false;
     bool res = true;
     board[BOARD_SIZE - 1][4] = '0';
@@ -860,6 +864,8 @@ bool Board::canBlackCastlingKing()
     if (!blackKingSide)
         return false;
     bool res = true;
+    if (board[0][BOARD_SIZE - 1] != 'r')
+        return false;
     board[0][4] = '0';
     board[0][BOARD_SIZE - 1] = '0';
     for (int col = 4; col <= 6 && res; col++)
@@ -882,6 +888,8 @@ bool Board::canBlackCastlingKing()
 bool Board::canBlackCastlingQueen()
 {
     if (!blackQueenSide)
+        return false;
+    if (board[0][0] != 'r')
         return false;
     bool res = true;
     board[0][4] = '0';
@@ -1377,6 +1385,8 @@ bool Board::nextMove(int color)
 
 bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 {
+    std::cerr << "Beginning of highlight King Status: \n";
+    debugBoard();
     if (isCheckmate(color))
     {
         isEnded = true;
@@ -1389,11 +1399,15 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 
         return true;
     }
+    std::cerr << "After checking checkmate\n";
+    debugBoard();
     if (!isKingSafe(color))
     {
         setRenderCheck(color);
         return true;
     }
+    std::cerr << "After checking safety\n";
+    debugBoard();
     if (isStalemate(color) || halfmoves >= 50)
     {
         isEnded = true;
@@ -1404,11 +1418,8 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
 
         return true;
     }
-    if (!isKingSafe(color))
-    {
-        setRenderCheck(color);
-        return true;
-    }
+    std::cerr << "After checking stalemate\n";
+    debugBoard();
     return false;
     if (false)
         std::cerr << "Statemate status: " << isStalemate(WHITE) << " and " << isStalemate(BLACK) << "\n";

@@ -1266,6 +1266,9 @@ int main(int argc, char *args[])
                             {
                                 // Check if there is any pawn under promotion
                                 int postPieceCount = board.getPieceCount();
+                                std::cerr << "Before if clause: \n";
+                                board.debugBoard();
+                                // ! -------
                                 if ((droppedPlace.getY() == 0 || droppedPlace.getY() == 7) && (board.getPieceName(pickedPiece) == PAWN))
                                 {
                                     isUnderPromotion = true;
@@ -1292,11 +1295,14 @@ int main(int argc, char *args[])
                                             soundboard.playSound(SoundEffect::MOVE);
                                     }
                                 }
-
+                                std::cerr << "After if clause: \n";
+                                // ! ---- 
                                 // Check if there is any king being checked
+                                board.debugBoard();
                                 board.setRenderCheck(COLOR_NONE);
 
                                 // Update Castling informations
+                                board.debugBoard();
                                 board.updateCastlingStatus();
 
                                 prevCoordinate = Coordinate(-1, -1);
@@ -1307,6 +1313,7 @@ int main(int argc, char *args[])
                                 GameBoardRender();
                                 GameTurnIndicatorLoad();
                                 needPresent = true;
+                                board.debugBoard();
                             }
 
                             // * Case player did a illegal move

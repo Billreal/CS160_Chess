@@ -1397,7 +1397,8 @@ bool Board::highlightKingStatus(bool &isEnded, chessColor color)
     if (isStalemate(color) || halfmoves >= 50)
     {
         isEnded = true;
-        setRenderStalemate(color);
+        if (halfmoves < 50)
+            setRenderStalemate(color);
         endingMessage = "Stalemate";
         SDL_Log("End game: Stalemate");
 

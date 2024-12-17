@@ -270,6 +270,7 @@ struct ThemeList
     Button button;
     colorRGBA primaryColor;
     colorRGBA secondaryColor;
+    std::string pieceTheme;
 };
 
 struct DifficultyList
@@ -518,13 +519,14 @@ int main(int argc, char *args[])
     Button ingameDifficultySwitchMedium(renderer, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
     Button ingameDifficultySwitchHard(renderer, 120, 50, startMenuBtnColor, white, "Hard", loadMenuFont);
 
-    vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary},
-                                   {ingameColorSwitchClassic, classicPrimary, classicSecondary},
-                                   {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary}};
+    vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary, "modern"},
+                                   {ingameColorSwitchClassic, classicPrimary, classicSecondary, "classic"},
+                                   {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary, "futuristic"}};
 
     vector<DifficultyList> difficultyList = {{ingameDifficultySwitchEasy, Difficulty::EASY},
                                              {ingameDifficultySwitchMedium, Difficulty::MEDIUM},
                                              {ingameDifficultySwitchHard, Difficulty::HARD}};
+
 
     Button undoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
     Button redoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
@@ -537,6 +539,7 @@ int main(int argc, char *args[])
     Button *currentDifficultyButton = &difficultyList[currentDifficultyIndex].button;
 
     board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+    board.setPieceTheme(themeList[currentThemeIndex].pieceTheme);
     communicator.setDifficulty(difficultyList[currentDifficultyIndex].difficulty);
     bool isUnderPromotion = false;
 
@@ -627,6 +630,7 @@ int main(int argc, char *args[])
         currentThemeButton->resetClicked();
         currentThemeButton = &themeList[currentThemeIndex].button;
         board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+        board.setPieceTheme(themeList[currentThemeIndex].pieceTheme);
         std::cerr << "Done resetting color\n";
     };
 
@@ -1670,6 +1674,7 @@ int main(int argc, char *args[])
                 currentThemeIndex = (currentThemeIndex + 1) % 3;
                 currentThemeButton = &themeList[currentThemeIndex].button;
                 board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+                board.setPieceTheme(themeList[currentThemeIndex].pieceTheme);
 
                 renderOnce = false;
             }

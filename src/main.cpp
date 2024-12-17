@@ -142,21 +142,21 @@ void loadGame(Board &board, const std::string &filename)
     board.updateFen(FEN);
     saveFile.close();
 }
-void loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, Communicator &communicator)
+bool loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, Communicator &communicator)
 {
     std::ifstream saveFile(filename);
     std::string FEN;
     if (!saveFile)
     {
         cerr << "Failed to open file for loading: " << filename << "\n";
-        return;
+        return false;
     }
 
     if (!std::getline(saveFile, FEN))
     {
         cerr << "Failed to read from file: " << filename << "\n";
         saveFile.close();
-        return;
+        return false;
     }
 
     bool tmp = 0;
@@ -197,6 +197,7 @@ void loadGame(Board &board, const std::string &filename, bool &isSinglePlayer, C
     board.updateFen(FEN);
 
     saveFile.close();
+    return true;
 }
 
 void saveGame(Board &board, int id, bool &isSinglePlayer, Communicator &communicator)
@@ -986,7 +987,8 @@ int main(int argc, char *args[])
                     // if (!isSinglePlayer)
                     // loadGame(board, files[i]);
                     // else
-                    loadGame(board, files[i], isSinglePlayer, communicator);
+                    loadFileBtns[i].resetClicked();
+                    if (!loadGame(board, files[i], isSinglePlayer, communicator)) break;
                     resetGameState();
                     board.resetBoardState(isEnded);
                     gameState.clear();
@@ -994,7 +996,6 @@ int main(int argc, char *args[])
                     board.highlightKingStatus(isEnded, WHITE);
                     board.highlightKingStatus(isEnded, BLACK);
                     isOn = GAME;
-                    loadFileBtns[i].resetClicked();
                     currentDifficultyButton->clear();
                     currentDifficultyIndex = 0;
 

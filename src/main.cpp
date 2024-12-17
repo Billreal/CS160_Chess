@@ -1675,6 +1675,7 @@ int main(int argc, char *args[])
                 currentThemeButton = &themeList[currentThemeIndex].button;
                 board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
                 board.setPieceTheme(themeList[currentThemeIndex].pieceTheme);
+                std::cerr << "Theme setted to " << board.getTheme() << "\n";
 
                 renderOnce = false;
             }

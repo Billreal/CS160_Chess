@@ -29,7 +29,7 @@ private:
     colorRGBA secondaryColor;
     colorRGBA backgroundColor;
     chessPieces chessPiece;
-    std::string pieceTheme = "classic";
+    std::string pieceTheme = "modern";
     // Board status, contains playerTurn, Castling, En Passant, half and total moves.
     int nextPlayerTurn = -1; // contains either 0 or 1. 0 stands for white turn, 1 for black turn
     bool whiteKingSide;
@@ -155,6 +155,8 @@ public:
 
     int getMargin();
 
+    std::string getTheme() {return pieceTheme;}
+    
     int getSideLength();
 
     void setRendererColor(colorRGBA color);

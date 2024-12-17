@@ -481,6 +481,7 @@ void Board::setColor(colorRGBA primary, colorRGBA secondary)
 void Board::setPieceTheme(std::string theme)
 {
     pieceTheme = theme;
+    loadTextures();
 }
 
 void Board::renderChessboard()

@@ -84,7 +84,7 @@ breaklines=true
           \item Medium mode: Stockfish is ran with moderate variation and moderate evaluation level.Stockfish searches for next move to depth 3 in 400 miliseconds and more computing resource are allocated
           \item Hard mode. Stockfish are given the most computing resource. It plays perfectly without variation, searches to depth 20 in 2000 miliseconds
         \end{itemize}
-        The game is delayed for 500 miliseconds in addition to Stockfish's search time to avoid error.
+        AI's turn is delayed for 500 miliseconds in addition to Stockfish's search time to avoid runtime errors.
 \end{itemize}
 %%%%%% Equations %%%%%%
 
@@ -92,15 +92,15 @@ breaklines=true
 \begin{itemize}
   \item A chessboard with movable pieces
 
-  \item Menu before the game is started
+  \item A start menu that renders before a game is started
         \begin{itemize}
-          \item Start buttons that start the game in two-player mode and single player mode. If the game is started in single player mode, there are a menu appears for the user to select the difficulty of AI.
-          \item Load button to load saved board from storage.
+          \item Start buttons that start the game in two-player mode and single player mode. If the game is started in single player mode, there is a popup menu for the user to select the difficulty of AI.
+          \item Load button to load saved board states from storage.
           \item Quit button to exit the game.
         \end{itemize}
-  \item Menu during gameplay is render to the right and the bottom of the board.
+  \item A In-game menu is rendered to the right and bottom portions of the board.
         \begin{itemize}
-          \item Promotion menu is rendered to the top or bottom of pawn under promotion, with four buttons to promote to queen, bishop, kngiht or rook.
+          \item Promotion menu is rendered to the top or bottom of pawn under promotion, with four options to promote to queen, bishop, kngiht or rook.
           \item Right menu bar
 
                 \begin{itemize}
@@ -111,21 +111,21 @@ breaklines=true
           \item Bottom menu bar
                 \begin{itemize}
                   \item Button to undo the latest move and undo to the initial board state.
-                  \item Button to redo the latest undo and redo to the final board state.
+                  \item Button to redo the latest undo and redo to the latest board state.
                 \end{itemize}
         \end{itemize}
-  \item Load menu displays buttons to load saved games, each of which shows previews of board when hovered and load the actual game when clicked.
-  \item Save menu displays buttons to save current game. On hover, each button display preview of saved game that is going to be overwritten if current game is saved. When pressed, a confirmation menu appears to ask if user want to overwrite. There are also a clear button for each save file to delete that save.
-  \item Setting menu has buttons of theme switching, adjust volume of all sound effect, mute and unmute sound, reset the game to starting position, and quit to menu.
+  \item A load menu displays buttons to load saved games, each of which shows previews of board when hovered and load the actual game when clicked.
+  \item A save menu displays buttons to save current game. On hover, each button display preview of saved game that is going to be overwritten if current game is saved. When pressed, a confirmation menu appears to ask if user want to overwrite. There are also a clear button for each save file to delete that save.
+  \item A setting menu has buttons of theme switching, adjust volume of all sound effect, mute and unmute sound, reset the game to starting position, and quit to menu.
 \end{itemize}
 \section{Chess board representation}
 \begin{itemize}
   \item Chessboard is drawn using SDL2 graphic libraries.
-  \item Pieces are first parsed to bitmap using \href{https://github.com/memononen/nanosvg}{nanoSVG} library's function, then rendered by SDL2
+  \item Pieces are first parsed to bitmap using \href{https://github.com/memononen/nanosvg}{nanoSVG} library's function, then rasterized and rendered by SDL2's functions.
   \item Pieces are moved by drag-dropping with mouse.
   \item Legal moves are highlighted with cell-centered dots for moves and hollow circles for captures. The rendering of legal moves are triggered when player click on a piece or drop a piece to its original cell.
   \item Illegal moves (including movement to cells that are not highlighted, movement out of board's bound, etc) will return the piece to its original cell and does not count as a move.
-  \item Moves are managed automatically, alternating between two colors after each move.
+  \item Moves are managed automatically, alternating between two colors after each move. Current player's turn is displayed by an indicator on the top portion of the screen.
   \item King piece's cell is highlighted with different colors for its check, checkmate and stalemate statuses.
         \begin{itemize}
           \item To highlight chess piece's movement, color of initial and ending cells of that piece is mixed with a yellowish color.
@@ -179,16 +179,15 @@ setoption name MultiPV value 1
 \end{itemize}
 After letting Stockfish executing commands, the communicator wait for 500 miliseconds before reading the result from \texttt{tmp/stockfish\_output.txt}
 \section{Game state management}
-The game is managed using the combination of 2D array board representation and FEN notation, the latter stores information needed to reconstruct the board from nothing. Turn management is done right after a legal move had been made. After each legal move, both array representation and FEN notation is updated.
+The game is managed using the combination of 2D array board representation and FEN notation, the latter stores information needed to reconstruct the board from scratch. Turn management is done right after a legal move had been made. After each legal move, both array representation and FEN notation of the board is updated.
 
-For undo and redo features, stack of FEN notation is used to store information for those operation, with the top of undo stack is the current board state. FEN notation of initial state is also saved as a constant string for creation of new game.
+For undo and redo features, two stacks of FEN notation is used to store information for those operation, with the top of undo stack is the current board state. FEN notation of initial state is also saved as a constant string for creation of new game.
 
 \section{Save and Load Functionality}
 \subsection{Save}
-There are separate menu dedicated for saving. In that menu, available save files are displayed in cards on the left side. On hovering, the card being hovered will be highlighted, and the board state that is stored within the file that the card stand for is displayed to the right of the game windows. When user clicks on a card, the confirmation box appears, asking if user want to overwrite the save file. If user presses yes, the game will proceed to overwrite that save file, otherwise the confirmation box will close.
-
+There is separate menu dedicated for saving. In that menu, available save files are displayed in cards on the left side. On hovering, the card being hovered will be highlighted, and the board state that is stored within the file that the card stand for is displayed to the right of the game windows. When user clicks on a card, the confirmation box appears, asking if user want to overwrite the save file. If the user confirms, the game will proceed to overwrite that save file, otherwise the confirmation box will close.
 \subsection{Load}
-There are separate menu dedicated for loading. In that menu, available save files are displayed in cards on the left side. On hovering, the card being hovered will be highlighted, and the board state that is stored within the file that the card stand for is displayed to the right of the game windows as a preview. When user clicks on a card, the board immediately load the respective save file.
+There is separate menu dedicated for loading. In that menu, available save files are displayed in cards on the left side. On hovering, the card being hovered will be highlighted, and the board state that is stored within the file that the card stand for is displayed to the right of the game windows as a preview. When user clicks on a card, the board immediately load the respective save file.
 \section{Optional features}
 While being dragged, selected chess piece follows the mouse's cursor smoothly.
 \section{Technology stack}

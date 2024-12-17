@@ -81,18 +81,18 @@ void Board::loadTextures()
         0 -> 5: white
         6 -> 11: black
     */
-    pieces[0] = loadTexture("./assets/white_rook.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[1] = loadTexture("./assets/white_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[2] = loadTexture("./assets/white_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[3] = loadTexture("./assets/white_queen.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[4] = loadTexture("./assets/white_king.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[5] = loadTexture("./assets/white_pawn.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[6] = loadTexture("./assets/black_rook.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[7] = loadTexture("./assets/black_knight.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[8] = loadTexture("./assets/black_bishop.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[9] = loadTexture("./assets/black_queen.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[10] = loadTexture("./assets/black_king.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
-    pieces[11] = loadTexture("./assets/black_pawn.svg", SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[0] = loadTexture(std::string("./assets/pieces/white_rook_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[1] = loadTexture(std::string("./assets/pieces/white_knight_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[2] = loadTexture(std::string("./assets/pieces/white_bishop_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[3] = loadTexture(std::string("./assets/pieces/white_queen_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[4] = loadTexture(std::string("./assets/pieces/white_king_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[5] = loadTexture(std::string("./assets/pieces/white_pawn_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[6] = loadTexture(std::string("./assets/pieces/black_rook_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[7] = loadTexture(std::string("./assets/pieces/black_knight_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[8] = loadTexture(std::string("./assets/pieces/black_bishop_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[9] = loadTexture(std::string("./assets/pieces/black_queen_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[10] = loadTexture(std::string("./assets/pieces/black_king_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
+    pieces[11] = loadTexture(std::string("./assets/pieces/black_pawn_" + pieceTheme + ".svg").c_str(), SIDE_LENGTH, SIDE_LENGTH, IMG_SCALE);
     possibleMoveIndicator = loadTexture("./assets/move_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, MOVE_INDICATOR_SCALE);
     possibleCaptureIndicator = loadTexture("./assets/capture_indicator.svg", SIDE_LENGTH, SIDE_LENGTH, CAPTURE_INDICATOR_SCALE);
 }
@@ -476,6 +476,11 @@ void Board::setColor(colorRGBA primary, colorRGBA secondary)
 {
     primaryColor = primary;
     secondaryColor = secondary;
+}
+
+void Board::setPieceTheme(std::string theme)
+{
+    pieceTheme = theme;
 }
 
 void Board::renderChessboard()

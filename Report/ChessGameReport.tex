@@ -51,7 +51,7 @@ sorting=none]{biblatex}
 \renewcommand{\abstractname}{Overview}
 %%%%%% Abstract %%%%%%
 \begin{abstract}
-  The project aims to develop a chess game that is smooth, lightweight in size and performance while providing decent experience to player.
+  The project aims to develop a chess game that is smooth, minimalistic, lightweight in size and performance while providing decent experience to player.
 \end{abstract}
 
 %%%%%% Main Text %%%%%%
@@ -88,8 +88,8 @@ sorting=none]{biblatex}
 
   \item Menu before the game is started
         \begin{itemize}
-          \item Start buttons that start the game in two-player mode and single player mode.
-          \item Load button to load saved board from storage
+          \item Start buttons that start the game in two-player mode and single player mode. If the game is started in single player mode, there are a menu appears for the user to select the difficulty of AI.
+          \item Load button to load saved board from storage.
           \item Quit button to exit the game.
         \end{itemize}
   \item Menu during gameplay is render to the right and the bottom of the board.
@@ -99,8 +99,6 @@ sorting=none]{biblatex}
 
                 \begin{itemize}
                   \item Button to save and load current board configuration, including board state, game mode and AI diffculty if there is.
-                  \item Button to reset current game.
-                  \item Button to go back to main menu.
                   \item Button to access setting menu
                 \end{itemize}
 
@@ -110,7 +108,9 @@ sorting=none]{biblatex}
                   \item Button to redo the latest undo and redo to the final board state.
                 \end{itemize}
         \end{itemize}
-    \item Load menu display buttons to load saved games, each of which shows previews of board when hovered and load the actual game when clicked. 
+    \item Load menu displays buttons to load saved games, each of which shows previews of board when hovered and load the actual game when clicked. 
+    \item Save menu displays buttons to save current game. On hover, each button display preview of saved game that is going to be overwritten if current game is saved. When pressed, a confirmation menu appears to ask if user want to overwrite. There are also a clear button for each save file to delete that save.
+    \item Setting menu has buttons of theme switching, adjust volume of all sound effect, mute and unmute sound, reset the game to starting position, and quit to menu.
 \end{itemize}
 \section{Chess board representation}
 \begin{itemize}
@@ -179,6 +179,7 @@ For undo and redo features, stack of FEN notation is used to store information f
 
 \section{Save and Load Functionality}
 \subsection{Save}
+There are separate menu dedicated for saving. In that menu, available save files are displayed in cards on the left side. On hovering, the card being hovered will be highlighted, and the board state that is stored within the file that the card stand for is displayed to the right of the game windows. When user clicks on a card, the confirmation box appears, asking if user want to overwrite the save file. If user presses yes, the game will proceed to overwrite that save file, otherwise the confirmation box will close.
 
 \subsection{Load}
 There are separate menu dedicated for loading. In that menu, available save files are displayed in cards on the left side. On hovering, the card being hovered will be highlighted, and the board state that is stored within the file that the card stand for is displayed to the right of the game windows as a preview. When user clicks on a card, the board immediately load the respective save file.
@@ -187,6 +188,11 @@ While being dragged, selected chess piece follows the mouse's cursor smoothly.
 \section{Technology stack}
 The game's logic, game state management and GUI(graphic user interface) is written in C and C++, using SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, followed by numbers indicating current game mode and difficulty of AI opponent. 
 \chapter{Design document}
+\section{System requirement and build}
+Currently, the game is only developed and tested on Windows operating system.
+To compile the program from source files, the directory must first be at the same path as the makefile file, that is, the \texttt{CS160\_Chess} folder
+
+
 \section{Interraction if single player mode}
 
 

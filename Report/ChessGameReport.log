@@ -1,6 +1,6 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  17 DEC 2024 09:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  17 DEC 2024 21:53
 entering extended mode
- restricted \write18 enabled.
+ \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
 **d:/University/Programming/Cplusplus/Project/CS160_Chess/Report/ChessGameReport.tex
@@ -519,8 +519,16 @@ Already applied: [0000/00/00] Usage of raw or classic option list on input line 
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 ) (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/tools\shellesc.sty
 Package: shellesc 2023/07/08 v1.0d unified shell escape interface for LaTeX
-Package shellesc Info: Restricted shell escape enabled on input line 77.
-)
+Package shellesc Info: Unrestricted shell escape enabled on input line 75.
+) (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/ifplatform\ifplatform.sty
+Package: ifplatform 2017/10/13 v0.4a Testing for the operating system
+ (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/generic/catchfile\catchfile.sty
+Package: catchfile 2019/12/09 v1.8 Catch the contents of a file (HO)
+ (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/generic/etexcmds\etexcmds.sty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)) (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifluatex.sty
+Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
+))
 \c@svg@param@lastpage=\count305
 \svg@box=\box54
 \c@svg@param@currpage=\count306
@@ -834,14 +842,38 @@ Package biblatex Info: ... and expl3
 Package: xparse 2024-05-08 L3 Experimental document command parser
 )
 Package: blx-case-expl3 2024/03/21 v3.20 expl3 case changing code for biblatex
+)) (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+\lst@mode=\count445
+\lst@gtempboxa=\box57
+\lst@token=\toks33
+\lst@length=\count446
+\lst@currlwidth=\dimen186
+\lst@column=\count447
+\lst@pos=\count448
+\lst@lostspace=\dimen187
+\lst@width=\dimen188
+\lst@newlines=\count449
+\lst@lineno=\count450
+\lst@maxwidth=\dimen189
+ (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty
+File: lstpatch.sty 2024/05/25 1.10b (Carsten Heinz)
+) (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
+File: lstmisc.sty 2024/05/25 1.10b (Carsten Heinz)
+\c@lstnumber=\count451
+\lst@skipnumbers=\count452
+\lst@framebox=\box58
+) (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
+File: listings.cfg 2024/05/25 1.10b listings configuration
 ))
+Package: listings 2024/05/25 1.10b (Carsten Heinz)
+
 
 Package biblatex Warning: 'babel/polyglossia' detected but 'csquotes' missing.
 (biblatex)                Loading 'csquotes' recommended.
 
-\@quotelevel=\count445
-\@quotereset=\count446
-LaTeX Font Info:    Trying to load font information for OT1+mlmr on input line 47.
+\@quotelevel=\count453
+\@quotereset=\count454
+LaTeX Font Info:    Trying to load font information for OT1+mlmr on input line 53.
 (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ot1mlmr.fd
 File: ot1mlmr.fd 2021/01/11 v1.0 Font defs for mlmodern
 ) (ChessGameReport.aux
@@ -851,30 +883,30 @@ File: t5mlmr.fd 2021/01/11 v1.0 Font defs for mlmodern
 ))
 \openout1 = `ChessGameReport.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 47.
-LaTeX Font Info:    Trying to load font information for T5+cmr on input line 47.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 53.
+LaTeX Font Info:    Trying to load font information for T5+cmr on input line 53.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/vntex\t5cmr.fd
 File: t5cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -884,15 +916,15 @@ LaTeX Font Info:    ... okay on input line 47.
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(90.3375pt, 416.83289pt, 90.3375pt)
-* v-part:(T,H,B)=(90.3375pt, 664.37186pt, 90.3375pt)
+* h-part:(L,W,R)=(72.26999pt, 452.9679pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 700.50687pt, 72.26999pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
-* \textwidth=416.83289pt
-* \textheight=664.37186pt
-* \oddsidemargin=18.0675pt
-* \evensidemargin=18.0675pt
-* \topmargin=-18.9325pt
+* \textwidth=452.9679pt
+* \textheight=700.50687pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
 * \headheight=12.0pt
 * \headsep=25.0pt
 * \topskip=10.0pt
@@ -912,17 +944,17 @@ LaTeX Font Info:    ... okay on input line 47.
 
 (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count447
-\scratchdimen=\dimen186
-\scratchbox=\box57
-\nofMPsegments=\count448
-\nofMParguments=\count449
-\everyMPshowfont=\toks33
-\MPscratchCnt=\count450
-\MPscratchDim=\dimen187
-\MPnumerator=\count451
-\makeMPintoPDFobject=\count452
-\everyMPtoPDFconversion=\toks34
+\scratchcounter=\count455
+\scratchdimen=\dimen190
+\scratchbox=\box59
+\nofMPsegments=\count456
+\nofMParguments=\count457
+\everyMPshowfont=\toks34
+\MPscratchCnt=\count458
+\MPscratchDim=\dimen191
+\MPnumerator=\count459
+\makeMPintoPDFobject=\count460
+\everyMPtoPDFconversion=\toks35
 ) (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -931,8 +963,9 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 47.
+Package hyperref Info: Link coloring OFF on input line 53.
  (ChessGameReport.out) (ChessGameReport.out)
 \@outlinefile=\write5
 \openout5 = `ChessGameReport.out'.
@@ -942,7 +975,7 @@ Package biblatex Info: ... file 'vietnamese.lbx' not found.
 
 
 Package biblatex Warning: Language 'vietnamese' not supported.
-(biblatex)                Using dummy definitions on input line 47.
+(biblatex)                Using dummy definitions on input line 53.
 
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
@@ -957,8 +990,9 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'ChessGameReport.bbl' found.
  (ChessGameReport.bbl)
-Package biblatex Info: Reference section=0 on input line 47.
-Package biblatex Info: Reference segment=0 on input line 47.
+Package biblatex Info: Reference section=0 on input line 53.
+Package biblatex Info: Reference segment=0 on input line 53.
+\c@lstlisting=\count461
 
 
 [1
@@ -969,7 +1003,7 @@ Package biblatex Info: Reference segment=0 on input line 47.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.55 \end{abstract}
+l.61 \end{abstract}
                     [1] (ChessGameReport.toc
 LaTeX Font Info:    Trying to load font information for OML+mlmm on input line 8.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\omlmlmm.fd
@@ -999,22 +1033,27 @@ LaTeX Font Info:    External font `mlmex10' loaded for size
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.65 \chapter
+l.71 \chapter
              {Requirement} [1
 
 ]
 Chapter 1.
-LaTeX Font Info:    Trying to load font information for TS1+mlmr on input line 70.
+LaTeX Font Info:    Trying to load font information for TS1+mlmr on input line 76.
 (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ts1mlmr.fd
 File: ts1mlmr.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
+Overfull \hbox (4.8655pt too wide) in paragraph at lines 84--85
+[]\OT1/mlmr/m/n/10 Medium mode: Stock-fish is ran with mod-er-ate vari-a-tion and mod-er-ate eval-u-a-tion level.Stockfish
+ []
+
+
 
 [2
 
 {C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}]
 
 [3]
-LaTeX Font Info:    Trying to load font information for OT1+mlmtt on input line 144.
+LaTeX Font Info:    Trying to load font information for OT1+mlmtt on input line 150.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ot1mlmtt.fd
 File: ot1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
@@ -1022,30 +1061,60 @@ File: ot1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 [4{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rmtt.enc}]
 
 [5]
-
-[6]
 Chapter 2.
 
 
-[7
+[6
 
 ]
+LaTeX Font Info:    Trying to load font information for TS1+mlmtt on input line 221.
+ (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ts1mlmtt.fd
+File: ts1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
+)
+Package svg Info: Last page of `./svg-inkscape/altDecision_svg-tex.pdf' is 1 on input line 226.
+ (svg-inkscape/altDecision_svg-tex.pdf_tex
+<./svg-inkscape/altDecision_svg-tex.pdf, id=182, page=1, 1423.56844pt x 791.20593pt>
+File: ./svg-inkscape/altDecision_svg-tex.pdf Graphic file (type pdf)
+<use ./svg-inkscape/altDecision_svg-tex.pdf, page 1>
+Package pdftex.def Info: ./svg-inkscape/altDecision_svg-tex.pdf , page1 used on input line 56.
+(pdftex.def)             Requested size: 500.0pt x 277.89204pt.
+)
+Overfull \hbox (47.0321pt too wide) in paragraph at lines 226--227
+[] 
+ []
+
+<MOve diagram.png, id=183, 3854.4pt x 1549.79pt>
+File: MOve diagram.png Graphic file (type png)
+<use MOve diagram.png>
+Package pdftex.def Info: MOve diagram.png  used on input line 230.
+(pdftex.def)             Requested size: 452.9679pt x 182.11217pt.
+
+
+[7 <./svg-inkscape/altDecision_svg-tex.pdf>]
+<AI move.png, id=282, 3854.4pt x 1681.28125pt>
+File: AI move.png Graphic file (type png)
+<use AI move.png>
+Package pdftex.def Info: AI move.png  used on input line 232.
+(pdftex.def)             Requested size: 452.9679pt x 197.5634pt.
+
+
+[8 <./MOve diagram.png> <./AI move.png>]
 Chapter 3.
-
-
-[8
-
-]
-Chapter 4.
 
 
 [9
 
 ]
-Chapter 5.
+Chapter 4.
 
 
 [10
+
+]
+Chapter 5.
+
+
+[11
 
 ] (ChessGameReport.aux)
  ***********
@@ -1053,23 +1122,23 @@ LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-07-20>
  ***********
 Package rerunfilecheck Info: File `ChessGameReport.out' has not changed.
-(rerunfilecheck)             Checksum: D19932406E930A7B2039BF0444537A67;2863.
+(rerunfilecheck)             Checksum: 0989051E39EF4D041348820F20342863;3119.
 Package logreq Info: Writing requests to 'ChessGameReport.run.xml'.
 \openout1 = `ChessGameReport.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 22724 strings out of 473899
- 415003 string characters out of 5726500
- 1938960 words of memory out of 5000000
- 45221 multiletter control sequences out of 15000+600000
- 612084 words of font info for 60 fonts, out of 8000000 for 9000
+ 24576 strings out of 473899
+ 442292 string characters out of 5726500
+ 2210960 words of memory out of 5000000
+ 47014 multiletter control sequences out of 15000+600000
+ 615647 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 94i,5n,93p,767b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on ChessGameReport.pdf (12 pages, 160276 bytes).
+ 94i,7n,93p,767b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt9.pfb>
+Output written on ChessGameReport.pdf (13 pages, 598621 bytes).
 PDF statistics:
- 215 PDF objects out of 1000 (max. 8388607)
- 35 named destinations out of 1000 (max. 500000)
- 181 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 359 PDF objects out of 1000 (max. 8388607)
+ 56 named destinations out of 1000 (max. 500000)
+ 225 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -38,7 +38,7 @@ chess: main color board colorScheme coordinate pieces button communicator gameSt
 	
 # Individual compilation targets
 main: 
-	g++ $(COMPILER_FLAG) -c src/main.cpp -o src/main.o $(LINKER_FLAGS)
+	g++ -c src/main.cpp -o src/main.o$(COMPILER_FLAG) $(LINKER_FLAGS)
 
 board: 
 	g++ -c src/board.cpp -o src/board.o $(COMPILER_FLAG) $(LINKER_FLAGS)

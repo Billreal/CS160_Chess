@@ -19,7 +19,7 @@ else ifeq ($(UNAME_S), Darwin)
 else ifeq ($(OS), Windows_NT)
 	COMPILER_FLAG = $(COMPILER_FLAG_WINDOWS)
     LINKER_FLAGS = $(LINKER_FLAGS_WINDOWS)
-    CLEAN_CMD = @powershell -Command "Get-ChildItem -Path src -Filter *.o | Remove-Item -Force" | @powershell -Command "Get-ChildItem -Path src -Filter chess.exe | Remove-Item -Force"
+    CLEAN_CMD = @powershell -Command "Get-ChildItem -Path src -Filter *.o | Remove-Item -Force | Get-ChildItem -Path src -Filter chess.exe | Remove-Item -Force"
 endif
 
 # Target to clean up object files and initialize Chess.exe

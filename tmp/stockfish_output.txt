@@ -28,16 +28,3 @@ info string Using 1 thread
 readyok
 readyok
 info string Using 1 thread
-readyok
-readyok
-info string Using 1 thread
-readyok
-readyok
-info string Using 1 thread
-readyok
-readyok
-info string Using 1 thread
-readyok
-readyok
-readyok
-readyok

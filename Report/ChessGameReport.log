@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  12 DEC 2024 17:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  17 DEC 2024 09:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1022,28 +1022,30 @@ File: ot1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 [4{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rmtt.enc}]
 
 [5]
+
+[6]
 Chapter 2.
-
-
-[6
-
-]
-Chapter 3.
 
 
 [7
 
 ]
-Chapter 4.
+Chapter 3.
 
 
 [8
 
 ]
-Chapter 5.
+Chapter 4.
 
 
 [9
+
+]
+Chapter 5.
+
+
+[10
 
 ] (ChessGameReport.aux)
  ***********
@@ -1051,23 +1053,23 @@ LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-07-20>
  ***********
 Package rerunfilecheck Info: File `ChessGameReport.out' has not changed.
-(rerunfilecheck)             Checksum: 912DB6BA721E70661270C757D423EE1E;2659.
+(rerunfilecheck)             Checksum: D19932406E930A7B2039BF0444537A67;2863.
 Package logreq Info: Writing requests to 'ChessGameReport.run.xml'.
 \openout1 = `ChessGameReport.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 22721 strings out of 473899
- 414972 string characters out of 5726500
- 1937960 words of memory out of 5000000
- 45220 multiletter control sequences out of 15000+600000
+ 22724 strings out of 473899
+ 415003 string characters out of 5726500
+ 1938960 words of memory out of 5000000
+ 45221 multiletter control sequences out of 15000+600000
  612084 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  94i,5n,93p,767b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on ChessGameReport.pdf (11 pages, 157256 bytes).
+Output written on ChessGameReport.pdf (12 pages, 160276 bytes).
 PDF statistics:
- 206 PDF objects out of 1000 (max. 8388607)
- 33 named destinations out of 1000 (max. 500000)
- 173 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 215 PDF objects out of 1000 (max. 8388607)
+ 35 named destinations out of 1000 (max. 500000)
+ 181 words of extra memory for PDF output out of 10000 (max. 10000000)
 

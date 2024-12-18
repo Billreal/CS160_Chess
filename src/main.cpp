@@ -394,7 +394,7 @@ int main(int argc, char *args[])
     int currentMoveColor = WHITE;
     bool renderOnce = false;
     bool needPresent = false;
-    bool openGameOverPopup = false;
+    bool renderGameOverPopupOnce = false;
 
     Coordinate prevCoordinate(-1, -1);
     char pickedPiece = ' ';
@@ -1038,21 +1038,22 @@ int main(int argc, char *args[])
         {
             if (isEnded)
             {
-                if (!openGameOverPopup)
+                if (!renderGameOverPopupOnce)
                 {
                     confirmationPopup.open();
-                    openGameOverPopup = true;
+                    renderGameOverPopupOnce = true;
                 }
                 needPresent = true;
             }
             else
             {
+                // Close popup is it's opened before the game is ended
                 if (!confirmationPopup.isClosed())
                 {
                     confirmationPopup.close();
-                    openGameOverPopup = false;
                 }
 
+                renderGameOverPopupOnce = false;
                 needPresent = false;
             }
             // * Computer's turn
@@ -1384,6 +1385,7 @@ int main(int argc, char *args[])
                     // default:
                     // board.present();
                 }
+                // Handle popup events if it is opened
                 if (isEnded && !confirmationPopup.isClosed())
                     confirmationPopup.handleButtonEvent(&event);
                 else

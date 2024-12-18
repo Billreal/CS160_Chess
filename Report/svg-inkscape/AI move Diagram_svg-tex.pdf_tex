@@ -1,0 +1,100 @@
+%% Creator: Inkscape 1.4 (86a8ad7, 2024-10-11), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'AI move Diagram_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{900bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.45583333)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.9275,0.0275){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Game State Manager\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.75125,0.0275){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Stockfish\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.58458333,0.0275){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Communicator\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.41791667,0.0275){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Sound Manager\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.25125,0.0275){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Board\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.06291667,0.0275){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Game handler\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.9275,0.42833333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Game State Manager\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.75125,0.42833333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Stockfish\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.58458333,0.42833333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Communicator\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.41791667,0.42833333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Sound Manager\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.25125,0.42833333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Board\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.06291667,0.42833333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Game handler\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.16041667,0.38875){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Encoded pieces' state\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.49541667,0.35208333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Encoded pieces' state\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.32291667,0.31541667){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Request next move from encoded pieces's state\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.66708333,0.27875){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}UCI commands\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.66958333,0.24208333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Stockfish output\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.32541667,0.20541667){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Best move\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.15625,0.16875){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Best move\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.15875,0.13208333){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Pieces' status\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{AI move Diagram_svg-tex.pdf}}%
+    \put(0.24125,0.09541667){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Request playing sound effect\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{AI move Diagram_svg-tex.pdf}}%
+  \end{picture}%
+\endgroup%

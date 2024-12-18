@@ -199,27 +199,7 @@ To compile the program from source files, the directory must first be at the sam
 
 Then, user can build the project by running \texttt{./buildscriptwindows.ps1} or run \texttt{make all}. After that, the executable is named \texttt{chess.exe}, which is located at \texttt{CS160\_Chess} folder. The executable will be automatically be ran after being built.
 
-An alternative way for building the project if the above methods doesn't work:
-First, run \begin{lstlisting}
-Get-ChildItem -Path src -Filter *.o | Remove-Item -Force | Get-ChildItem -Path src -Filter chess.exe | Remove-Item -Force
-\end{lstlisting} in powershell.
-Then, execute the following commamds:
-\begin{lstlisting}
-g++ -c src/main.cpp -o src/main.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/board.cpp -o src/board.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/color.cpp -o src/color.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/colorScheme.cpp -o src/colorScheme.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/pieces.cpp -o src/pieces.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/coordinate.cpp -o src/coordinate.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/button.cpp -o src/button.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/communicator.cpp -o src/communicator.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/gameStateManager.cpp -o src/gameStateManager.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/popup.cpp -o src/popup.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/sound.cpp -o src/sound.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -c src/music.cpp -o src/music.o -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-g++ -o chess $(wildcard src/*.o) -std=c++20 -lmingw32  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
-./chess
-\end{lstlisting}
+An alternative way for building the project if the above methods doesn't work is to run \texttt{BuildScriptWindows.ps1} file in powershell. 
 
 \section{Architecture design}
 \includesvg[width = 500pt, height = 600pt, angle = 0]{altDecision.svg}

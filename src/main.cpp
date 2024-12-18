@@ -267,7 +267,8 @@ enum GUI_State
 
 struct ThemeList
 {
-    Button button;
+    Button boardButton;
+    Button pieceButton;
     colorRGBA primaryColor;
     colorRGBA secondaryColor;
     std::string pieceTheme;
@@ -432,6 +433,7 @@ int main(int argc, char *args[])
     //// Initialize load menu
     SDL_Rect loadInfos = {60, 80, 900, 850};
     SDL_Texture *loadMenuTexture = loadTexture("./assets/load.png");
+    SDL_Texture *saveMenuTexture = loadTexture("./assets/save.png");
     TTF_Font *loadMenuFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 24);
     TTF_Font *loadMenuFontSmall = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Light.ttf", 18);
     // TTF_Font *loadMenuFont = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
@@ -512,34 +514,40 @@ int main(int argc, char *args[])
     Button saveBtn(renderer, 120, 50, startMenuBtnColor, white, "Save", loadMenuFont);
     Button loadBtnInGame(renderer, 120, 50, startMenuBtnColor, white, "Load", loadMenuFont);
     Button settingBtn(renderer, 120, 50, startMenuBtnColor, white, "Setting", loadMenuFont);
-    Button ingameColorSwitchModern(renderer, 120, 50, startMenuBtnColor, white, "Modern", loadMenuFont);
-    Button ingameColorSwitchFuturistic(renderer, 120, 50, startMenuBtnColor, white, "Futuristic", loadMenuFont);
-    Button ingameColorSwitchClassic(renderer, 120, 50, startMenuBtnColor, white, "Classic", loadMenuFont);
+    Button ingameBoardColorSwitchModern(renderer, 100, 50, startMenuBtnColor, white, "Modern", loadMenuFontSmall);
+    Button ingameBoardColorSwitchFuturistic(renderer, 100, 50, startMenuBtnColor, white, "Futuristic", loadMenuFontSmall);
+    Button ingameBoardColorSwitchClassic(renderer, 100, 50, startMenuBtnColor, white, "Classic", loadMenuFontSmall);
+
+    Button ingamePieceColorSwitchModern(renderer, 100, 50, startMenuBtnColor, white, "Modern", loadMenuFontSmall);
+    Button ingamePieceColorSwitchFuturistic(renderer, 100, 50, startMenuBtnColor, white, "Futuristic", loadMenuFontSmall);
+    Button ingamePieceColorSwitchClassic(renderer, 100, 50, startMenuBtnColor, white, "Classic", loadMenuFontSmall);
+
     Button ingameDifficultySwitchEasy(renderer, 120, 50, startMenuBtnColor, white, "Easy", loadMenuFont);
     Button ingameDifficultySwitchMedium(renderer, 120, 50, startMenuBtnColor, white, "Medium", loadMenuFont);
     Button ingameDifficultySwitchHard(renderer, 120, 50, startMenuBtnColor, white, "Hard", loadMenuFont);
 
-    vector<ThemeList> themeList = {{ingameColorSwitchModern, modernPrimary, modernSecondary, "modern"},
-                                   {ingameColorSwitchClassic, classicPrimary, classicSecondary, "classic"},
-                                   {ingameColorSwitchFuturistic, futuristicPrimary, futuristicSecondary, "futuristic"}};
+    vector<ThemeList> themeList = {{ingameBoardColorSwitchModern, ingamePieceColorSwitchModern, modernPrimary, modernSecondary, "modern"},
+                                   {ingameBoardColorSwitchClassic, ingamePieceColorSwitchClassic, classicPrimary, classicSecondary, "classic"},
+                                   {ingameBoardColorSwitchFuturistic, ingamePieceColorSwitchFuturistic, futuristicPrimary, futuristicSecondary, "futuristic"}};
 
     vector<DifficultyList> difficultyList = {{ingameDifficultySwitchEasy, Difficulty::EASY},
                                              {ingameDifficultySwitchMedium, Difficulty::MEDIUM},
                                              {ingameDifficultySwitchHard, Difficulty::HARD}};
-
 
     Button undoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
     Button redoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
     Button beginBtn(renderer, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
     Button endBtn(renderer, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
 
-    int currentThemeIndex = 0;
+    int currentBoardThemeIndex = 0;
+    int currentPieceThemeIndex = 0;
     int currentDifficultyIndex = 0;
-    Button *currentThemeButton = &themeList[currentThemeIndex].button;
+    Button *currentBoardThemeButton = &themeList[currentBoardThemeIndex].boardButton;
+    Button *currentPieceThemeButton = &themeList[currentPieceThemeIndex].pieceButton;
     Button *currentDifficultyButton = &difficultyList[currentDifficultyIndex].button;
 
-    board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
-    board.setPieceTheme(themeList[currentThemeIndex].pieceTheme);
+    board.setColor(themeList[currentBoardThemeIndex].primaryColor, themeList[currentBoardThemeIndex].secondaryColor);
+    board.setPieceTheme(themeList[currentPieceThemeIndex].pieceTheme);
     communicator.setDifficulty(difficultyList[currentDifficultyIndex].difficulty);
     bool isUnderPromotion = false;
 
@@ -551,6 +559,7 @@ int main(int argc, char *args[])
     Button homeBtn(renderer, 250, 50, startMenuBtnColor, white, "Home", loadMenuFont);
     Button retryBtn(renderer, 250, 50, startMenuBtnColor, white, "Retry", loadMenuFont);
 
+    SDL_Rect settingLogoSeperator = {(SCREEN_WIDTH - 250) / 2, TOP_MARGIN - 60, 250, 5};
     vector<SDL_Rect> volumeRect(16, {-1, -1, -1, -1});
     Button *currentMusicState = &settingMuteMusic;
     //// Popup handling
@@ -610,7 +619,7 @@ int main(int argc, char *args[])
 
     auto GameGUIButtonsHandling = [&]()
     {
-        // currentThemeButton->handleEvent(&event);
+        // currentBoardThemeButton->handleEvent(&event);
         // if (isSinglePlayer)
         //     currentDifficultyButton->handleEvent(&event);
         saveBtn.handleEvent(&event);
@@ -626,11 +635,14 @@ int main(int argc, char *args[])
 
     auto ResetColor = [&]()
     {
-        currentThemeIndex = 0;
-        currentThemeButton->resetClicked();
-        currentThemeButton = &themeList[currentThemeIndex].button;
-        board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
-        board.setPieceTheme(themeList[currentThemeIndex].pieceTheme);
+        currentBoardThemeIndex = 0;
+        currentPieceThemeIndex = 0;
+        currentBoardThemeButton->resetClicked();
+        currentPieceThemeButton->resetClicked();
+        currentBoardThemeButton = &themeList[currentBoardThemeIndex].boardButton;
+        currentPieceThemeButton = &themeList[currentPieceThemeIndex].pieceButton;
+        board.setColor(themeList[currentBoardThemeIndex].primaryColor, themeList[currentBoardThemeIndex].secondaryColor);
+        board.setPieceTheme(themeList[currentPieceThemeIndex].pieceTheme);
         std::cerr << "Done resetting color\n";
     };
 
@@ -687,14 +699,14 @@ int main(int argc, char *args[])
         //     gameState.pushState(board.getFen());
         //     retryBtn.resetClicked(); // Reset button state
         // }
-        // if (currentThemeButton->clicked())
+        // if (currentBoardThemeButton->clicked())
         // {
         //     SDL_Log("Theme clicked");
-        //     currentThemeButton->resetClicked(); // Reset button state
+        //     currentBoardThemeButton->resetClicked(); // Reset button state
         //     // * To next color in circle
-        //     currentThemeIndex = (currentThemeIndex + 1) % 3;
-        //     currentThemeButton = &themeList[currentThemeIndex].button;
-        //     board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
+        //     currentBoardThemeIndex = (currentBoardThemeIndex + 1) % 3;
+        //     currentBoardThemeButton = &themeList[currentBoardThemeIndex].button;
+        //     board.setColor(themeList[currentBoardThemeIndex].primaryColor, themeList[currentBoardThemeIndex].secondaryColor);
 
         //     renderOnce = false;
         // }
@@ -712,11 +724,11 @@ int main(int argc, char *args[])
             SDL_Log("Setting clicked!");
             isOn = SETTINGS;
             previousState = GUI_State::GAME;
-            for (auto &theme : themeList)
-            {
-                // std::cerr << theme.button.getWidth() << " " << theme.button.getHeight() << "\n";
-                theme.button.setSize(250, 50);
-            }
+            // for (auto &theme : themeList)
+            // {
+            // std::cerr << theme.button.getWidth() << " " << theme.button.getHeight() << "\n";
+            // theme.boardButton.setSize(250, 50);
+            // }
             quitBtn.setSize(250, 50);
 
             settingBtn.resetClicked(); // Reset button state
@@ -992,7 +1004,8 @@ int main(int argc, char *args[])
                     // loadGame(board, files[i]);
                     // else
                     loadFileBtns[i].resetClicked();
-                    if (!loadGame(board, files[i], isSinglePlayer, communicator)) break;
+                    if (!loadGame(board, files[i], isSinglePlayer, communicator))
+                        break;
                     resetGameState();
                     board.resetBoardState(isEnded);
                     gameState.clear();
@@ -1301,7 +1314,7 @@ int main(int argc, char *args[])
                                     }
                                 }
                                 // std::cerr << "After if clause: \n";
-                                // ! ---- 
+                                // ! ----
                                 // Check if there is any king being checked
                                 // board.debugBoard();
                                 board.setRenderCheck(COLOR_NONE);
@@ -1485,7 +1498,7 @@ int main(int argc, char *args[])
                 }
             }
             // Render logo
-            SDL_RenderCopy(renderer, loadMenuTexture, NULL, &loadInfos);
+            SDL_RenderCopy(renderer, saveMenuTexture, NULL, &loadInfos);
             // Render Buttons
             for (int i = 0; i < saveFileBtns.size(); i++)
             {
@@ -1624,15 +1637,22 @@ int main(int argc, char *args[])
 
             backBtn.renderSVG("assets/game_button.svg", 50, 50, SVG_SCALE);
 
-            currentThemeButton->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN, SVG_SCALE);
-            currentMusicState->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 80, SVG_SCALE);
-            homeBtn.renderSVG("./assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 160, SVG_SCALE);
-            retryBtn.renderSVG("./assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 240, SVG_SCALE);
-            renderText(renderer, font, "Music Volume: " + std::to_string(backgroundMusic.getVolume()), white, {SCREEN_WIDTH / 2 - 50, TOP_MARGIN + 310, 100, 30});
+            TTF_Font *settingFont = TTF_OpenFont("./font/Recursive/static/Recursive_Casual-Bold.ttf", 42);
+            renderText(renderer, settingFont, "Settings", white, {(SCREEN_WIDTH - 250) / 2, TOP_MARGIN - 80 - 35, 250, 50});
+            SDL_SetRenderDrawColor(renderer, modernPrimary.getR(), modernPrimary.getG(), modernPrimary.getB(), modernPrimary.getA());
+            SDL_RenderFillRect(renderer, &settingLogoSeperator);
+
+            renderText(renderer, loadMenuFont, "Theme", white, {SCREEN_WIDTH / 2 - 50, TOP_MARGIN - 20, 100, 20});
+            renderText(renderer, loadMenuFontSmall, "Board theme", white, {(SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 20, 100, 20});
+            renderText(renderer, loadMenuFontSmall, "Piece theme", white, {SCREEN_WIDTH / 2 + 25, TOP_MARGIN + 20, 100, 20});
+            currentBoardThemeButton->renderSVG("assets/setting_button_small.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 50, SVG_SCALE);
+            currentPieceThemeButton->renderSVG("assets/setting_button_small.svg", (SCREEN_WIDTH / 2) + 25, TOP_MARGIN + 50, SVG_SCALE);
+            retryBtn.renderSVG("./assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 130, SVG_SCALE);
+            renderText(renderer, font, "Music Volume: " + std::to_string(backgroundMusic.getVolume()), white, {SCREEN_WIDTH / 2 - 50, TOP_MARGIN + 200, 100, 30});
             int volume = backgroundMusic.getVolume();
             for (int i = 0; i < volumeRect.size(); i++)
             {
-                volumeRect[i] = {SCREEN_WIDTH / 2 - 150 + 19 * i, TOP_MARGIN + 340, 15, 20};
+                volumeRect[i] = {SCREEN_WIDTH / 2 - 150 + 19 * i, TOP_MARGIN + 240, 15, 20};
                 if (volume)
                 {
                     SDL_SetRenderDrawColor(renderer, modernPrimary.getR(), modernPrimary.getG(), modernPrimary.getB(), modernPrimary.getA());
@@ -1645,9 +1665,11 @@ int main(int argc, char *args[])
                     SDL_RenderFillRect(renderer, &volumeRect[i]);
                 }
             }
-            settingDecreaseMusicVolume.renderSVG("assets/setting_button_small.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 380, SVG_SCALE);
-            settingIncreaseMusicVolume.renderSVG("assets/setting_button_small.svg", (SCREEN_WIDTH / 2) + 25, TOP_MARGIN + 380, SVG_SCALE);
-            quitBtn.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 460, SVG_SCALE);
+            settingDecreaseMusicVolume.renderSVG("assets/setting_button_small.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 280, SVG_SCALE);
+            settingIncreaseMusicVolume.renderSVG("assets/setting_button_small.svg", (SCREEN_WIDTH / 2) + 25, TOP_MARGIN + 280, SVG_SCALE);
+            currentMusicState->renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 360, SVG_SCALE);
+            homeBtn.renderSVG("./assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 440, SVG_SCALE);
+            quitBtn.renderSVG("assets/setting_button.svg", (SCREEN_WIDTH - 250) / 2, TOP_MARGIN + 520, SVG_SCALE);
 
             while (SDL_PollEvent(&event) != 0)
             {
@@ -1656,7 +1678,8 @@ int main(int argc, char *args[])
                     running = false;
                     break;
                 }
-                currentThemeButton->handleEvent(&event);
+                currentBoardThemeButton->handleEvent(&event);
+                currentPieceThemeButton->handleEvent(&event);
                 backBtn.handleEvent(&event);
                 homeBtn.handleEvent(&event);
                 retryBtn.handleEvent(&event);
@@ -1666,16 +1689,27 @@ int main(int argc, char *args[])
                 quitBtn.handleEvent(&event);
             }
 
-            if (currentThemeButton->clicked())
+            if (currentBoardThemeButton->clicked())
             {
                 SDL_Log("Theme clicked");
-                currentThemeButton->resetClicked(); // Reset button state
+                currentBoardThemeButton->resetClicked(); // Reset button state
                 // * To next color in circle
-                currentThemeIndex = (currentThemeIndex + 1) % 3;
-                currentThemeButton = &themeList[currentThemeIndex].button;
-                board.setColor(themeList[currentThemeIndex].primaryColor, themeList[currentThemeIndex].secondaryColor);
-                board.setPieceTheme(themeList[currentThemeIndex].pieceTheme);
-                std::cerr << "Theme setted to " << board.getTheme() << "\n";
+                currentBoardThemeIndex = (currentBoardThemeIndex + 1) % 3;
+                currentBoardThemeButton = &themeList[currentBoardThemeIndex].boardButton;
+                board.setColor(themeList[currentBoardThemeIndex].primaryColor, themeList[currentBoardThemeIndex].secondaryColor);
+
+                renderOnce = false;
+            }
+
+            if (currentPieceThemeButton->clicked())
+            {
+                SDL_Log("Piece theme clicked");
+                currentPieceThemeButton->resetClicked(); // Reset button state
+                // * To next color in circle
+                currentPieceThemeIndex = (currentPieceThemeIndex + 1) % 3;
+                currentPieceThemeButton = &themeList[currentPieceThemeIndex].pieceButton;
+                board.setPieceTheme(themeList[currentPieceThemeIndex].pieceTheme);
+                std::cerr << "Piece theme setted to " << board.getTheme() << "\n";
 
                 renderOnce = false;
             }
@@ -1686,10 +1720,10 @@ int main(int argc, char *args[])
                 isOn = previousState;
                 renderOnce = false;
 
-                for (auto &theme : themeList)
-                {
-                    theme.button.setSize(120, 50);
-                }
+                // for (auto &theme : themeList)
+                // {
+                //     theme.button.setSize(120, 50);
+                // }
                 quitBtn.setSize(120, 50);
 
                 break;
@@ -1760,7 +1794,7 @@ int main(int argc, char *args[])
 
             // Update screen
             SDL_RenderPresent(renderer);
-
+            TTF_CloseFont(settingFont);
             break;
         }
         }
@@ -1769,6 +1803,8 @@ int main(int argc, char *args[])
     // system("pause");
     backgroundMusic.stop();
     TTF_CloseFont(font);
+    TTF_CloseFont(loadMenuFont);
+    TTF_CloseFont(loadMenuFontSmall);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();

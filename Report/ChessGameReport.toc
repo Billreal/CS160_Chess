@@ -23,9 +23,14 @@
 \contentsline {subsection}{\numberline {2.3.1}Mouse event processing}{7}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Player's move}{7}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}AI's move}{7}{subsection.2.3.3}%
-\contentsline {chapter}{\numberline {3}Implementation Details}{8}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Organization}{8}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Libraries}{8}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Major component}{8}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Testing}{9}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Future Improvements}{10}{chapter.5}%
+\contentsline {section}{\numberline {2.4}User Interface}{8}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Consistent Color theme}{8}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Clarity and Simplicity}{8}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Minimalism in Navigation}{8}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Feedback and Interactivity}{8}{subsection.2.4.4}%
+\contentsline {chapter}{\numberline {3}Implementation Details}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Organization}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Libraries}{9}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Major component}{9}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Testing}{10}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Future Improvements}{11}{chapter.5}%

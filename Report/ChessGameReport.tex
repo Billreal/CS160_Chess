@@ -216,19 +216,17 @@ On player's turn, the program first push the current board configuration into st
 \subsection{Consistent Color theme}
 The game adopts the subtle green and beige color gradient, which was taken inspiration from a famous online Chess game website \href{https://chess.com/}{Chess.com}.
 
-The gradient is applied to UI elements like Chess board, Turn indicator, Buttons and menus. Different Themes also are provided for player to choose from.
+The gradient is applied to UI elements: chessboard, turn indicator, buttons and menus. Different themes are also provided for player to choose from.
 
 The game aims to support extended play sessions and reduce eye strain by implementing a dark mode with muted Gray and Green asthetic.
 \subsection{Clarity and Simplicity}
 The game utilizes clean, flat design elements that align with the Windows 11 Fluent Design language to ensure a modern and accessible look.
 
-Prioritize clear visibility of the board and pieces. Use distinct, high-contrast color pallete to enhance focus.
+Clear visibility of the board and pieces is prioritized. To enhance focus, the design uses distinct, high-contrast color palletes.
 
-Visual distractions are limitedby avoiding excessive animations or decorative elements that do not serve gameplay.
+Visual distractions are limited by avoiding excessive animations or decorative elements that do not serve gameplay.
 \subsection{Minimalism in Navigation}
-The game implements an intuitive and minimal navigation bar with essential options (e.g., Play, Load, Settings). Avoid clutter by grouping advanced features under expandable menus.
-
-Keep action buttons (e.g., "Undo," "Redo") clearly labeled and easily accessible near the board without overwhelming the screen space.
+The game implements an intuitive and minimal navigation bar with essential options (e.g., Play, Load, Settings), avoiding clutter by grouping advanced features under expandable menus. Action buttons (e.g., "Undo," "Redo") are kept clearly labeled and easily accessible near the board without overwhelming the screen space.
 \subsection{Feedback and Interactivity}
 The game provides immediate visual feedback for actions, such as highlighting selectable pieces, legal moves and errors (e.g., illegal moves).
 
@@ -249,11 +247,13 @@ There are three major component: General logic, board, and communicator.
 
 The project is tested by playtesting, in which simple games are played and all interaction that player might do is performed in order to detect bugs and ensure good experience.
 
-While testing, we find that at any given moment, the game only run single task, that is, while the AI is evaluating best move any input is blocked. Also, the game does not have any feature of checking pawn that is eligible for promotion on loading saved game.
+While testing, we find that at any given moment, the game only run single task, that is, while the AI is evaluating best move any input is blocked. 
 
 \chapter{Future Improvements}
 \begin{enumerate}
   \item Implementation of board rotation for better user experience.
-  \item Fix the inconsistency between x-axis, y-axis of screen and row, column of 2D array representation. The inconsistency made board's methods seems confusing to use.
+  \item In single player mode, user can choose to play in either black or white color.
+  \item Fix the inconsistency between x-axis, y-axis of screen and row, column of 2D array representation, which created confusion in how the methods of board to be used. 
+  \item Implement multi-threading, which is supposed to fix the issue of freezing the game while the AI is evaluating
 \end{enumerate}
 \end{document}

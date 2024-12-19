@@ -534,10 +534,10 @@ int main(int argc, char *args[])
                                              {ingameDifficultySwitchMedium, Difficulty::MEDIUM},
                                              {ingameDifficultySwitchHard, Difficulty::HARD}};
 
-    Button undoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
-    Button redoBtn(renderer, 34, 50, startMenuBtnColor, white, "", loadMenuFont);
-    Button beginBtn(renderer, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
-    Button endBtn(renderer, 59, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button undoBtn(renderer, 50, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button redoBtn(renderer, 50, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button beginBtn(renderer, 50, 50, startMenuBtnColor, white, "", loadMenuFont);
+    Button endBtn(renderer, 50, 50, startMenuBtnColor, white, "", loadMenuFont);
 
     int currentBoardThemeIndex = 0;
     int currentPieceThemeIndex = 0;
@@ -611,10 +611,10 @@ int main(int argc, char *args[])
         // if (isSinglePlayer)
         //     currentDifficultyButton->renderSVG("./assets/game_button.svg", SCREEN_WIDTH - (SIDE_MARGIN + 130), TOP_MARGIN + 440, SVG_SCALE);
 
-        undoBtn.renderPNG("./assets/undo.png", SIDE_MARGIN + bottomPanelWidth / 2 - 34 - 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
-        redoBtn.renderPNG("./assets/redo.png", SIDE_MARGIN + bottomPanelWidth / 2 + 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
-        beginBtn.renderPNG("./assets/begin.png", SIDE_MARGIN + bottomPanelWidth / 2 - 5 - 34 - 10 - 59, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
-        endBtn.renderPNG("./assets/end.png", SIDE_MARGIN + bottomPanelWidth / 2 + 5 + 34 + 10, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10);
+        undoBtn.renderSVG("./assets/undo.svg", SIDE_MARGIN + bottomPanelWidth / 2 - 50 - 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, SVG_SCALE);
+        redoBtn.renderSVG("./assets/redo.svg", SIDE_MARGIN + bottomPanelWidth / 2 + 5, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, SVG_SCALE);
+        beginBtn.renderSVG("./assets/begin.svg", SIDE_MARGIN + bottomPanelWidth / 2 - 5 - 50 - 10 - 50, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, SVG_SCALE);
+        endBtn.renderSVG("./assets/end.svg", SIDE_MARGIN + bottomPanelWidth / 2 + 5 + 50 + 10, SCREEN_HEIGHT - panelMargin - bottomPanelHeight + 10, SVG_SCALE);
     };
 
     auto GameGUIButtonsHandling = [&]()

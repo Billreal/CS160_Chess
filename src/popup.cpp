@@ -102,9 +102,9 @@ void Popup::render(std::string textPrimary, std::string textSecondary, int paddi
 
 void Popup::render(std::string text, int padding)
 {
-    // SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
     // if (popupBg == semiDark)
-    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup_semidark.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    // SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup_semidark.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
 
     if (!popupTexture)
     {
@@ -120,7 +120,8 @@ void Popup::render(std::string text, int padding)
 
 void Popup::renderDifficulty(std::string text, int padding)
 {
-    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    // SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
+    SDL_Texture *popupTexture = loadTexture((std::string) "./assets/popup_semidark.svg", POPUP_LENGTH, POPUP_LENGTH, SVG_SCALE);
     if (!popupTexture)
     {
         std::cerr << "Failed to load popup texture\n";

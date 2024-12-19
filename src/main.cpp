@@ -568,6 +568,8 @@ int main(int argc, char *args[])
     bool isToRenderPopupDelete = false;
     int saveFileId, deleteSaveFileId;
 
+    SDL_Rect saveInfos = {60, 100, 900, 850};
+
     //// Pseudo codes
     auto resetGameState = [&]()
     {
@@ -1500,7 +1502,7 @@ int main(int argc, char *args[])
                 }
             }
             // Render logo
-            SDL_RenderCopy(renderer, saveMenuTexture, NULL, &loadInfos);
+            SDL_RenderCopy(renderer, saveMenuTexture, NULL, &saveInfos);
             // Render Buttons
             for (int i = 0; i < saveFileBtns.size(); i++)
             {
@@ -1510,7 +1512,7 @@ int main(int argc, char *args[])
             {
                 deleteSaveFileBtns[i].renderSVG("./assets/x_circle.svg", 350, 240 + i * 90, SVG_SCALE * 1.25);
             }
-            backBtn.renderSVG("assets/game_button.svg", 120, 800, SVG_SCALE);
+            backBtn.renderSVG("assets/game_button.svg", 800, 120, SVG_SCALE);
 
             // Save confirmation popup
             if (isToRenderPopupSave)

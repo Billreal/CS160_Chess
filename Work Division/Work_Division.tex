@@ -1,0 +1,91 @@
+\documentclass[a4paper, 10pt, titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english, vietnamese]{babel}
+\usepackage{authblk}
+\usepackage{setspace}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{graphicx}
+\graphicspath{ {./figures/} }
+\usepackage{subcaption}
+\usepackage{amsmath}
+% \usepackage{lineno}
+\usepackage[hidelinks]{hyperref}
+\usepackage{mlmodern}
+\usepackage{svg}
+% \linenumbers
+\selectlanguage{english}
+%%%%%% Bibliography %%%%%%
+% Replace "sample" in the \addbibresource line below with the name of your .bib file.
+\usepackage[style=nejm, 
+citestyle=numeric-comp,
+sorting=none]{biblatex}
+\usepackage{listings}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
+% \addbibresource{sample.bib}
+
+%%%%%% Title %%%%%%
+% Full titles can be a maximum of 100 characters, including spaces. Do not use abbreviations.
+% Title Format: Use title case, capitalizing the first letter of each word, except for certain small words, such as articles and short prepositions
+\title{Work Division}
+
+%%%%%% Authors %%%%%%
+% Authors should be listed in order of contribution to the paper, by first name, then middle initial (if any), followed by last name.
+% Authors should be listed in the order in which they will appear in the published version if the manuscript is accepted. 
+% Use an asterisk (*) to identify the corresponding author, and be sure to include that person’s e-mail address. Use symbols (in this order: †, ‡, §, ||, ¶, #, ††, ‡‡, etc.) for author notes, such as present addresses, “These authors contributed equally to this work” notations, and similar information.
+\begin{otherlanguage}{vietnam}
+\date{Last edited day: \selectlanguage{english}\today}
+\end{otherlanguage}
+%%%%%% Affiliations %%%%%%
+
+%%%%%% Date %%%%%%
+% Date is optional
+% \date{}
+
+%%%%%% Spacing %%%%%%
+% Use paragraph spacing of 1.5 or 2 (for double spacing, use command \doublespacing)
+\onehalfspacing
+
+\begin{document}
+\maketitle
+\section{Team members}
+\begin{enumerate}
+    \item Nguyễn Hoàng Thuận Phát - 24125072
+    \item Huỳnh Tấn Phúc - 24125017
+\end{enumerate}
+\section{Responsibilities}
+Both members has contributed in both frontend and backend aspects. However, the main responsibility is as following:
+\subsection{ Member: Nguyễn Hoàng Thuận Phát - 24125072}
+Responsible for development of backend features, including the logic, algorithm and communication with Stockfish. The noticable contributions is implementation of generation of possible moves and captures
+Developed files:
+\ttfamily
+\begin{enumerate}
+    \item main.cpp
+    \item board.cpp
+    \item color.cp
+    \item colorScheme.cpp
+    \item communicator.cpp
+    \item coordinate.cpp
+    \item music.cpp
+    \item pieces.cpp
+    \item sound.cpp
+\end{enumerate}
+\rmfamily
+\subsection{Member: Huỳnh Tấn Phúc - 24125017}
+Responsible for development of frontend elements, including user interface, user experience. The noticable contributions is implementation of buttons and menu, the smooth rendering process and the implementation of game state manager which is the backbone for undo and redo features.
+Developed files:
+\ttfamily
+\begin{enumerate}
+    \item main.cpp
+    \item board.cpp
+    \item gameStateManager.cpp
+    \item popup.cpp
+    \item button.cpp
+\end{enumerate}
+\rmfamily
+\section{Collaboration tools}
+We used Git and Github as tool to manage versions of source code and collaboration
+\end{document}

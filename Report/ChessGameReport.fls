@@ -365,6 +365,38 @@ INPUT .\AI move.png
 INPUT .\AI move.png
 INPUT .\AI move.png
 INPUT .\AI move.png
+INPUT .\start_screen.png
+INPUT .\start_screen.png
+INPUT .\start_screen.png
+INPUT .\start_screen.png
+INPUT .\start_screen.png
+INPUT .\start_screen.png
+INPUT .\start_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\load_screen.png
+INPUT .\load_screen.png
+INPUT .\load_screen.png
+INPUT .\load_screen.png
+INPUT .\load_screen.png
+INPUT .\load_screen.png
+INPUT .\load_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\game_screen.png
+INPUT .\settings_screen.png
+INPUT .\settings_screen.png
+INPUT .\settings_screen.png
+INPUT .\settings_screen.png
+INPUT .\settings_screen.png
+INPUT .\settings_screen.png
+INPUT .\settings_screen.png
 INPUT ChessGameReport.aux
 INPUT .\ChessGameReport.out
 INPUT .\ChessGameReport.out

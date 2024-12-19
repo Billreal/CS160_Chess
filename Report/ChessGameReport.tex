@@ -201,12 +201,15 @@ Then, user can build the project by running \texttt{./buildscriptwindows.ps1} or
 
 An alternative way for building the project if the above methods doesn't work is to run \\ \texttt{BuildScriptWindows.ps1} file in powershell. 
 
-\section{Architecture design}
+\section{Overview}
 \includesvg[width = 500pt, height = 600pt, angle = 0]{altDecision.svg}
 
 \section{Processes}
+\subsection{Mouse event processing}
+On mouse button pressed, the mouse's position is is checked if it is in bound of board. If it is true, the prgogram will register it as mouse holding until the mouse button is released, otherwise it will register a mouse click.
 \subsection{Player's move}
 \includegraphics[width = \linewidth]{MOve diagram.png}
+On player's turn, the program first push the current board configuration into state manager, which is demonstrated at the first two action of the diagram. Then, the program will process player's input by mouse. On pressing on a piece that is of the color of player then release it somewhere on the game canvas, the program follows the rest of the diagram
 \subsection{AI's move}
 \includegraphics[width = \linewidth]{AI move.png}
 

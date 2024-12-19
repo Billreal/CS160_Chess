@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  18 DEC 2024 17:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  19 DEC 2024 16:39
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1064,7 +1064,7 @@ File: ot1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 Chapter 2.
 Package svg Info: Last page of `./svg-inkscape/altDecision_svg-tex.pdf' is 1 on input line 205.
 (svg-inkscape/altDecision_svg-tex.pdf_tex
-<./svg-inkscape/altDecision_svg-tex.pdf, id=166, page=1, 1423.56844pt x 791.20593pt>
+<./svg-inkscape/altDecision_svg-tex.pdf, id=171, page=1, 1423.56844pt x 791.20593pt>
 File: ./svg-inkscape/altDecision_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/altDecision_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/altDecision_svg-tex.pdf , page1 used on input line 56.
@@ -1074,20 +1074,20 @@ Overfull \hbox (47.0321pt too wide) in paragraph at lines 205--206
 [] 
  []
 
-<MOve diagram.png, id=167, 3854.4pt x 1549.79pt>
-File: MOve diagram.png Graphic file (type png)
-<use MOve diagram.png>
-Package pdftex.def Info: MOve diagram.png  used on input line 209.
-(pdftex.def)             Requested size: 452.9679pt x 182.11217pt.
 
 
 [6
 
  <./svg-inkscape/altDecision_svg-tex.pdf>]
-<AI move.png, id=259, 3854.4pt x 1681.28125pt>
+<MOve diagram.png, id=262, 3854.4pt x 1549.79pt>
+File: MOve diagram.png Graphic file (type png)
+<use MOve diagram.png>
+Package pdftex.def Info: MOve diagram.png  used on input line 211.
+(pdftex.def)             Requested size: 452.9679pt x 182.11217pt.
+<AI move.png, id=264, 3854.4pt x 1681.28125pt>
 File: AI move.png Graphic file (type png)
 <use AI move.png>
-Package pdftex.def Info: AI move.png  used on input line 211.
+Package pdftex.def Info: AI move.png  used on input line 214.
 (pdftex.def)             Requested size: 452.9679pt x 197.5634pt.
 
 
@@ -1115,23 +1115,23 @@ LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-07-20>
  ***********
 Package rerunfilecheck Info: File `ChessGameReport.out' has not changed.
-(rerunfilecheck)             Checksum: 0989051E39EF4D041348820F20342863;3119.
+(rerunfilecheck)             Checksum: 005A082CFEE2B2DFB46C963D7EADA306;3239.
 Package logreq Info: Writing requests to 'ChessGameReport.run.xml'.
 \openout1 = `ChessGameReport.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24254 strings out of 473899
- 439225 string characters out of 5726500
+ 24256 strings out of 473899
+ 439259 string characters out of 5726500
  1938960 words of memory out of 5000000
- 46716 multiletter control sequences out of 15000+600000
+ 46717 multiletter control sequences out of 15000+600000
  612084 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  94i,7n,93p,767b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on ChessGameReport.pdf (12 pages, 576258 bytes).
+Output written on ChessGameReport.pdf (12 pages, 577679 bytes).
 PDF statistics:
- 326 PDF objects out of 1000 (max. 8388607)
- 38 named destinations out of 1000 (max. 500000)
- 225 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 331 PDF objects out of 1000 (max. 8388607)
+ 39 named destinations out of 1000 (max. 500000)
+ 233 words of extra memory for PDF output out of 10000 (max. 10000000)
 

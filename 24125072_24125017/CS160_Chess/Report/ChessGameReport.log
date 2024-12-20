@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  20 DEC 2024 12:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  20 DEC 2024 23:08
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**d:/University/Programming/Cplusplus/Project/CS160_Chess/Report/ChessGameReport.tex
-(d:/University/Programming/Cplusplus/Project/CS160_Chess/Report/ChessGameReport.tex
+**d:/University/Programming/Cplusplus/Project/CS160_Chess/24125072_24125017/CS160_Chess/Report/ChessGameReport.tex
+(d:/University/Programming/Cplusplus/Project/CS160_Chess/24125072_24125017/CS160_Chess/Report/ChessGameReport.tex
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-07-20>
 (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/base\report.cls
@@ -1053,7 +1053,7 @@ Overfull \hbox (4.8655pt too wide) in paragraph at lines 84--85
 {C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}]
 
 [3]
-LaTeX Font Info:    Trying to load font information for OT1+mlmtt on input line 150.
+LaTeX Font Info:    Trying to load font information for OT1+mlmtt on input line 151.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ot1mlmtt.fd
 File: ot1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
@@ -1062,7 +1062,7 @@ File: ot1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 
 [5]
 Chapter 2.
-Package svg Info: Last page of `./svg-inkscape/altDecision_svg-tex.pdf' is 1 on input line 205.
+Package svg Info: Last page of `./svg-inkscape/altDecision_svg-tex.pdf' is 1 on input line 206.
 (svg-inkscape/altDecision_svg-tex.pdf_tex
 <./svg-inkscape/altDecision_svg-tex.pdf, id=196, page=1, 1423.56844pt x 791.20593pt>
 File: ./svg-inkscape/altDecision_svg-tex.pdf Graphic file (type pdf)
@@ -1070,7 +1070,7 @@ File: ./svg-inkscape/altDecision_svg-tex.pdf Graphic file (type pdf)
 Package pdftex.def Info: ./svg-inkscape/altDecision_svg-tex.pdf , page1 used on input line 56.
 (pdftex.def)             Requested size: 500.0pt x 277.89204pt.
 )
-Overfull \hbox (47.0321pt too wide) in paragraph at lines 205--206
+Overfull \hbox (47.0321pt too wide) in paragraph at lines 206--207
 [] 
  []
 
@@ -1082,12 +1082,12 @@ Overfull \hbox (47.0321pt too wide) in paragraph at lines 205--206
 <MOve diagram.png, id=287, 3854.4pt x 1549.79pt>
 File: MOve diagram.png Graphic file (type png)
 <use MOve diagram.png>
-Package pdftex.def Info: MOve diagram.png  used on input line 211.
+Package pdftex.def Info: MOve diagram.png  used on input line 212.
 (pdftex.def)             Requested size: 452.9679pt x 182.11217pt.
 <AI move.png, id=289, 3854.4pt x 1681.28125pt>
 File: AI move.png Graphic file (type png)
 <use AI move.png>
-Package pdftex.def Info: AI move.png  used on input line 214.
+Package pdftex.def Info: AI move.png  used on input line 215.
 (pdftex.def)             Requested size: 452.9679pt x 197.5634pt.
 
 
@@ -1095,37 +1095,37 @@ Package pdftex.def Info: AI move.png  used on input line 214.
 <start_screen.png, id=297, 1125.45468pt x 1123.19624pt>
 File: start_screen.png Graphic file (type png)
 <use start_screen.png>
-Package pdftex.def Info: start_screen.png  used on input line 236.
+Package pdftex.def Info: start_screen.png  used on input line 237.
 (pdftex.def)             Requested size: 452.9679pt x 452.06412pt.
 <game_screen.png, id=298, 1121.69063pt x 1126.96031pt>
 File: game_screen.png Graphic file (type png)
 <use game_screen.png>
-Package pdftex.def Info: game_screen.png  used on input line 243.
+Package pdftex.def Info: game_screen.png  used on input line 244.
 (pdftex.def)             Requested size: 452.9679pt x 455.09233pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 247--248
+Underfull \hbox (badness 10000) in paragraph at lines 248--249
 
  []
 
 <load_screen.png, id=299, 1122.44344pt x 1125.45468pt>
 File: load_screen.png Graphic file (type png)
 <use load_screen.png>
-Package pdftex.def Info: load_screen.png  used on input line 250.
+Package pdftex.def Info: load_screen.png  used on input line 251.
 (pdftex.def)             Requested size: 452.9679pt x 454.17522pt.
 <save_screen.png, id=300, 1124.70187pt x 1131.47719pt>
 File: save_screen.png Graphic file (type png)
 <use save_screen.png>
-Package pdftex.def Info: save_screen.png  used on input line 257.
+Package pdftex.def Info: save_screen.png  used on input line 258.
 (pdftex.def)             Requested size: 452.9679pt x 455.69055pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 261--262
+Underfull \hbox (badness 10000) in paragraph at lines 262--263
 
  []
 
 <settings_screen.png, id=301, 1123.19624pt x 1129.97156pt>
 File: settings_screen.png Graphic file (type png)
 <use settings_screen.png>
-Package pdftex.def Info: settings_screen.png  used on input line 264.
+Package pdftex.def Info: settings_screen.png  used on input line 265.
 (pdftex.def)             Requested size: 452.9679pt x 455.68764pt.
 
 
@@ -1169,17 +1169,17 @@ Package logreq Info: Writing requests to 'ChessGameReport.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24327 strings out of 473899
- 440578 string characters out of 5726500
+ 24329 strings out of 473899
+ 440980 string characters out of 5726500
  1938960 words of memory out of 5000000
  46770 multiletter control sequences out of 15000+600000
  612084 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 94i,7n,93p,767b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 94i,7n,93p,797b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on ChessGameReport.pdf (18 pages, 1384127 bytes).
+Output written on ChessGameReport.pdf (18 pages, 1385100 bytes).
 PDF statistics:
- 402 PDF objects out of 1000 (max. 8388607)
- 57 named destinations out of 1000 (max. 500000)
+ 404 PDF objects out of 1000 (max. 8388607)
+ 59 named destinations out of 1000 (max. 500000)
  298 words of extra memory for PDF output out of 10000 (max. 10000000)
 

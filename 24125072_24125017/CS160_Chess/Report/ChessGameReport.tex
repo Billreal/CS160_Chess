@@ -143,7 +143,8 @@ breaklines=true
           \item Status of king is examined during moves generating and after all special moves.
         \end{itemize}
   \item Selected cell's ending cell is compared in its legal moves and captures list. Each move is simulated while creating the list to ensure that move does not put the king in check.
-  \item In case of stalemate or checkmate, any chess piece cannot be moved. In such case, a pop-up menu is displayed to ask if user want to continue another game. If yes button is clicked, the game reset to starting configration with the current game mode. If no button is clicked, the game quits. If the menu is turned off, the game still function as normal, yet the board cannot be interacted with.
+  \item In case of checkmate, any chess piece cannot be moved. In such case, a pop-up menu is displayed to ask if user want to continue another game. If yes button is clicked, the game reset to starting configration with the current game mode. If no button is clicked, the game quits. If the menu is turned off, the game still function as normal, yet the board cannot be interacted with.
+  \item If 50 half-moves have been done without any capture or pawn movement, or stalemate happens, the game ends in tie. The events after the game ends in tie is similar to the events after the game ends in checkmate. 
 \end{itemize}
 \section{AI Opponent}
 Stockfish is initialized before running with
@@ -281,7 +282,7 @@ There are three major component: General logic, board, and communicator.
 
 The project is tested by playtesting, in which simple games are played and all interaction that player might do is performed in order to detect bugs and ensure good experience.
 
-While testing, we find that at any given moment, the game only run single task, that is, while the AI is evaluating best move any input is blocked. 
+While testing, we find that at any given moment, the game only run single task, that is, while the AI is evaluating best move any input is blocked. Also, the game's windows is obstructed when the scaling of screen is greater than 100\%.
 
 \chapter{Future Improvements}
 \begin{enumerate}
@@ -289,5 +290,7 @@ While testing, we find that at any given moment, the game only run single task, 
   \item In single player mode, user can choose to play in either black or white color.
   \item Fix the inconsistency between x-axis, y-axis of screen and row, column of 2D array representation, which created confusion in how the methods of board to be used. 
   \item Implement multi-threading, which is supposed to fix the issue of freezing the game while the AI is evaluating
+  \item Implement tie due to insufficient material, tie due to dead position and tie due to threefold repetition. 
+  \item Implement scalable windows that is adaptive to different screen size and scale level.
 \end{enumerate}
 \end{document}

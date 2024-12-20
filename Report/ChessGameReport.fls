@@ -386,10 +386,13 @@ INPUT .\load_screen.png
 INPUT .\load_screen.png
 INPUT .\load_screen.png
 INPUT .\load_screen.png
-INPUT .\game_screen.png
-INPUT .\game_screen.png
-INPUT .\game_screen.png
-INPUT .\game_screen.png
+INPUT .\save_screen.png
+INPUT .\save_screen.png
+INPUT .\save_screen.png
+INPUT .\save_screen.png
+INPUT .\save_screen.png
+INPUT .\save_screen.png
+INPUT .\save_screen.png
 INPUT .\settings_screen.png
 INPUT .\settings_screen.png
 INPUT .\settings_screen.png

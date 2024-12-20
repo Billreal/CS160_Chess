@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  19 DEC 2024 19:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  20 DEC 2024 12:43
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -872,40 +872,40 @@ Package biblatex Warning: 'babel/polyglossia' detected but 'csquotes' missing.
 
 \@quotelevel=\count452
 \@quotereset=\count453
-LaTeX Font Info:    Trying to load font information for OT1+mlmr on input line 52.
+LaTeX Font Info:    Trying to load font information for OT1+mlmr on input line 51.
 (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\ot1mlmr.fd
 File: ot1mlmr.fd 2021/01/11 v1.0 Font defs for mlmodern
 ) (Work_Division.aux
-LaTeX Font Info:    Trying to load font information for T5+mlmr on input line 12.
+LaTeX Font Info:    Trying to load font information for T5+mlmr on input line 11.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\t5mlmr.fd
 File: t5mlmr.fd 2021/01/11 v1.0 Font defs for mlmodern
 ))
 \openout1 = `Work_Division.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 52.
-LaTeX Font Info:    Trying to load font information for T5+cmr on input line 52.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 51.
+LaTeX Font Info:    Trying to load font information for T5+cmr on input line 51.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/vntex\t5cmr.fd
 File: t5cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -964,7 +964,7 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 52.
+Package hyperref Info: Link coloring OFF on input line 51.
  (Work_Division.out) (Work_Division.out)
 \@outlinefile=\write5
 \openout5 = `Work_Division.out'.
@@ -974,7 +974,7 @@ Package biblatex Info: ... file 'vietnamese.lbx' not found.
 
 
 Package biblatex Warning: Language 'vietnamese' not supported.
-(biblatex)                Using dummy definitions on input line 52.
+(biblatex)                Using dummy definitions on input line 51.
 
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
@@ -989,19 +989,15 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'Work_Division.bbl' found.
  (Work_Division.bbl)
-Package biblatex Info: Reference section=0 on input line 52.
-Package biblatex Info: Reference segment=0 on input line 52.
+Package biblatex Info: Reference section=0 on input line 51.
+Package biblatex Info: Reference segment=0 on input line 51.
 \c@lstlisting=\count460
 
 
 [1
 
-{C:/Users/Admin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-t5.enc}
-
-LaTeX Warning: No \author given.
-
-{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}]
-LaTeX Font Info:    Trying to load font information for T5+mlmtt on input line 64.
+{C:/Users/Admin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-t5.enc}{C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}]
+LaTeX Font Info:    Trying to load font information for T5+mlmtt on input line 63.
  (C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex/latex/mlmodern\t5mlmtt.fd
 File: t5mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
@@ -1010,7 +1006,7 @@ File: t5mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.91 \end{document}
+l.90 \end{document}
                     [1] (Work_Division.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
@@ -1023,15 +1019,15 @@ Package logreq Info: Writing requests to 'Work_Division.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24051 strings out of 473899
- 434459 string characters out of 5726500
+ 24033 strings out of 473899
+ 434070 string characters out of 5726500
  1935960 words of memory out of 5000000
- 46563 multiletter control sequences out of 15000+600000
+ 46545 multiletter control sequences out of 15000+600000
  595846 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  94i,5n,93p,774b,1226s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on Work_Division.pdf (2 pages, 102241 bytes).
+Output written on Work_Division.pdf (2 pages, 101816 bytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
  23 named destinations out of 1000 (max. 500000)

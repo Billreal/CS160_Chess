@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  19 DEC 2024 19:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.10)  20 DEC 2024 12:40
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1095,36 +1095,37 @@ Package pdftex.def Info: AI move.png  used on input line 214.
 <start_screen.png, id=297, 1125.45468pt x 1123.19624pt>
 File: start_screen.png Graphic file (type png)
 <use start_screen.png>
-Package pdftex.def Info: start_screen.png  used on input line 234.
+Package pdftex.def Info: start_screen.png  used on input line 236.
 (pdftex.def)             Requested size: 452.9679pt x 452.06412pt.
 <game_screen.png, id=298, 1121.69063pt x 1126.96031pt>
 File: game_screen.png Graphic file (type png)
 <use game_screen.png>
-Package pdftex.def Info: game_screen.png  used on input line 241.
+Package pdftex.def Info: game_screen.png  used on input line 243.
 (pdftex.def)             Requested size: 452.9679pt x 455.09233pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 245--246
+Underfull \hbox (badness 10000) in paragraph at lines 247--248
 
  []
 
 <load_screen.png, id=299, 1122.44344pt x 1125.45468pt>
 File: load_screen.png Graphic file (type png)
 <use load_screen.png>
-Package pdftex.def Info: load_screen.png  used on input line 248.
+Package pdftex.def Info: load_screen.png  used on input line 250.
 (pdftex.def)             Requested size: 452.9679pt x 454.17522pt.
-File: game_screen.png Graphic file (type png)
-<use game_screen.png>
-Package pdftex.def Info: game_screen.png  used on input line 255.
-(pdftex.def)             Requested size: 452.9679pt x 455.09233pt.
+<save_screen.png, id=300, 1124.70187pt x 1131.47719pt>
+File: save_screen.png Graphic file (type png)
+<use save_screen.png>
+Package pdftex.def Info: save_screen.png  used on input line 257.
+(pdftex.def)             Requested size: 452.9679pt x 455.69055pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 259--260
+Underfull \hbox (badness 10000) in paragraph at lines 261--262
 
  []
 
-<settings_screen.png, id=300, 1123.19624pt x 1129.97156pt>
+<settings_screen.png, id=301, 1123.19624pt x 1129.97156pt>
 File: settings_screen.png Graphic file (type png)
 <use settings_screen.png>
-Package pdftex.def Info: settings_screen.png  used on input line 262.
+Package pdftex.def Info: settings_screen.png  used on input line 264.
 (pdftex.def)             Requested size: 452.9679pt x 455.68764pt.
 
 
@@ -1136,7 +1137,7 @@ Package pdftex.def Info: settings_screen.png  used on input line 262.
 
 [11 <./load_screen.png>]
 
-[12]
+[12 <./save_screen.png>]
 
 [13 <./settings_screen.png>]
 Chapter 3.
@@ -1168,17 +1169,17 @@ Package logreq Info: Writing requests to 'ChessGameReport.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24321 strings out of 473899
- 440441 string characters out of 5726500
+ 24327 strings out of 473899
+ 440578 string characters out of 5726500
  1938960 words of memory out of 5000000
- 46764 multiletter control sequences out of 15000+600000
+ 46770 multiletter control sequences out of 15000+600000
  612084 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  94i,7n,93p,767b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmbx12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr10.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr12.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmr17.pfb><C:/Users/Admin/AppData/Local/Programs/MiKTeX/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on ChessGameReport.pdf (18 pages, 1189116 bytes).
+Output written on ChessGameReport.pdf (18 pages, 1384127 bytes).
 PDF statistics:
- 400 PDF objects out of 1000 (max. 8388607)
+ 402 PDF objects out of 1000 (max. 8388607)
  57 named destinations out of 1000 (max. 500000)
- 293 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 298 words of extra memory for PDF output out of 10000 (max. 10000000)
 

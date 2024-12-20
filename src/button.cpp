@@ -143,7 +143,7 @@ void Button::renderSVG(std::string svgFilePath, int x, int y, double scale)
     // Render text
     if (text.empty())
     {
-        std::cerr << "Text is empty\n";
+        // std::cerr << "Text is empty\n";
         return;
     }
     SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);

@@ -362,7 +362,7 @@ int main(int argc, char *args[])
     Communicator communicator(isCommunicatorEnabled);
     Music backgroundMusic("assets/effects/fallen.mp3");
     Sound soundboard;
-    std::cerr << "Done setting volume\n";
+    // std::cerr << "Done setting volume\n";
     std::cerr << "Done setting volume\n";
     soundboard.loadSoundEffect(SoundEffect::PICKUP, "assets/effects/notify.mp3");
     soundboard.loadSoundEffect(SoundEffect::CAPTURE, "assets/effects/capture.mp3");
@@ -460,7 +460,7 @@ int main(int argc, char *args[])
     std::vector<Button> deleteSaveFileBtns;
     for (int i = 0; i < files.size(); i++)
     {
-        std::cerr << files[i] << "\n";
+        // std::cerr << files[i] << "\n";
         string name = "";
         for (int j = 0; j < files[i].length() - 3; j++)
         {
@@ -745,11 +745,11 @@ int main(int argc, char *args[])
                 board.resetBoardState(isEnded);
 
                 currentMoveColor = board.getMoveColor();
-                if (currentMoveColor)
-                    std::cerr << "Black\n";
-                else
-                    std::cerr << "White\n";
-                std::cerr << prevFen << "\n";
+                // if (currentMoveColor)
+                //     std::cerr << "Black\n";
+                // else
+                //     std::cerr << "White\n";
+                // std::cerr << prevFen << "\n";
                 renderOnce = false;
             }
             undoBtn.resetClicked(); // Reset button state
@@ -764,11 +764,11 @@ int main(int argc, char *args[])
                 board.resetBoardState(isEnded);
 
                 currentMoveColor = board.getMoveColor();
-                if (currentMoveColor)
-                    std::cerr << "Black\n";
-                else
-                    std::cerr << "White\n";
-                std::cerr << nextFen << "\n";
+                // if (currentMoveColor)
+                //     std::cerr << "Black\n";
+                // else
+                //     std::cerr << "White\n";
+                // std::cerr << nextFen << "\n";
                 renderOnce = false;
             }
             redoBtn.resetClicked(); // Reset button state
@@ -781,11 +781,11 @@ int main(int argc, char *args[])
             board.resetBoardState(isEnded);
 
             currentMoveColor = board.getMoveColor();
-            if (currentMoveColor)
-                std::cerr << "Black\n";
-            else
-                std::cerr << "White\n";
-            std::cerr << nextFen << "\n";
+            // if (currentMoveColor)
+            //     std::cerr << "Black\n";
+            // else
+            //     std::cerr << "White\n";
+            // std::cerr << nextFen << "\n";
             renderOnce = false;
             beginBtn.resetClicked(); // Reset button state
         }
@@ -797,11 +797,11 @@ int main(int argc, char *args[])
             board.resetBoardState(isEnded);
 
             currentMoveColor = board.getMoveColor();
-            if (currentMoveColor)
-                std::cerr << "Black\n";
-            else
-                std::cerr << "White\n";
-            std::cerr << nextFen << "\n";
+            // if (currentMoveColor)
+            //     std::cerr << "Black\n";
+            // else
+            //     std::cerr << "White\n";
+            // std::cerr << nextFen << "\n";
             renderOnce = false;
             endBtn.resetClicked(); // Reset button state
         }
@@ -1020,10 +1020,10 @@ int main(int argc, char *args[])
 
                     for (int k = 0; k < difficultyList.size(); k++)
                     {
-                        std::cerr << "Seaching at: " << k << "\n";
+                        // std::cerr << "Seaching at: " << k << "\n";
                         if (difficultyList[k].difficulty == communicator.getDifficulty())
                         {
-                            std::cerr << "Found current difficulty at | " << k << " |" << "\n";
+                            // std::cerr << "Found current difficulty at | " << k << " |" << "\n";
                             currentDifficultyIndex = k;
                             break;
                         }
@@ -1070,7 +1070,7 @@ int main(int argc, char *args[])
 
                 GameTurnIndicatorLoad();
 
-                std::cerr << "Nvm, its moves are resetted now\n";
+                // std::cerr << "Nvm, its moves are resetted now\n";
 
                 SDL_RenderPresent(renderer);
 
@@ -1112,7 +1112,7 @@ int main(int argc, char *args[])
                 board.highlightKingStatus(isEnded, (chessColor)currentMoveColor);
                 GameBoardRender();
                 GameTurnIndicatorLoad();
-                std::cerr << "Hello hello black moved\n";
+                // std::cerr << "Hello hello black moved\n";
                 // Update the screen
                 SDL_RenderPresent(renderer);
                 break;
@@ -1525,7 +1525,7 @@ int main(int argc, char *args[])
                 {
                     if (confirmationPopup.isConfirmed() == Confirmation::YES)
                     {
-                        std::cerr << "Yes pressed" << std::endl;
+                        // std::cerr << "Yes pressed" << std::endl;
                         saveGame(board, saveFileId + 1, isSinglePlayer, communicator);
                         std::cerr << "Done saving\n";
                         demoBoard.updateFen("8/8/8/8/8/8/8/8 w - - 0 0");
@@ -1567,8 +1567,8 @@ int main(int argc, char *args[])
                 confirmationPopup.handleButtonClicked();
                 if (confirmationPopup.isConfirmed() == Confirmation::YES)
                 {
-                    std::cerr << "Yes pressed" << std::endl;
-                    std::cerr << "saveFileId is: " << deleteSaveFileId + 1 << "\n";
+                    // std::cerr << "Yes pressed" << std::endl;
+                    // std::cerr << "saveFileId is: " << deleteSaveFileId + 1 << "\n";
                     deleteSave(deleteSaveFileId + 1);
                     saveFileId = -1;
                     isToRenderPopupDelete = false;

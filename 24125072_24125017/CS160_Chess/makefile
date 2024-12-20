@@ -3,7 +3,7 @@ UNAME_S := $(shell uname -s)
 
 # Compiler and linker flags
 COMPILER_FLAG_WINDOWS = -std=c++20 -lmingw32 
-COMPILER_FLAG_MACOS = -std=c++20 -Wall
+COMPILER_FLAG_MACOS = -std=c++20 -Wall 
 LINKER_FLAGS_WINDOWS = -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -Lsrc/SDL2/lib -Lsrc/SDL2/bin -Isrc/SDL2/include -Isrc/SDL2/include/SDL2
 LINKER_FLAGS_MACOS = -framework SDL2 -framework SDL2_ttf -framework SDL2_image -framework SDL2_mixer -rpath /Library/Frameworks -F/Library/Frameworks -I/Library/Frameworks/SDL2_ttf.framework/Headers -I/Library/Frameworks/SDL2_image.framework/Headers -I/Library/Frameworks/SDL2_mixer.framework/Headers
 

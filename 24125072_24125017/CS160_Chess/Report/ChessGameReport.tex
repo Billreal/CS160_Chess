@@ -195,7 +195,7 @@ While being dragged, selected chess piece follows the mouse's cursor smoothly.
 The game's logic, game state management and GUI(graphic user interface) is written in C and C++, using SDL2 and nanoSVG libraries for graphic. The AI used for player versus computer mode is \href{https://github.com/official-stockfish/Stockfish}{Stockfish}, a popular and strong open-source AI chess engine. Current board state is written to plain text file in FEN notation, followed by numbers indicating current game mode and difficulty of AI opponent.
 \chapter{Design document}
 \section{System requirement and build}
-Currently, the game is only developed and tested on Windows operating system.
+Currently, the game is only developed and tested on Windows operating system. The game is designed to be ran on 100\% screen scale.
 To compile the program from source files, the directory must first be at the same path as the makefile file, that is, the \texttt{CS160\_Chess} folder. Also, makefile must be installed.
 
 Then, user can build the project by running \texttt{./buildscriptwindows.ps1} or run \texttt{make all}. After that, the executable is named \texttt{chess.exe}, which is located at \texttt{CS160\_Chess} folder. The executable will be automatically be ran after being built.
@@ -284,6 +284,7 @@ The project is tested by playtesting, in which simple games are played and all i
 
 While testing, we find that at any given moment, the game only run single task, that is, while the AI is evaluating best move any input is blocked. Also, the game's windows is obstructed when the scaling of screen is greater than 100\%.
 
+On rare occasions, the AI may not perform moves at its turn but the program still count it as black's move. 
 \chapter{Future Improvements}
 \begin{enumerate}
   \item Implementation of board rotation for better user experience.
